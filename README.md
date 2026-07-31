@@ -1,5 +1,3 @@
-Wall time: 0.5 seconds
-Output:
 # Branchboard
 
 Branchboard 是一个本地优先的 Chrome 生图画布。它不调用或反代 OpenAI

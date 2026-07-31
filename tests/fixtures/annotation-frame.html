@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN" data-embedded="true">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Branchboard 标注布局回归</title>
+    <link rel="stylesheet" href="/src/canvas/styles.css" />
+  </head>
+  <body>
+    <div class="annotation-overlay">
+      <section class="annotation-panel">
+        <header class="annotation-header">
+          <div><span>IMAGE MARKUP</span><strong>图片标注</strong></div>
+          <button type="button">×</button>
+        </header>
+        <div class="annotation-toolbar">
+          <div class="tool-group">
+            <button class="active" type="button">画笔</button>
+            <button type="button">矩形</button>
+            <button type="button">箭头</button>
+          </div>
+          <div class="color-group">
+            <button style="background:#ff5145" type="button"></button>
+            <button style="background:#ffb12b" type="button"></button>
+            <button style="background:#3388e8" type="button"></button>
+          </div>
+          <label class="width-control">粗细 <input type="range" /></label>
+          <div class="history-actions"><button type="button">撤销</button></div>
+        </div>
+        <div class="annotation-stage-shell">
+          <div class="annotation-stage">
+            <div class="annotation-canvas-space">
+              <canvas width="800" height="500"></canvas>
+            </div>
+          </div>
+        </div>
+        <footer class="annotation-footer">
+          <span>滚轮缩放图片</span>
+          <div>
+            <button class="cancel" type="button">取消</button>
+            <button class="save" type="button">保存到图片节点</button>
+          </div>
+        </footer>
+      </section>
+    </div>
+  </body>
+</html>
+

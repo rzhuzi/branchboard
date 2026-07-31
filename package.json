@@ -1,0 +1,30 @@
+{
+  "name": "branchboard",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "test": "node --test tests/*.test.mjs",
+    "icons": "node scripts/generate-icons.mjs",
+    "build": "tsc -b && vite build",
+    "typecheck": "tsc -b",
+    "preview": "vite preview",
+    "release:check": "node scripts/validate-release.mjs"
+  },
+  "dependencies": {
+    "@xyflow/react": "^12.11.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.4",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.0"
+  }
+}
+

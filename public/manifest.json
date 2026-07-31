@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Branchboard — ChatGPT 生图画布",
+  "version": "1.0.0",
+  "description": "用无限画布整理提示词、参考图和 ChatGPT 网页端生成结果。",
+  "minimum_chrome_version": "114",
+  "permissions": ["storage", "clipboardWrite", "offscreen"],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "显示或收起 Branchboard 浮动画布",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
+      ],
+      "js": ["runtime-utils.js", "content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["canvas.html", "assets/*"],
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
+      ]
+    }
+  ]
+}
+
