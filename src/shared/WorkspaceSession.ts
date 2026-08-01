@@ -5,6 +5,8 @@ import {
   loadCanvasDocument,
   loadCanvasRegistry,
   loadSnapshot,
+  removeCanvasTab,
+  renameCanvasTab,
   saveCanvasSnapshot,
   type CanvasDocument,
   type CanvasRegistry,
@@ -275,6 +277,92 @@ export function createWorkspaceSession({
     }
   };
 
+  const deleteCanvas = async (
+    currentCanvasId: string,
+    currentSnapshot: CanvasSnapshot,
+    targetCanvasId: string
+  ): Promise<
+    | { ok: true; view: WorkspaceView }
+    | { ok: false; failure: WorkspaceCommitFailure }
+  > => {
+    if (currentCanvasId && currentCanvasId !== targetCanvasId) {
+      const saved = await commit(currentCanvasId, currentSnapshot);
+      if (!saved.ok) return { ok: false, failure: saved };
+    }
+
+    try {
+      const before = await loadCanvasRegistry();
+      const targetIndex =
+        before?.canvases.findIndex((canvas) => canvas.id === targetCanvasId) ??
+        -1;
+      const removed = await removeCanvasTab(targetCanvasId);
+      if (!removed.ok) {
+        return {
+          ok: false,
+          failure: {
+            ok: false,
+            kind: "unavailable",
+            message:
+              removed.reason === "last-canvas"
+                ? "至少需要保留一个画布"
+                : "这个画布已经被移除",
+            recoverable: true
+          }
+        };
+      }
+
+      documents.delete(targetCanvasId);
+      const remaining = removed.registry.canvases;
+      const activeCanvasId = remaining.some(
+        (canvas) => canvas.id === currentCanvasId
+      )
+        ? currentCanvasId
+        : remaining[
+            Math.min(Math.max(targetIndex, 0), remaining.length - 1)
+          ].id;
+      writeSessionCanvasId(activeCanvasId);
+      const document = await openDocument(activeCanvasId);
+      publish({ kind: "registry" });
+      return {
+        ok: true,
+        view: {
+          activeCanvasId,
+          canvases: remaining,
+          snapshot: document.snapshot
+        }
+      };
+    } catch (error) {
+      return { ok: false, failure: failureFrom(error) };
+    }
+  };
+
+  const renameCanvas = async (
+    canvasId: string,
+    title: string
+  ): Promise<
+    | { ok: true; canvases: CanvasTab[] }
+    | { ok: false; failure: WorkspaceCommitFailure }
+  > => {
+    try {
+      const registry = await renameCanvasTab(canvasId, title);
+      if (!registry) {
+        return {
+          ok: false,
+          failure: {
+            ok: false,
+            kind: "unavailable",
+            message: "这个画布已经被移除",
+            recoverable: true
+          }
+        };
+      }
+      publish({ kind: "registry" });
+      return { ok: true, canvases: registry.canvases };
+    } catch (error) {
+      return { ok: false, failure: failureFrom(error) };
+    }
+  };
+
   const refreshCanvas = async (
     canvasId: string
   ): Promise<CanvasSnapshot | null> => {
@@ -314,6 +402,8 @@ export function createWorkspaceSession({
     commit,
     selectCanvas,
     createCanvas,
+    deleteCanvas,
+    renameCanvas,
     refreshCanvas,
     refreshRegistry,
     subscribe
