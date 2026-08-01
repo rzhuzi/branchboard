@@ -34,6 +34,7 @@ export type InboxImage = {
   createdAt: string;
   parentPromptId?: string;
   canvasId?: string;
+  position?: { x: number; y: number };
 };
 
 export type ActivePrompt = {
@@ -43,8 +44,10 @@ export type ActivePrompt = {
 };
 
 export type WorkspaceMode = "manual" | "auto";
+export type WorkspaceTheme = "dark" | "light";
 
 export type ExecutionSettings = {
   mode: WorkspaceMode;
+  theme: WorkspaceTheme;
 };
 
