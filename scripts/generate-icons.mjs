@@ -65,9 +65,9 @@ function makeIcon(size) {
       if (!inRoundedRectangle(x, y, size, radius)) continue;
 
       const light = Math.max(0, 1 - Math.hypot(x, y) / (size * 1.15));
-      pixels[offset] = Math.round(233 + light * 22);
-      pixels[offset + 1] = Math.round(77 + light * 37);
-      pixels[offset + 2] = Math.round(30 + light * 25);
+      pixels[offset] = Math.round(53 + light * 36);
+      pixels[offset + 1] = Math.round(75 + light * 38);
+      pixels[offset + 2] = Math.round(91 + light * 41);
       pixels[offset + 3] = 255;
 
       const onLink =
@@ -77,9 +77,9 @@ function makeIcon(size) {
         ([nodeX, nodeY]) => Math.hypot(x - nodeX, y - nodeY) <= nodeRadius
       );
       if (onLink || onNode) {
-        pixels[offset] = 25;
-        pixels[offset + 1] = 25;
-        pixels[offset + 2] = 20;
+        pixels[offset] = 220;
+        pixels[offset + 1] = 230;
+        pixels[offset + 2] = 237;
       }
     }
   }
