@@ -32,6 +32,10 @@ export type CanvasCommitAttempt =
   | { ok: true; document: CanvasDocument }
   | { ok: false; kind: "conflict"; current: CanvasDocument };
 
+export type CanvasRemovalResult =
+  | { ok: true; registry: CanvasRegistry }
+  | { ok: false; reason: "missing" | "last-canvas" };
+
 type StoredCanvasRegistry = CanvasRegistry & {
   id: typeof CANVAS_REGISTRY_ID;
   kind: "canvas-registry";
@@ -249,6 +253,92 @@ export async function appendCanvasTab(
     } satisfies StoredCanvasRegistry);
     await transactionDone(transaction);
     return next;
+  } finally {
+    database.close();
+  }
+}
+
+export async function renameCanvasTab(
+  canvasId: string,
+  title: string
+): Promise<CanvasRegistry | null> {
+  const database = await openDatabase();
+  try {
+    const transaction = database.transaction(SNAPSHOT_STORE, "readwrite");
+    const store = transaction.objectStore(SNAPSHOT_STORE);
+    const stored = await requestToPromise(
+      store.get(CANVAS_REGISTRY_ID) as IDBRequest<
+        StoredCanvasRegistry | undefined
+      >
+    );
+    if (!stored?.canvases.some((canvas) => canvas.id === canvasId)) {
+      await transactionDone(transaction);
+      return null;
+    }
+
+    const registry: CanvasRegistry = {
+      version: 1,
+      activeCanvasId: stored.activeCanvasId,
+      canvases: stored.canvases.map((canvas) =>
+        canvas.id === canvasId ? { ...canvas, title } : canvas
+      )
+    };
+    store.put({
+      ...registry,
+      id: CANVAS_REGISTRY_ID,
+      kind: "canvas-registry"
+    } satisfies StoredCanvasRegistry);
+    await transactionDone(transaction);
+    return registry;
+  } finally {
+    database.close();
+  }
+}
+
+export async function removeCanvasTab(
+  canvasId: string
+): Promise<CanvasRemovalResult> {
+  const database = await openDatabase();
+  try {
+    const transaction = database.transaction(SNAPSHOT_STORE, "readwrite");
+    const store = transaction.objectStore(SNAPSHOT_STORE);
+    const stored = await requestToPromise(
+      store.get(CANVAS_REGISTRY_ID) as IDBRequest<
+        StoredCanvasRegistry | undefined
+      >
+    );
+    const canvases = stored?.canvases ?? [];
+    const removedIndex = canvases.findIndex((canvas) => canvas.id === canvasId);
+    if (removedIndex < 0) {
+      await transactionDone(transaction);
+      return { ok: false, reason: "missing" };
+    }
+    if (canvases.length === 1) {
+      await transactionDone(transaction);
+      return { ok: false, reason: "last-canvas" };
+    }
+
+    const remaining = canvases.filter((canvas) => canvas.id !== canvasId);
+    const storedActiveCanvasId = stored?.activeCanvasId ?? "";
+    const activeCanvasId =
+      storedActiveCanvasId === canvasId ||
+      !remaining.some((canvas) => canvas.id === storedActiveCanvasId)
+        ? remaining[Math.min(removedIndex, remaining.length - 1)].id
+        : storedActiveCanvasId;
+    const registry: CanvasRegistry = {
+      version: 1,
+      activeCanvasId,
+      canvases: remaining
+    };
+
+    store.put({
+      ...registry,
+      id: CANVAS_REGISTRY_ID,
+      kind: "canvas-registry"
+    } satisfies StoredCanvasRegistry);
+    store.delete(`${CANVAS_SNAPSHOT_PREFIX}${canvasId}`);
+    await transactionDone(transaction);
+    return { ok: true, registry };
   } finally {
     database.close();
   }
