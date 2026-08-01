@@ -102,7 +102,6 @@ export function ImageNode(props: NodeProps<CanvasNode>) {
       />
       <div className="image-frame">
         <img src={data.dataUrl} alt={data.name || "生成图片"} draggable={false} />
-        <span className="image-index">OUTPUT</span>
       </div>
       <div className="image-meta">
         <div>
