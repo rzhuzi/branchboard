@@ -20,8 +20,50 @@
       :host {
         all: initial;
         color-scheme: dark;
-        font-family: "Segoe UI Variable", "Segoe UI", "PingFang SC",
-          "Microsoft YaHei", sans-serif;
+        font-family: "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI",
+          "Microsoft YaHei", Arial, sans-serif;
+        --canvas-bg: #10161d;
+        --titlebar-bg: #18212a;
+        --toolbar-bg: #1d2731;
+        --node-bg: #202a34;
+        --inner-bg: #151d25;
+        --hover-bg: #27333e;
+        --border-default: #2b3742;
+        --border-strong: #34414d;
+        --text-primary: #e7ebef;
+        --text-normal: #b7c0c9;
+        --text-secondary: #8794a1;
+        --text-placeholder: #65727f;
+        --accent: #e9783e;
+        --accent-hover: #f0864c;
+        --accent-active: #ce6531;
+        --accent-soft: rgba(233,120,62,.12);
+        --accent-border: rgba(233,120,62,.45);
+        --success: #70a989;
+        --warning: #d9a35f;
+        --danger: #d96c6c;
+        --shadow-soft: rgba(8,12,16,.28);
+        --shadow-card: rgba(8,12,16,.44);
+      }
+      :host(.theme-light) {
+        color-scheme: light;
+        --canvas-bg: #e7e3dd;
+        --titlebar-bg: #dedad4;
+        --toolbar-bg: #efebe5;
+        --node-bg: #f7f4ef;
+        --inner-bg: #ddd8d1;
+        --hover-bg: #d5d0c9;
+        --border-default: #cbc5bd;
+        --border-strong: #b8b1a8;
+        --text-primary: #27313a;
+        --text-normal: #46525d;
+        --text-secondary: #73808c;
+        --text-placeholder: #929ca4;
+        --success: #4f866b;
+        --warning: #ad7734;
+        --danger: #b84f4f;
+        --shadow-soft: rgba(72,62,52,.18);
+        --shadow-card: rgba(72,62,52,.26);
       }
       * { box-sizing: border-box; }
       button { font: inherit; }
@@ -32,15 +74,11 @@
         height: 50px;
         place-items: center;
         padding: 0;
-        border: 1px solid rgba(255,255,255,.24);
-        border-radius: 16px;
-        color: #191914;
-        background:
-          linear-gradient(145deg, rgba(255,255,255,.16), transparent 42%),
-          linear-gradient(145deg, #ff7b49, #e95725);
-        box-shadow:
-          0 18px 46px rgba(0,0,0,.38),
-          inset 0 1px 0 rgba(255,255,255,.2);
+        border: 1px solid var(--border-strong);
+        border-radius: 12px;
+        color: var(--text-normal);
+        background: var(--toolbar-bg);
+        box-shadow: 0 12px 30px var(--shadow-soft);
         cursor: grab;
         touch-action: none;
         transition: transform .16s ease, box-shadow .16s ease;
@@ -65,19 +103,20 @@
         stroke-width: 1.8;
       }
       .orb .icon-node {
-        fill: #191914;
-        stroke: rgba(255,255,255,.48);
+        fill: var(--inner-bg);
+        stroke: var(--text-secondary);
         stroke-width: .7;
       }
       .orb:hover {
         transform: translateY(-2px);
-        box-shadow: 0 22px 58px rgba(0,0,0,.46);
+        background: var(--hover-bg);
+        box-shadow: 0 15px 36px var(--shadow-soft);
       }
       .orb:active,
       .orb.dragging {
         cursor: grabbing;
         transform: scale(.97);
-        box-shadow: 0 12px 34px rgba(0,0,0,.34);
+        box-shadow: 0 12px 34px var(--shadow-soft);
       }
       .orb.hidden { display: none; }
       .floating {
@@ -90,11 +129,11 @@
         min-height: min(420px, calc(100vh - 16px));
         overflow: hidden;
         resize: none;
-        border: 1px solid rgba(244,237,223,.14);
-        border-radius: 19px;
-        color: #f4eddf;
-        background: #151611;
-        box-shadow: 0 30px 90px rgba(0,0,0,.52);
+        border: 1px solid var(--border-strong);
+        border-radius: 12px;
+        color: var(--text-normal);
+        background: var(--canvas-bg);
+        box-shadow: 0 24px 64px var(--shadow-card);
         animation: floating-in .18s ease-out;
       }
       .floating.open { display: block; }
@@ -102,14 +141,12 @@
         position: relative;
         z-index: 5;
         display: flex;
-        height: 48px;
+        height: 44px;
         align-items: center;
         justify-content: space-between;
-        padding: 0 11px 0 13px;
-        border-bottom: 1px solid rgba(244,237,223,.09);
-        background:
-          linear-gradient(90deg, rgba(255,107,53,.07), transparent 35%),
-          #1c1d18;
+        padding: 0 9px 0 12px;
+        border-bottom: 1px solid var(--border-default);
+        background: var(--titlebar-bg);
         cursor: grab;
         user-select: none;
       }
@@ -124,64 +161,89 @@
         width: 29px;
         height: 29px;
         place-items: center;
-        border-radius: 8px;
-        color: #171713;
-        background: #ff6b35;
-        font-family: Georgia, serif;
-        font-size: 16px;
-        font-style: italic;
-        font-weight: 700;
+        border: 1px solid var(--border-default);
+        border-radius: 7px;
+        color: var(--text-normal);
+        background: var(--toolbar-bg);
+      }
+      .mark svg {
+        width: 19px;
+        height: 19px;
+        overflow: visible;
+      }
+      .mark .icon-frame,
+      .mark .icon-link {
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .mark .icon-frame {
+        stroke-width: 1.55;
+        opacity: .62;
+      }
+      .mark .icon-link { stroke-width: 1.8; }
+      .mark .icon-node {
+        fill: var(--inner-bg);
+        stroke: var(--text-secondary);
+        stroke-width: .7;
+      }
+      .brand-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
       }
       .brand strong {
-        color: #f4eddf;
-        font-family: Georgia, serif;
-        font-size: 13px;
+        color: var(--text-primary);
+        font-size: 14px;
         font-weight: 600;
+        letter-spacing: .01em;
       }
-      .brand span:last-child {
-        color: #686961;
-        font-size: 7px;
-        font-weight: 800;
+      .brand-copy span {
+        color: var(--text-secondary);
+        font-size: 8px;
+        font-weight: 600;
         letter-spacing: .13em;
       }
       .shell-actions {
         display: flex;
-        gap: 5px;
+        gap: 2px;
       }
       .shell-button {
         display: grid;
-        width: 29px;
-        height: 29px;
+        width: 30px;
+        height: 30px;
         place-items: center;
-        border: 1px solid rgba(244,237,223,.1);
-        border-radius: 8px;
-        color: #99978f;
-        background: rgba(255,255,255,.03);
+        border: 0;
+        border-radius: 7px;
+        color: var(--text-secondary);
+        background: transparent;
+        font-size: 16px;
+        line-height: 1;
         cursor: pointer;
       }
       .shell-button:hover {
-        color: #f4eddf;
-        background: rgba(255,255,255,.07);
+        color: var(--text-primary);
+        background: var(--hover-bg);
       }
       .canvas-frame {
         display: block;
         width: 100%;
-        height: calc(100% - 48px);
+        height: calc(100% - 44px);
         border: 0;
-        background: #141511;
+        background: var(--canvas-bg);
       }
       .drop-catcher {
         position: absolute;
         z-index: 4;
-        inset: 48px 0 0;
+        inset: 44px 0 0;
         display: none;
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        border: 2px dashed rgba(255,107,53,.72);
-        color: #f4eddf;
-        background: rgba(19,20,16,.88);
-        backdrop-filter: blur(8px);
+        border: 2px dashed var(--accent-border);
+        color: var(--text-primary);
+        background: rgba(16,22,29,.92);
       }
       .drop-catcher.active { display: flex; }
       .drop-catcher i {
@@ -189,23 +251,22 @@
         width: 54px;
         height: 54px;
         place-items: center;
-        border: 1px solid rgba(255,107,53,.35);
+        border: 1px solid var(--accent-border);
         border-radius: 16px;
-        color: #ff6b35;
-        background: rgba(255,107,53,.1);
+        color: var(--accent);
+        background: var(--accent-soft);
         font-size: 24px;
         font-style: normal;
       }
       .drop-catcher strong {
         margin-top: 14px;
-        font-family: Georgia, serif;
-        font-size: 16px;
-        font-weight: 500;
+        font-size: 17px;
+        font-weight: 600;
       }
       .drop-catcher span {
         margin-top: 5px;
-        color: #8b8a81;
-        font-size: 9px;
+        color: var(--text-secondary);
+        font-size: 11px;
       }
       .toast {
         position: absolute;
@@ -216,12 +277,12 @@
         align-items: center;
         gap: 8px;
         padding: 10px 12px;
-        border: 1px solid rgba(244,237,223,.12);
+        border: 1px solid var(--border-default);
         border-radius: 9px;
-        color: #eee5d8;
-        background: rgba(40,41,34,.96);
-        box-shadow: 0 16px 40px rgba(0,0,0,.4);
-        font-size: 9px;
+        color: var(--text-primary);
+        background: rgba(29,39,49,.96);
+        box-shadow: 0 16px 40px var(--shadow-card);
+        font-size: 10px;
         font-weight: 700;
       }
       .toast.show { display: flex; }
@@ -231,14 +292,14 @@
         height: 18px;
         place-items: center;
         border-radius: 50%;
-        color: #192014;
-        background: #8fa474;
-        font-size: 9px;
+        color: var(--inner-bg);
+        background: var(--success);
+        font-size: 10px;
         font-style: normal;
       }
       .toast.warn i {
-        color: #271b0d;
-        background: #d99c50;
+        color: var(--inner-bg);
+        background: var(--warning);
       }
       .resize-handle {
         position: absolute;
@@ -248,17 +309,17 @@
         width: 28px;
         height: 28px;
         border: 0;
-        color: #77786f;
+        color: var(--text-secondary);
         background:
-          linear-gradient(135deg, transparent 45%, rgba(244,237,223,.16) 46%, rgba(244,237,223,.16) 51%, transparent 52%),
-          linear-gradient(135deg, transparent 62%, rgba(244,237,223,.24) 63%, rgba(244,237,223,.24) 68%, transparent 69%);
+          linear-gradient(135deg, transparent 45%, rgba(135,148,161,.16) 46%, rgba(135,148,161,.16) 51%, transparent 52%),
+          linear-gradient(135deg, transparent 62%, rgba(135,148,161,.24) 63%, rgba(135,148,161,.24) 68%, transparent 69%);
         cursor: nwse-resize;
       }
       .resize-handle:hover {
-        color: #ff6b35;
+        color: var(--accent);
         background:
-          linear-gradient(135deg, transparent 45%, rgba(255,107,53,.42) 46%, rgba(255,107,53,.42) 51%, transparent 52%),
-          linear-gradient(135deg, transparent 62%, rgba(255,107,53,.65) 63%, rgba(255,107,53,.65) 68%, transparent 69%);
+          linear-gradient(135deg, transparent 45%, rgba(233,120,62,.42) 46%, rgba(233,120,62,.42) 51%, transparent 52%),
+          linear-gradient(135deg, transparent 62%, rgba(233,120,62,.65) 63%, rgba(233,120,62,.65) 68%, transparent 69%);
       }
       @keyframes floating-in {
         from { opacity: 0; transform: translateY(8px) scale(.99); }
@@ -285,9 +346,19 @@
     <section class="floating" aria-label="Branchboard 浮动画布">
       <header class="shell-header">
         <div class="brand">
-          <span class="mark">B</span>
-          <strong>Branchboard</strong>
-          <span>FLOATING CANVAS</span>
+          <span class="mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32">
+              <path class="icon-frame" d="M7.5 12V7.5H12M20 7.5h4.5V12M24.5 20v4.5H20M12 24.5H7.5V20"/>
+              <path class="icon-link" d="m10.5 11.5 5 4.5 6-5M15.5 16v5"/>
+              <circle class="icon-node" cx="10.5" cy="11.5" r="2.35"/>
+              <circle class="icon-node" cx="21.5" cy="11" r="2.35"/>
+              <circle class="icon-node" cx="15.5" cy="21" r="2.35"/>
+            </svg>
+          </span>
+          <span class="brand-copy">
+            <strong>分支画布</strong>
+            <span>BRANCHBOARD</span>
+          </span>
         </div>
         <div class="shell-actions">
           <button class="shell-button maximize" type="button" title="最大化">□</button>
@@ -465,10 +536,15 @@
   async function restoreGeometry() {
     const restored = await chrome.storage.local.get([
       "floatingCanvasGeometry",
-      "floatingOrbPosition"
+      "floatingOrbPosition",
+      "branchboardExecutionSettings"
     ]);
     floatingGeometry = restored.floatingCanvasGeometry || null;
     orbPosition = restored.floatingOrbPosition || null;
+    host.classList.toggle(
+      "theme-light",
+      restored.branchboardExecutionSettings?.theme === "light"
+    );
     if (open) {
       applyFloatingGeometry();
     } else {
@@ -485,7 +561,13 @@
     });
   }
 
-  async function saveImageBlob(blob, name, parentPromptId, canvasId) {
+  async function saveImageBlob(
+    blob,
+    name,
+    parentPromptId,
+    canvasId,
+    position
+  ) {
     if (!blob.type.startsWith("image/")) {
       throw new Error("拖入的内容不是图片");
     }
@@ -495,23 +577,27 @@
       dataUrl,
       name,
       parentPromptId,
-      canvasId
+      canvasId,
+      position
     });
     if (!response?.ok) throw new Error(response?.error || "保存图片失败");
     showToast("图片已加入画布");
   }
 
   function imageUrlFromTransfer(transfer) {
+    const html = transfer.getData("text/html");
+    if (html) {
+      const parsed = new DOMParser().parseFromString(html, "text/html");
+      const source = parsed.querySelector("img")?.src || "";
+      if (source) return source;
+    }
+
     const uri = transfer
       .getData("text/uri-list")
       .split(/\r?\n/)
       .find((line) => line && !line.startsWith("#"));
     if (uri) return uri;
-
-    const html = transfer.getData("text/html");
-    if (!html) return "";
-    const parsed = new DOMParser().parseFromString(html, "text/html");
-    return parsed.querySelector("img")?.src || "";
+    return "";
   }
 
   async function receiveDrop(transfer) {
@@ -531,6 +617,21 @@
     await saveImageBlob(blob, "ChatGPT 生成结果");
   }
 
+  async function receiveDroppedImageUrl(message) {
+    const imageUrl = String(message.imageUrl || "");
+    if (!imageUrl) throw new Error("拖拽没有携带图片地址");
+    const response = await fetch(imageUrl, { credentials: "include" });
+    if (!response.ok) throw new Error("图片拖取受限，请改用复制粘贴");
+    const blob = await response.blob();
+    await saveImageBlob(
+      blob,
+      "拖入图片",
+      String(message.parentPromptId || ""),
+      String(message.canvasId || ""),
+      message.position
+    );
+  }
+
   function wait(milliseconds) {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   }
@@ -542,113 +643,7 @@
       {
         type: "branchboard:execution-progress",
         requestId,
-        promptId: details.promptId || matchingExecution?.promptId || "",
-        canvasId: details.canvasId || matchingExecution?.canvasId || "",
-        stage,
-        message
-      },
-      "*"
-    );
-  }
-
-  function findComposer() {
-    const selectors = [
-      "#prompt-textarea",
-      "textarea[data-testid='prompt-textarea']",
-      "form textarea",
-      "main [contenteditable='true'][data-virtualkeyboard='true']",
-      "main form [contenteditable='true']"
-    ];
-    for (const selector of selectors) {
-      const element = document.querySelector(selector);
-      if (
-        element instanceof HTMLTextAreaElement ||
-        (element instanceof HTMLElement && element.isContentEditable)
-      ) {
-        return element;
-      }
-    }
-    return null;
-  }
-
-  async function waitForComposer(execution, timeout = 10_000) {
-    const startedAt = Date.now();
-    while (Date.now() - startedAt < timeout) {
-      if (execution) assertExecutionActive(execution);
-      const composer = findComposer();
-      if (composer) return composer;
-      await wait(180);
-    }
-    throw new Error("没有找到 ChatGPT 输入框，请刷新页面后重试");
-  }
-
-  function setTextareaValue(textarea, text) {
-    const setter = Object.getOwnPropertyDescriptor(
-      HTMLTextAreaElement.prototype,
-      "value"
-    )?.set;
-    if (setter) setter.call(textarea, text);
-    else textarea.value = text;
-    textarea.dispatchEvent(
-      new InputEvent("input", {
-        bubbles: true,
-        inputType: "insertText",
-        data: text
-      })
-    );
-    textarea.dispatchEvent(new Event("change", { bubbles: true }));
-  }
-
-  function setContentEditableValue(element, text) {
-    element.focus();
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(element);
-    selection?.removeAllRanges();
-    selection?.addRange(range);
-
-    const inserted = document.execCommand("insertText", false, text);
-    if (!inserted) {
-      element.textContent = text;
-      element.dispatchEvent(
-        new InputEvent("input", {
-          bubbles: true,
-          inputType: "insertText",
-          data: text
-        })
-      );
-    }
-  }
-
-  async function fillComposer(prompt, execution) {
-    const composer = await waitForComposer(execution);
-    if (execution) assertExecutionActive(execution);
-    composer.focus();
-    if (composer instanceof HTMLTextAreaElement) {
-      setTextareaValue(composer, prompt);
-    } else {
-      setContentEditableValue(composer, prompt);
-    }
-    await wait(180);
-  }
-
-  function findFileInput() {
-    const composerRoot = findComposer()?.closest("form");
-    const inputs = Array.from(
-      (composerRoot || document).querySelectorAll("input[type='file']")
-    );
-    return inputs.find((input) => {
-      if (!(input instanceof HTMLInputElement)) return false;
-      const accept = input.accept.toLowerCase();
-      return (
-        !accept ||
-        accept.includes("image") ||
-        /\.(?:png|jpe?g|webp|gif)/.test(accept)
-      );
-    });
-  }
-
-  async function waitForFileInput(timeout = 2400) {
+        promptId: details.promptId || matchingExe…755 tokens truncated…FileInput(timeout = 2400) {
     const startedAt = Date.now();
     while (Date.now() - startedAt < timeout) {
       const input = findFileInput();
@@ -1225,12 +1220,22 @@
 
   window.addEventListener("message", (event) => {
     if (event.source !== frame.contentWindow) return;
+    if (event.data?.type === "branchboard:theme-change") {
+      host.classList.toggle("theme-light", event.data.theme === "light");
+      return;
+    }
     if (event.data?.type === "branchboard:minimize-floating-canvas") {
       setOpen(false);
       return;
     }
     if (event.data?.type === "branchboard:execute-prompt") {
       void executePrompt(event.data);
+      return;
+    }
+    if (event.data?.type === "branchboard:import-dropped-image") {
+      void receiveDroppedImageUrl(event.data).catch((error) =>
+        showToast(error instanceof Error ? error.message : String(error), true)
+      );
       return;
     }
     if (event.data?.type === "branchboard:cancel-execution") {
