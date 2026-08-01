@@ -3,7 +3,8 @@ import type { ActivePrompt, ExecutionSettings } from "./types";
 const ACTIVE_PROMPT_KEY = "activePrompt";
 const EXECUTION_SETTINGS_KEY = "branchboardExecutionSettings";
 const DEFAULT_EXECUTION_SETTINGS: ExecutionSettings = {
-  mode: "manual"
+  mode: "manual",
+  theme: "dark"
 };
 
 function hasChromeStorage(): boolean {
@@ -37,15 +38,23 @@ export async function getExecutionSettings(): Promise<ExecutionSettings> {
   if (hasChromeStorage()) {
     const result = await chrome.storage.local.get(EXECUTION_SETTINGS_KEY);
     const stored = result[EXECUTION_SETTINGS_KEY] as
-      | { mode?: string }
+      | { mode?: string; theme?: string }
       | undefined;
-    return { mode: stored?.mode === "auto" || stored?.mode === "script" ? "auto" : "manual" };
+    return {
+      mode:
+        stored?.mode === "auto" || stored?.mode === "script"
+          ? "auto"
+          : "manual",
+      theme: stored?.theme === "light" ? "light" : "dark"
+    };
   }
   const stored = localStorage.getItem(EXECUTION_SETTINGS_KEY);
   if (!stored) return DEFAULT_EXECUTION_SETTINGS;
-  const parsed = JSON.parse(stored) as { mode?: string };
+  const parsed = JSON.parse(stored) as { mode?: string; theme?: string };
   return {
-    mode: parsed.mode === "auto" || parsed.mode === "script" ? "auto" : "manual"
+    mode:
+      parsed.mode === "auto" || parsed.mode === "script" ? "auto" : "manual",
+    theme: parsed.theme === "light" ? "light" : "dark"
   };
 }
 
