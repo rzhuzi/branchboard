@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { DragEvent as ReactDragEvent } from "react";
 import {
   Background,
   BackgroundVariant,
@@ -124,12 +125,17 @@ function integrateInbox(
     nodes.push({
       id: imageId,
       type: "image",
-      position: parent
+      position: image.position
         ? {
-            x: parent.position.x + 430,
-            y: parent.position.y + outgoingCount * 360
+            x: image.position.x + index * 28,
+            y: image.position.y + index * 28
           }
-        : { x: 560 + index * 40, y: 160 + index * 40 },
+        : parent
+          ? {
+              x: parent.position.x + 430,
+              y: parent.position.y + outgoingCount * 360
+            }
+          : { x: 560 + index * 40, y: 160 + index * 40 },
       data: {
         kind: "image",
         name: image.name,
@@ -235,6 +241,24 @@ function isTextInput(target: EventTarget | null): boolean {
   );
 }
 
+function imageUrlFromDataTransfer(transfer: DataTransfer): string {
+  const html = transfer.getData("text/html");
+  if (html) {
+    const parsed = new DOMParser().parseFromString(html, "text/html");
+    const source = parsed.querySelector("img")?.getAttribute("src");
+    if (source) return source;
+  }
+
+  const uri = transfer
+    .getData("text/uri-list")
+    .split(/\r?\n/)
+    .find((line) => line && !line.startsWith("#"));
+  if (uri) return uri;
+
+  const text = transfer.getData("text/plain").trim();
+  return /^(?:https?:|blob:|data:image\/)/i.test(text) ? text : "";
+}
+
 function CanvasWorkspace() {
   const workspace = useMemo(
     () =>
@@ -253,6 +277,9 @@ function CanvasWorkspace() {
   const [canvasTabs, setCanvasTabs] = useState<CanvasTab[]>([]);
   const [activeCanvasId, setActiveCanvasId] = useState("");
   const [canvasActionPending, setCanvasActionPending] = useState(false);
+  const [editingCanvasId, setEditingCanvasId] = useState("");
+  const [canvasTitleDraft, setCanvasTitleDraft] = useState("");
+  const [dragActive, setDragActive] = useState(false);
   const [unreadResults, setUnreadResults] = useState<Record<string, number>>({});
   const selectedPromptId = useRef<string | null>(null);
   const nodesRef = useRef<CanvasNode[]>([]);
@@ -263,13 +290,44 @@ function CanvasWorkspace() {
   const localDirtyRef = useRef(false);
   const editVersionRef = useRef(0);
   const saveLoopRef = useRef<Promise<void> | null>(null);
-  const { screenToFlowPosition, fitView } = useReactFlow<CanvasNode, CanvasEdge>();
-  const { mode, setMode } = useExecutionSettings();
+  const editingCanvasIdRef = useRef("");
+  const dragDepthRef = useRef(0);
+  const {
+    screenToFlowPosition,
+    fitView,
+    getViewport,
+    setViewport
+  } = useReactFlow<CanvasNode, CanvasEdge>();
+  const { mode, setMode, theme, setTheme } = useExecutionSettings();
   const {
     executions,
     setCurrentCanvasId,
     cancelPrompts
   } = useExecutionSession();
+
+  const fitViewCrisp = useCallback(
+    async (options: {
+      padding: number;
+      duration: number;
+      maxZoom: number;
+    }) => {
+      await fitView(options);
+      const viewport = getViewport();
+      const zoom =
+        Math.abs(viewport.zoom - 1) < 0.015
+          ? 1
+          : Math.round(viewport.zoom * 100) / 100;
+      await setViewport(
+        {
+          x: Math.round(viewport.x),
+          y: Math.round(viewport.y),
+          zoom
+        },
+        { duration: 0 }
+      );
+    },
+    [fitView, getViewport, setViewport]
+  );
 
   useEffect(() => {
     nodesRef.current = nodes;
@@ -315,12 +373,13 @@ function CanvasWorkspace() {
         setNodes(routed.activeSnapshot.nodes);
         setEdges(routed.activeSnapshot.edges);
         window.setTimeout(
-          () => void fitView({ padding: 0.18, duration: 500, maxZoom: 1 }),
+          () =>
+            void fitViewCrisp({ padding: 0.18, duration: 500, maxZoom: 1 }),
           40
         );
       }
     },
-    [fitView, setEdges, setNodes, workspace]
+    [fitViewCrisp, setEdges, setNodes, workspace]
   );
 
   useEffect(() => {
@@ -360,7 +419,8 @@ function CanvasWorkspace() {
         setHydrated(true);
         setSaveState("saved");
         window.setTimeout(
-          () => void fitView({ padding: 0.2, duration: 450, maxZoom: 1 }),
+          () =>
+            void fitViewCrisp({ padding: 0.2, duration: 450, maxZoom: 1 }),
           80
         );
       } catch (error) {
@@ -374,7 +434,7 @@ function CanvasWorkspace() {
     return () => {
       cancelled = true;
     };
-  }, [fitView, setEdges, setNodes, workspace]);
+  }, [fitViewCrisp, setEdges, setNodes, workspace]);
 
   const flushCanvas = useCallback(
     (canvasId: string): Promise<void> => {
@@ -485,16 +545,16 @@ function CanvasWorkspace() {
       if (event.source !== window.parent) return;
       if (event.data?.type !== "branchboard:canvas-visible") return;
       window.setTimeout(
-        () => void fitView({ padding: 0.2, duration: 320, maxZoom: 1 }),
+        () => void fitViewCrisp({ padding: 0.2, duration: 320, maxZoom: 1 }),
         40
       );
     };
     window.addEventListener("message", handleParentMessage);
     return () => window.removeEventListener("message", handleParentMessage);
-  }, [fitView]);
+  }, [fitViewCrisp]);
 
   const insertImages = useCallback(
-    async (files: File[]) => {
+    async (files: File[], dropPosition?: { x: number; y: number }) => {
       if (!files.length) return;
       const dataUrls = await Promise.all(files.map(fileToDataUrl));
       const currentNodes = nodesRef.current;
@@ -511,12 +571,17 @@ function CanvasWorkspace() {
       const addedNodes: CanvasNode[] = dataUrls.map((dataUrl, index) => ({
         id: crypto.randomUUID(),
         type: "image",
-        position: parent
+        position: dropPosition
           ? {
-              x: parent.position.x + 430,
-              y: parent.position.y + (outgoingCount + index) * 360
+              x: dropPosition.x + index * 28,
+              y: dropPosition.y + index * 28
             }
-          : { x: 520 + index * 40, y: 180 + index * 40 },
+          : parent
+            ? {
+                x: parent.position.x + 430,
+                y: parent.position.y + (outgoingCount + index) * 360
+              }
+            : { x: 520 + index * 40, y: 180 + index * 40 },
         data: {
           kind: "image",
           name: files[index]?.name || `粘贴图片 ${index + 1}`,
@@ -539,28 +604,66 @@ function CanvasWorkspace() {
     [setEdges, setNodes]
   );
 
-  useEffect(() => {
-    const handlePaste = (event: ClipboardEvent) => {
-      const imageFiles = Array.from(event.clipboardData?.items ?? [])
-        .filter((item) => item.kind === "file" && item.type.startsWith("image/"))
-        .map((item) => item.getAsFile())
-        .filter((file): file is File => Boolean(file));
+  const handleCanvasDragEnter = useCallback(
+    (event: ReactDragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      dragDepthRef.current += 1;
+      setDragActive(true);
+    },
+    []
+  );
 
-      if (imageFiles.length) {
-        event.preventDefault();
-        void insertImages(imageFiles);
+  const handleCanvasDragLeave = useCallback(
+    (event: ReactDragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      dragDepthRef.current = Math.max(0, dragDepthRef.current - 1);
+      if (dragDepthRef.current === 0) setDragActive(false);
+    },
+    []
+  );
+
+  const handleCanvasDragOver = useCallback(
+    (event: ReactDragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
+    },
+    []
+  );
+
+  const handleCanvasDrop = useCallback(
+    async (event: ReactDragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      dragDepthRef.current = 0;
+      setDragActive(false);
+
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY
+      });
+      const files = Array.from(event.dataTransfer.files).filter((file) =>
+        file.type.startsWith("image/")
+      );
+      if (files.length) {
+        await insertImages(files, position);
         return;
       }
 
-      if (isTextInput(event.target)) return;
-      const text = event.clipboardData?.getData("text/plain").trim();
-      if (!text) return;
-      event.preventDefault();
-      const position = screenToFlowPosition({
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2
-      });
-      const node = newPromptNode(position);
+      const imageUrl = imageUrlFromDataTransfer(event.dataTransfer);
+      if (!imageUrl) {
+        setSaveState("error");
+        setSaveError("拖入的内容没有可用图片");
+        return;
+      }
+
+      const parentPromptId =
+        selectedPromptId.current ??
+        [...nodesRef.current]
+          .reverse()
+          .find((node) => node.data.kind === "prompt")?.id ??
+        "";
+      const embedded =
+        new URLSearchParams(window.location.search).get("embedded"…494 tokens truncated…;
       node.data = { ...node.data, title: "粘贴的提示词", prompt: text };
       setNodes((existing) => [...existing, node]);
     };
@@ -605,11 +708,11 @@ function CanvasWorkspace() {
       setEdges(nextEdges);
       void setActivePrompt(null);
       window.setTimeout(
-        () => void fitView({ padding: 0.2, duration: 420, maxZoom: 1 }),
+        () => void fitViewCrisp({ padding: 0.2, duration: 420, maxZoom: 1 }),
         40
       );
     },
-    [fitView, setEdges, setNodes]
+    [fitViewCrisp, setEdges, setNodes]
   );
 
   const applyWorkspaceView = useCallback(
@@ -700,6 +803,112 @@ function CanvasWorkspace() {
     workspace
   ]);
 
+  const beginRenameCanvas = useCallback(
+    (canvas: CanvasTab) => {
+      if (canvasActionPending) return;
+      editingCanvasIdRef.current = canvas.id;
+      setCanvasTitleDraft(canvas.title);
+      setEditingCanvasId(canvas.id);
+    },
+    [canvasActionPending]
+  );
+
+  const cancelRenameCanvas = useCallback(() => {
+    editingCanvasIdRef.current = "";
+    setEditingCanvasId("");
+    setCanvasTitleDraft("");
+  }, []);
+
+  const commitRenameCanvas = useCallback(
+    async (canvasId: string) => {
+      if (editingCanvasIdRef.current !== canvasId) return;
+      const title = canvasTitleDraft.trim();
+      const previous = canvasTabsRef.current.find(
+        (canvas) => canvas.id === canvasId
+      );
+      editingCanvasIdRef.current = "";
+      setEditingCanvasId("");
+      setCanvasTitleDraft("");
+      if (!title || title === previous?.title) return;
+
+      setCanvasActionPending(true);
+      setSaveState("saving");
+      setSaveError("");
+      try {
+        const result = await workspace.renameCanvas(canvasId, title);
+        if (!result.ok) {
+          setSaveState("error");
+          setSaveError(result.failure.message);
+          return;
+        }
+        canvasTabsRef.current = result.canvases;
+        setCanvasTabs(result.canvases);
+        setSaveState("saved");
+      } finally {
+        setCanvasActionPending(false);
+      }
+    },
+    [canvasTitleDraft, workspace]
+  );
+
+  const deleteCanvas = useCallback(
+    async (canvas: CanvasTab) => {
+      if (canvasActionPending || canvasTabsRef.current.length <= 1) return;
+      if (!window.confirm(`删除“${canvas.title}”？其中的节点和图片也会删除。`)) {
+        return;
+      }
+
+      setCanvasActionPending(true);
+      setSaveState("saving");
+      setSaveError("");
+      try {
+        await saveLoopRef.current;
+        const promptIds = Object.values(executions)
+          .filter((execution) => execution.canvasId === canvas.id)
+          .map((execution) => execution.promptId);
+        cancelPrompts(promptIds);
+        if (
+          promptIds.length &&
+          new URLSearchParams(window.location.search).get("embedded") === "1"
+        ) {
+          window.parent.postMessage(
+            { type: "branchboard:cancel-execution", promptIds },
+            "*"
+          );
+        }
+
+        const result = await workspace.deleteCanvas(
+          activeCanvasIdRef.current,
+          snapshotOfCurrentCanvas(),
+          canvas.id
+        );
+        if (!result.ok) {
+          setSaveState("error");
+          setSaveError(result.failure.message);
+          return;
+        }
+        applyWorkspaceView(result.view);
+        localDirtyRef.current = false;
+        setUnreadResults((current) => {
+          const next = { ...current };
+          delete next[canvas.id];
+          return next;
+        });
+        setSaveState("saved");
+      } finally {
+        setCanvasActionPending(false);
+      }
+    },
+    [
+      applyWorkspaceView,
+      cancelPrompts,
+      canvasActionPending,
+      executions,
+      snapshotOfCurrentCanvas,
+      workspace
+    ]
+  );
+
   useEffect(
     () =>
       workspace.subscribe((change) => {
@@ -707,6 +916,18 @@ function CanvasWorkspace() {
           if (change.kind === "registry") {
             const registry = await workspace.refreshRegistry();
             if (!registry) return;
+            if (
+              !registry.canvases.some(
+                (canvas) => canvas.id === activeCanvasIdRef.current
+              )
+            ) {
+              const view = await workspace.open();
+              applyWorkspaceView(view);
+              localDirtyRef.current = false;
+              setSaveState("saved");
+              setSaveError("");
+              return;
+            }
             canvasTabsRef.current = registry.canvases;
             setCanvasTabs(registry.canvases);
             return;
@@ -731,7 +952,7 @@ function CanvasWorkspace() {
           setSaveError("");
         })();
       }),
-    [applyCanvasSnapshot, workspace]
+    [applyCanvasSnapshot, applyWorkspaceView, workspace]
   );
 
   const handleSelectionChange = ({
@@ -749,16 +970,19 @@ function CanvasWorkspace() {
   };
 
   const minimapColor = useCallback(
-    (node: CanvasNode) => (node.data.kind === "prompt" ? "#ff6b35" : "#f0dfbf"),
+    (_node: CanvasNode) => "#e9783e",
     []
   );
 
   const defaultEdgeOptions = useMemo(
     () => ({
-      style: { stroke: "#887e6d", strokeWidth: 1.6 },
+      style: {
+        stroke: theme === "light" ? "#b8c0c7" : "#34414d",
+        strokeWidth: 1.6
+      },
       animated: false
     }),
-    []
+    [theme]
   );
 
   const executionToneByCanvas = useMemo(() => {
@@ -800,10 +1024,18 @@ function CanvasWorkspace() {
     <main className="canvas-shell">
       <div className="topbar">
         <div className="brand">
-          <span className="brand-mark">B</span>
+          <span className="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32">
+              <path d="M7.5 12V7.5H12M20 7.5h4.5V12M24.5 20v4.5H20M12 24.5H7.5V20" />
+              <path d="m10.5 11.5 5 4.5 6-5M15.5 16v5" />
+              <circle cx="10.5" cy="11.5" r="2.35" />
+              <circle cx="21.5" cy="11" r="2.35" />
+              <circle cx="15.5" cy="21" r="2.35" />
+            </svg>
+          </span>
           <div>
-            <strong>Branchboard</strong>
-            <span>GPT WEB IMAGE WORKSPACE</span>
+            <strong>分支画布</strong>
+            <span>BRANCHBOARD</span>
           </div>
         </div>
         <div className="topbar-actions">
@@ -837,6 +1069,16 @@ function CanvasWorkspace() {
             <kbd>V</kbd>
             粘贴图片
           </span>
+          <button
+            className="theme-toggle"
+            type="button"
+            aria-pressed={theme === "light"}
+            title={theme === "light" ? "切换到深色模式" : "切换到白色模式"}
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+          >
+            <span aria-hidden="true">{theme === "light" ? "☾" : "☀"}</span>
+            {theme === "light" ? "深色模式" : "白色模式"}
+          </button>
           <button className="toolbar-button" type="button" onClick={addPrompt}>
             <span>＋</span>
             新建提示词
@@ -846,41 +1088,99 @@ function CanvasWorkspace() {
 
       <nav className="canvas-tabs" aria-label="画布标签">
         <div className="canvas-tabs-scroll">
-          {canvasTabs.map((canvas, index) => (
-            <button
-              key={canvas.id}
-              type="button"
-              className={canvas.id === activeCanvasId ? "active" : ""}
-              aria-pressed={canvas.id === activeCanvasId}
-              disabled={canvasActionPending}
-              onClick={() => void switchCanvas(canvas.id)}
-            >
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <strong>{canvas.title}</strong>
-              {executionToneByCanvas[canvas.id] ? (
-                <i
-                  className={`tab-activity ${executionToneByCanvas[canvas.id]}`}
-                  aria-label={
-                    executionToneByCanvas[canvas.id] === "working"
-                      ? "正在运行"
-                      : executionToneByCanvas[canvas.id] === "error"
-                        ? "运行失败"
-                        : "运行完成"
-                  }
-                >
-                  {executionToneByCanvas[canvas.id] === "working"
-                    ? "●"
-                    : executionToneByCanvas[canvas.id] === "error"
-                      ? "!"
-                      : "✓"}
-                </i>
-              ) : unreadResults[canvas.id] ? (
-                <i aria-label={`${unreadResults[canvas.id]} 个新结果`}>
-                  {unreadResults[canvas.id]}
-                </i>
-              ) : null}
-            </button>
-          ))}
+          {canvasTabs.map((canvas, index) => {
+            const isActive = canvas.id === activeCanvasId;
+            return (
+              <div
+                key={canvas.id}
+                className={`canvas-tab${isActive ? " active" : ""}${
+                  editingCanvasId === canvas.id ? " editing" : ""
+                }`}
+              >
+                {editingCanvasId === canvas.id ? (
+                  <input
+                    className="canvas-tab-input"
+                    aria-label="画布名称"
+                    value={canvasTitleDraft}
+                    maxLength={40}
+                    autoFocus
+                    onChange={(event) => setCanvasTitleDraft(event.target.value)}
+                    onBlur={() => void commitRenameCanvas(canvas.id)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        void commitRenameCanvas(canvas.id);
+                      } else if (event.key === "Escape") {
+                        event.preventDefault();
+                        cancelRenameCanvas();
+                      }
+                    }}
+                  />
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      className="canvas-tab-select"
+                      aria-pressed={isActive}
+                      title="双击改名"
+                      disabled={canvasActionPending}
+                      onClick={() => void switchCanvas(canvas.id)}
+                      onDoubleClick={() => beginRenameCanvas(canvas)}
+                    >
+                      <span>{String(index + 1).padStart(2, "0")}</span>
+                      <strong>{canvas.title}</strong>
+                      {executionToneByCanvas[canvas.id] ? (
+                        <i
+                          className={`tab-activity ${executionToneByCanvas[canvas.id]}`}
+                          aria-label={
+                            executionToneByCanvas[canvas.id] === "working"
+                              ? "正在运行"
+                              : executionToneByCanvas[canvas.id] === "error"
+                                ? "运行失败"
+                                : "运行完成"
+                          }
+                        >
+                          {executionToneByCanvas[canvas.id] === "working"
+                            ? "●"
+                            : executionToneByCanvas[canvas.id] === "error"
+                              ? "!"
+                              : "✓"}
+                        </i>
+                      ) : unreadResults[canvas.id] ? (
+                        <i aria-label={`${unreadResults[canvas.id]} 个新结果`}>
+                          {unreadResults[canvas.id]}
+                        </i>
+                      ) : null}
+                    </button>
+                    <button
+                      type="button"
+                      className="canvas-tab-rename"
+                      aria-label={`重命名${canvas.title}`}
+                      title="重命名画布"
+                      disabled={canvasActionPending}
+                      onClick={() => beginRenameCanvas(canvas)}
+                    >
+                      ✎
+                    </button>
+                    <button
+                      type="button"
+                      className="canvas-tab-delete"
+                      aria-label={`删除${canvas.title}`}
+                      title={
+                        canvasTabs.length <= 1
+                          ? "至少保留一个画布"
+                          : "删除画布"
+                      }
+                      disabled={canvasActionPending || canvasTabs.length <= 1}
+                      onClick={() => void deleteCanvas(canvas)}
+                    >
+                      ×
+                    </button>
+                  </>
+                )}
+              </div>
+            );
+          })}
         </div>
         <button
           type="button"
@@ -908,7 +1208,13 @@ function CanvasWorkspace() {
         </div>
       ) : null}
 
-      <div className="flow-region">
+      <div
+        className={`flow-region${dragActive ? " drag-active" : ""}`}
+        onDragEnter={handleCanvasDragEnter}
+        onDragLeave={handleCanvasDragLeave}
+        onDragOver={handleCanvasDragOver}
+        onDrop={(event) => void handleCanvasDrop(event)}
+      >
         <ReactFlow<CanvasNode, CanvasEdge>
           nodes={nodes}
           edges={edges}
@@ -924,25 +1230,39 @@ function CanvasWorkspace() {
           maxZoom={2}
           selectionOnDrag
           nodesConnectable={false}
-          panOnScroll
+          panOnScroll={false}
+          zoomOnScroll
           deleteKeyCode={["Backspace", "Delete"]}
           proOptions={{ hideAttribution: true }}
         >
           <Background
             variant={BackgroundVariant.Dots}
             gap={22}
-            size={1}
-            color="#3b3c35"
+            size={0.75}
+            color={
+              theme === "light"
+                ? "rgba(70, 81, 92, 0.13)"
+                : "rgba(135, 148, 161, 0.12)"
+            }
           />
           <MiniMap
             nodeColor={minimapColor}
             nodeStrokeWidth={0}
-            maskColor="rgba(19, 20, 17, 0.7)"
+            maskColor={
+              theme === "light"
+                ? "rgba(225, 220, 213, 0.88)"
+                : "rgba(21, 29, 37, 0.88)"
+            }
             pannable
             zoomable
           />
           <Controls showInteractive={false} />
         </ReactFlow>
+        <div className="canvas-drop-overlay" role="status" aria-live="polite">
+          <span>＋</span>
+          <strong>松开以加入图片</strong>
+          <small>支持电脑文件和 ChatGPT 生成图</small>
+        </div>
       </div>
 
       <aside className="canvas-note">
