@@ -25,7 +25,8 @@ async function storeInboxImage(
   dataUrl,
   name,
   parentPromptId,
-  canvasId
+  canvasId,
+  position
 ) {
   if (!dataUrl.startsWith("data:image/")) {
     throw new Error("只支持图片文件");
@@ -45,7 +46,11 @@ async function storeInboxImage(
         name: name || "ChatGPT 生成结果",
         createdAt: new Date().toISOString(),
         parentPromptId: parentPromptId || activePrompt?.id,
-        canvasId: canvasId || undefined
+        canvasId: canvasId || undefined,
+        position:
+          Number.isFinite(position?.x) && Number.isFinite(position?.y)
+            ? { x: position.x, y: position.y }
+            : undefined
       });
       transaction.oncomplete = () => resolve();
       transaction.onerror = () => reject(transaction.error);
@@ -114,7 +119,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       String(message.dataUrl || ""),
       String(message.name || ""),
       String(message.parentPromptId || ""),
-      String(message.canvasId || "")
+      String(message.canvasId || ""),
+      message.position
     )
       .then(() => sendResponse({ ok: true }))
       .catch((error) =>
