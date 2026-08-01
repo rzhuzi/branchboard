@@ -12,11 +12,13 @@ import {
 } from "../shared/browser";
 import type {
   ExecutionSettings,
-  WorkspaceMode
+  WorkspaceMode,
+  WorkspaceTheme
 } from "../shared/types";
 
 type ExecutionSettingsContextValue = ExecutionSettings & {
   setMode: (mode: WorkspaceMode) => void;
+  setTheme: (theme: WorkspaceTheme) => void;
 };
 
 const ExecutionSettingsContext =
@@ -28,7 +30,8 @@ export function ExecutionSettingsProvider({
   children: ReactNode;
 }) {
   const [settings, setSettings] = useState<ExecutionSettings>({
-    mode: "manual"
+    mode: "manual",
+    theme: "dark"
   });
   const [hydrated, setHydrated] = useState(false);
 
@@ -49,10 +52,21 @@ export function ExecutionSettingsProvider({
     void setExecutionSettings(settings);
   }, [hydrated, settings]);
 
+  useEffect(() => {
+    document.documentElement.dataset.theme = settings.theme;
+    if (window.parent !== window) {
+      window.parent.postMessage(
+        { type: "branchboard:theme-change", theme: settings.theme },
+        "*"
+      );
+    }
+  }, [settings.theme]);
+
   const value = useMemo<ExecutionSettingsContextValue>(
     () => ({
       ...settings,
-      setMode: (mode) => setSettings((current) => ({ ...current, mode }))
+      setMode: (mode) => setSettings((current) => ({ ...current, mode })),
+      setTheme: (theme) => setSettings((current) => ({ ...current, theme }))
     }),
     [settings]
   );
