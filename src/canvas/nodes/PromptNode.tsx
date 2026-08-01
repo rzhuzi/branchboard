@@ -285,4 +285,3 @@ export function PromptNode(props: NodeProps<CanvasNode>) {
     </article>
   );
 }
-

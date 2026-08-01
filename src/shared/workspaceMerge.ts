@@ -123,4 +123,3 @@ export function mergeCanvasSnapshots(
     updatedAt: new Date().toISOString()
   };
 }
-

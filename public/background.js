@@ -154,4 +154,3 @@ chrome.action.onClicked.addListener(async (tab) => {
     // The action only works on supported ChatGPT pages.
   }
 });
-

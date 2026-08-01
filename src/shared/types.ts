@@ -50,4 +50,3 @@ export type ExecutionSettings = {
   mode: WorkspaceMode;
   theme: WorkspaceTheme;
 };
-

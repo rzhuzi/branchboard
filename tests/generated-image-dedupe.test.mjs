@@ -53,4 +53,3 @@ test("uses image bytes rather than URLs for the final duplicate key", async () =
   assert.equal(firstHash, duplicateHash);
   assert.notEqual(firstHash, differentHash);
 });
-

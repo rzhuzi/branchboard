@@ -44,4 +44,3 @@ for (const relativePath of requiredFiles) {
 console.log(
   `Branchboard ${manifest.version} release validated (${requiredFiles.length} required files)`
 );
-

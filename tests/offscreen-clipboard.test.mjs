@@ -262,4 +262,3 @@ test("falls back to a selected image when the image Clipboard API is blocked", a
   assert.equal(result.clipboardApiWrites, 0);
   assert.equal(result.fallbackImageSource, "data:image/png;base64,aW1hZ2U=");
 });
-

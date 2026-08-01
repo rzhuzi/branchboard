@@ -107,4 +107,3 @@ npm run release:check
 隐私处理见 [PRIVACY.md](PRIVACY.md)，版本变化见
 [CHANGELOG.md](CHANGELOG.md)，用于项目介绍和申报的结构化材料见
 [docs/PROJECT_APPLICATION.md](docs/PROJECT_APPLICATION.md)。
-

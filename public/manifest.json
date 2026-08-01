@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Branchboard — ChatGPT 生图画布",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "用无限画布整理提示词、参考图和 ChatGPT 网页端生成结果。",
   "minimum_chrome_version": "114",
   "permissions": ["storage", "clipboardWrite", "offscreen"],
@@ -45,4 +45,3 @@
     }
   ]
 }
-

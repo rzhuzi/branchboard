@@ -169,4 +169,3 @@ export async function notifyCanvasInbox(): Promise<void> {
     // The canvas may not be open yet. It consumes the inbox on next launch.
   }
 }
-

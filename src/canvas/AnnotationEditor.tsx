@@ -418,4 +418,3 @@ export function AnnotationEditor({
     </div>
   );
 }
-

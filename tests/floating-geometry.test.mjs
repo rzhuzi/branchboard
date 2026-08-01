@@ -66,4 +66,3 @@ test("converts legacy right and bottom offsets into canonical coordinates", () =
   assert.equal(geometry.width, 600);
   assert.equal(geometry.height, 450);
 });
-

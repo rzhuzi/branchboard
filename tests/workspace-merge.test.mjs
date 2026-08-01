@@ -92,4 +92,3 @@ test("accepts an unchanged remote deletion but retains a locally edited entity",
   );
   assert.equal(editedDeletion.nodes[0].data.title, "删除前仍有本地修改");
 });
-

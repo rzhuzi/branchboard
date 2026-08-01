@@ -109,4 +109,3 @@ for (const size of [16, 32, 48, 128]) {
   await writeFile(resolve(outputDirectory, `icon${size}.png`), makeIcon(size));
 }
 console.log(`Generated Branchboard icons in ${outputDirectory}`);
-

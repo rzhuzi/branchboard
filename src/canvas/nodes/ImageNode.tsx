@@ -151,4 +151,3 @@ export function ImageNode(props: NodeProps<CanvasNode>) {
     </article>
   );
 }
-
