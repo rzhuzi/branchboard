@@ -483,7 +483,897 @@
       {
         width: window.innerWidth,
         height: window.innerHeight
-      „~5∂âûÀk∫wµÁ@ÅÙ((ÄÅÖÕÂπåÅô’πç—•Ω∏ÅçÖ¡—’…ïïπï…Ö—ïë%µÖùî†(ÄÄÄÅ•µÖùî∞(ÄÄÄÅçÖπŸÖÕ%ê∞(ÄÄÄÅ¡…Ωµ¡—%ê∞(ÄÄÄÅôÖ±±âÖç≠Q•—±î∞(ÄÄÄÅÕ•ùπÖ∞∞(ÄÄÄÅçÖ¡—’…ïë•πùï…¡…•π—Ã(ÄÄ§ÅÏ(ÄÄÄÅçΩπÕ–Å•µÖùïU…∞ÄÙÅùïπï…Ö—ïë%µÖùï-ï‰°•µÖùî§Ï(ÄÄÄÅ•òÄ†Ö•µÖùïU…∞§Å—°…Ω‹Åπï‹Å……Ω»†ãûRö"Cñn˚û&ö áör'ñ>ø¢æÔñ>[ûjñr√ñv à§Ï(ÄÄÄÅçΩπÕ–Å…ïÕ¡ΩπÕîÄÙÅÖ›Ö•–Åôï—ç†°•µÖùïU…∞∞ÅÏ(ÄÄÄÄÄÅç…ïëïπ—•Ö±ÃËÄâ•πç±’ëîà∞(ÄÄÄÄÄÅÕ•ùπÖ∞(ÄÄÄÅÙ§Ï(ÄÄÄÅ•òÄ†Ö…ïÕ¡ΩπÕîπΩ¨§ÅÏ(ÄÄÄÄÄÅ—°…Ω‹Åπï‹Å……Ω»°É¢æÔñ>[ûRö"Cñn˚û&ñí«¢“îÄ†ëÌ…ïÕ¡ΩπÕîπÕ—Ö—’ÕÙ•Ä§Ï(ÄÄÄÅÙ(ÄÄÄÅçΩπÕ–Åâ±ΩàÄÙÅÖ›Ö•–Å…ïÕ¡ΩπÕîπâ±Ωà†§Ï(ÄÄÄÅçΩπÕ–Åô•πùï…¡…•π–ÄÙÅÖ›Ö•–Åâ±Ωâ•πùï…¡…•π–°â±Ωà§Ï(ÄÄÄÅ•òÄ°çÖ¡—’…ïë•πùï…¡…•π—Ãπ°ÖÃ°ô•πùï…¡…•π–§§Å…ï—’…∏ÅôÖ±ÕîÏ(ÄÄÄÅçÖ¡—’…ïë•πùï…¡…•π—ÃπÖëê°ô•πùï…¡…•π–§Ï(ÄÄÄÅÖ›Ö•–ÅÕÖŸï%µÖùï	±Ωà†(ÄÄÄÄÄÅâ±Ωà∞(ÄÄÄÄÄÅùïπï…Ö—ïë%µÖùï9Öµî°•µÖùî∞ÅôÖ±±âÖç≠Q•—±î§∞(ÄÄÄÄÄÅ¡…Ωµ¡—%ê∞(ÄÄÄÄÄÅçÖπŸÖÕ%ê(ÄÄÄÄ§Ï(ÄÄÄÅ…ï—’…∏Å—…’îÏ(ÄÅÙ((ÄÅô’πç—•Ω∏Åô•πëM—Ω¡	’——Ω∏†§ÅÏ(ÄÄÄÅçΩπÕ–ÅÕï±ïç—Ω…ÃÄÙÅl(ÄÄÄÄÄÄââ’——ΩπmëÖ—Ñµ—ïÕ—•êÙùÕ—Ω¿µâ’——Ω∏ùtà∞(ÄÄÄÄÄÄââ’——ΩπmÖ…•Ñµ±Öâï∞®ÙùM—Ω¿Åùïπï…Ö—•πúúÅ•tà∞(ÄÄÄÄÄÄââ’——ΩπmÖ…•Ñµ±Öâï∞®ÙùM—Ω¿ÅÕ—…ïÖµ•πúúÅ•tà∞(ÄÄÄÄÄÄââ’——ΩπmÖ…•Ñµ±Öâï∞®Ùüñsö∂ãûRö"@ùtà∞(ÄÄÄÄÄÄââ’——ΩπmÖ…•Ñµ±Öâï∞®Ùüñsö∂ãñn{ñí4ùtà(ÄÄÄÅtÏ(ÄÄÄÅôΩ»Ä°çΩπÕ–ÅÕï±ïç—Ω»ÅΩòÅÕï±ïç—Ω…Ã§ÅÏ(ÄÄÄÄÄÅçΩπÕ–Åâ’——Ω∏ÄÙÅëΩç’µïπ–π≈’ï…ÂMï±ïç—Ω»°Õï±ïç—Ω»§Ï(ÄÄÄÄÄÅ•òÄ°â’——Ω∏Å•πÕ—ÖπçïΩòÅ!Q51	’——Ωπ±ïµïπ–§Å…ï—’…∏Åâ’——Ω∏Ï(ÄÄÄÅÙ(ÄÄÄÅ…ï—’…∏Åπ’±∞Ï(ÄÅÙ((ÄÅô’πç—•Ω∏Å•ÕIïÕ¡ΩπÕïïπï…Ö—•πú†§ÅÏ(ÄÄÄÅ…ï—’…∏Å	ΩΩ±ïÖ∏°ô•πëM—Ω¡	’——Ω∏†§§Ï(ÄÅÙ((ÄÅô’πç—•Ω∏Åπï›ÕÕ•Õ—Öπ—Q’…πÃ°âÖÕï±•πïQ’…∏§ÅÏ(ÄÄÄÅçΩπÕ–Åµ•π•µ’µQ’…∏ÄÙÅâÖÕï±•πïQ’…∏Ä¨Ä»Ï(ÄÄÄÅ…ï—’…∏Å……Ö‰πô…Ω¥†(ÄÄÄÄÄÅëΩç’µïπ–π≈’ï…ÂMï±ïç—Ω…±∞†âÕïç—•ΩπmëÖ—Ñµ—ïÕ—•ëxÙùçΩπŸï…ÕÖ—•Ω∏µ—’…∏¥ùtà§(ÄÄÄÄ§πô•±—ï»†°Õïç—•Ω∏§ÄÙ¯ÅÏ(ÄÄÄÄÄÅçΩπÕ–ÅµÖ—ç†ÄÙÅÕïç—•Ω∏(ÄÄÄÄÄÄÄÄπùï———…•â’—î†âëÖ—Ñµ—ïÕ—•êà§(ÄÄÄÄÄÄÄÄ¸πµÖ—ç††ΩçΩπŸï…ÕÖ—•Ω∏µ—’…∏¥°qê¨§º§Ï(ÄÄÄÄÄÅçΩπÕ–Å—’…∏ÄÙÅµÖ—ç†Ä¸Å9’µâï»°µÖ—ç°l≈t§ÄËÄ¥ƒÏ(ÄÄÄÄÄÅ•òÄ°—’…∏Ä¯ÙÅµ•π•µ’µQ’…∏§Å…ï—’…∏Å—…’îÏ(ÄÄÄÄÄÅçΩπÕ–Å°ïÖë•πúÄÙÅ……Ö‰πô…Ω¥°Õïç—•Ω∏π≈’ï…ÂMï±ïç—Ω…±∞†â†–∞Å†‘∞Å†ÿà§§(ÄÄÄÄÄÄÄÄπµÖ¿†°ï±ïµïπ–§ÄÙ¯Åï±ïµïπ–π—ï·—Ωπ—ïπ–ÅÒÄàà§(ÄÄÄÄÄÄÄÄπ©Ω•∏†àÄà§Ï(ÄÄÄÄÄÅ…ï—’…∏Ä†(ÄÄÄÄÄÄÄÅ—’…∏Ä¯ÅâÖÕï±•πïQ’…∏Äòò(ÄÄÄÄÄÄÄÄΩ°Ö—AQÒÖÕÕ•Õ—Öπ—Ûñ*ßö&,Ω§π—ïÕ–°°ïÖë•πú§(ÄÄÄÄÄÄ§Ï(ÄÄÄÅÙ§Ï(ÄÅÙ((ÄÅô’πç—•Ω∏Å°ÖÕ%µÖùïïπï…Ö—•ΩπA±Öçï°Ω±ëï»°—’…πÃ§ÅÏ(ÄÄÄÅ…ï—’…∏Å—’…πÃπÕΩµî†(ÄÄÄÄÄÄ°—’…∏§ÄÙ¯(ÄÄÄÄÄÄÄÅ—’…∏π≈’ï…ÂMï±ïç—Ω»†ùmç±ÖÕÃ®Ùâ•µÖùïùï∏âtú§ÅÒ(ÄÄÄÄÄÄÄÅ……Ö‰πô…Ω¥°—’…∏π≈’ï…ÂMï±ïç—Ω…±∞†â•µúà§§πÕΩµî†(ÄÄÄÄÄÄÄÄÄÄ°•µÖùî§ÄÙ¯(ÄÄÄÄÄÄÄÄÄÄÄÅ•µÖùîÅ•πÕ—ÖπçïΩòÅ!Q51%µÖùï±ïµïπ–ÄòòÅ•Õïπï…Ö—ïë%µÖùî°•µÖùî§(ÄÄÄÄÄÄÄÄ§(ÄÄÄÄ§Ï(ÄÅÙ((ÄÅô’πç—•Ω∏ÅÖÕÕï…—·ïç’—•Ωπç—•Ÿî°ï·ïç’—•Ω∏§ÅÏ(ÄÄÄÅ•òÄ°ï·ïç’—•Ω∏πçÖπçï±±ïêÅÒÅï·ïç’—•Ω∏πçΩπ—…Ω±±ï»πÕ•ùπÖ∞πÖâΩ…—ïê§ÅÏ(ÄÄÄÄÄÅ—°…Ω‹Åπï‹Å=5·çï¡—•Ω∏†ã¢˛C¢Ü3ñﬁÀñ>[ö⁄ à∞ÄââΩ…—……Ω»à§Ï(ÄÄÄÅÙ(ÄÅÙ((ÄÅÖÕÂπåÅô’πç—•Ω∏Å›Ö•—Ω…ïπï…Ö—ïëIïÕ’±—Ã°Ï(ÄÄÄÅ…ï≈’ïÕ—%ê∞(ÄÄÄÅçÖπŸÖÕ%ê∞(ÄÄÄÅ¡…Ωµ¡—%ê∞(ÄÄÄÅ—•—±î∞(ÄÄÄÅâÖÕï±•πïQ’…∏∞(ÄÄÄÅâÖÕï±•πï-ïÂÃ∞(ÄÄÄÅï·ïç’—•Ω∏∞(ÄÄÄÅ—•µïΩ’–ÄÙÄÃÿ¡|¿¿¿(ÄÅÙ§ÅÏ(ÄÄÄÅçΩπÕ–ÅÕ—Ö…—ïë–ÄÙÅÖ—îππΩ‹†§Ï(ÄÄÄÅ±ï–Åô•…Õ—IïÖëÂ–ÄÙÄ¿Ï(ÄÄÄÅ±ï–Å—ï·—IïÕ¡ΩπÕïIïÖëÂ–ÄÙÄ¿Ï((ÄÄÄÅ…ï¡Ω…—·ïç’—•Ω∏°…ï≈’ïÕ—%ê∞Äâ›Ö•—•πúà∞Äâ°Ö—APÉö∂èñr£ûRö"Cñn˚û&à§Ï(ÄÄÄÅ›°•±îÄ°Ö—îππΩ‹†§Ä¥ÅÕ—Ö…—ïë–ÄÅ—•µïΩ’–§ÅÏ(ÄÄÄÄÄÅÖÕÕï…—·ïç’—•Ωπç—•Ÿî°ï·ïç’—•Ω∏§Ï(ÄÄÄÄÄÅçΩπÕ–ÅçÖπë•ëÖ—ïÃÄÙÅπï›ïπï…Ö—ïë%µÖùïÃ°âÖÕï±•πïQ’…∏∞ÅâÖÕï±•πï-ïÂÃ§Ï(ÄÄÄÄÄÅ•òÄ†ÖçÖπë•ëÖ—ïÃπ±ïπù—†§ÅÏ(ÄÄÄÄÄÄÄÅô•…Õ—IïÖëÂ–ÄÙÄ¿Ï(ÄÄÄÄÄÄÄÅçΩπÕ–ÅÖÕÕ•Õ—Öπ—Q’…πÃÄÙÅπï›ÕÕ•Õ—Öπ—Q’…πÃ°âÖÕï±•πïQ’…∏§Ï(ÄÄÄÄÄÄÄÅçΩπÕ–Å…ïÕ¡ΩπÕïM—•±±I’ππ•πúÄÙÅ•ÕIïÕ¡ΩπÕïïπï…Ö—•πú†§Ï(ÄÄÄÄÄÄÄÅçΩπÕ–Å•µÖùïA±Öçï°Ω±ëï»ÄÙÅ°ÖÕ%µÖùïïπï…Ö—•ΩπA±Öçï°Ω±ëï»°ÖÕÕ•Õ—Öπ—Q’…πÃ§Ï(ÄÄÄÄÄÄÄÅ•òÄ†(ÄÄÄÄÄÄÄÄÄÅÖÕÕ•Õ—Öπ—Q’…πÃπ±ïπù—†Äòò(ÄÄÄÄÄÄÄÄÄÄÖ…ïÕ¡ΩπÕïM—•±±I’ππ•πúÄòò(ÄÄÄÄÄÄÄÄÄÄÖ•µÖùïA±Öçï°Ω±ëï»(ÄÄÄÄÄÄÄÄ§ÅÏ(ÄÄÄÄÄÄÄÄÄÅ•òÄ†Ö—ï·—IïÕ¡ΩπÕïIïÖëÂ–§Å—ï·—IïÕ¡ΩπÕïIïÖëÂ–ÄÙÅÖ—îππΩ‹†§Ï(ÄÄÄÄÄÄÄÄÄÅ•òÄ°Ö—îππΩ‹†§Ä¥Å—ï·—IïÕ¡ΩπÕïIïÖëÂ–Ä¯ÙÅQaQ}IMA=9M}I}5L§ÅÏ(ÄÄÄÄÄÄÄÄÄÄÄÅ—°…Ω‹Åπï‹Å……Ω»†â°Ö—APÉ¢˛Sñn{íÍöZñ∂_æÚ3ö áör'ûRö"Cñn˚û&à§Ï(ÄÄÄÄÄÄÄÄÄÅÙ(ÄÄÄÄÄÄÄÅÙÅï±ÕîÅÏ(ÄÄÄÄÄÄÄÄÄÅ—ï·—IïÕ¡ΩπÕïIïÖëÂ–ÄÙÄ¿Ï(ÄÄÄÄÄÄÄÅÙ(ÄÄÄÄÄÄÄÅÖ›Ö•–Å›Ö•–†‰¿¿§Ï(ÄÄÄÄÄÄÄÅçΩπ—•π’îÏ(ÄÄÄÄÄÅÙ((ÄÄÄÄÄÅ—ï·—IïÕ¡ΩπÕïIïÖëÂ–ÄÙÄ¿Ï(ÄÄÄÄÄÅ•òÄ†Öô•…Õ—IïÖëÂ–§Åô•…Õ—IïÖëÂ–ÄÙÅÖ—îππΩ‹†§Ï(ÄÄÄÄÄÅ•òÄ°Ö—îππΩ‹†§Ä¥Åô•…Õ—IïÖëÂ–ÄÄƒÿ¿¿§ÅÏ(ÄÄÄÄÄÄÄÅÖ›Ö•–Å›Ö•–†‘¿¿§Ï(ÄÄÄÄÄÄÄÅçΩπ—•π’îÏ(ÄÄÄÄÄÅÙ((ÄÄÄÄÄÅ…ï¡Ω…—·ïç’—•Ω∏†(ÄÄÄÄÄÄÄÅ…ï≈’ïÕ—%ê∞(ÄÄÄÄÄÄÄÄâçÖ¡—’…•πúà∞(ÄÄÄÄÄÄÄÅÉö∂èñr£öéö~îÄëÌçÖπë•ëÖ—ïÃπ±ïπù—°ÙÉí‚´ûRö"CûÓOözqÄ(ÄÄÄÄÄÄ§Ï(ÄÄÄÄÄÅçΩπÕ–ÅçÖ¡—’…ïë•πùï…¡…•π—ÃÄÙÅπï‹ÅMï–†§Ï(ÄÄÄÄÄÅ±ï–ÅçÖ¡—’…ïëΩ’π–ÄÙÄ¿Ï(ÄÄÄÄÄÅôΩ»Ä°çΩπÕ–Å•µÖùîÅΩòÅçÖπë•ëÖ—ïÃ§ÅÏ(ÄÄÄÄÄÄÄÅÖÕÕï…—·ïç’—•Ωπç—•Ÿî°ï·ïç’—•Ω∏§Ï(ÄÄÄÄÄÄÄÅ•òÄ°Ö›Ö•–ÅçÖ¡—’…ïïπï…Ö—ïë%µÖùî†(ÄÄÄÄÄÄÄÄÄÅ•µÖùî∞(ÄÄÄÄÄÄÄÄÄÅçÖπŸÖÕ%ê∞(ÄÄÄÄÄÄÄÄÄÅ¡…Ωµ¡—%ê∞(ÄÄÄÄÄÄÄÄÄÅ—•—±î∞(ÄÄÄÄÄÄÄÄÄÅï·ïç’—•Ω∏πçΩπ—…Ω±±ï»πÕ•ùπÖ∞∞(ÄÄÄÄÄÄÄÄÄÅçÖ¡—’…ïë•πùï…¡…•π—Ã(ÄÄÄÄÄÄÄÄ§§ÅÏ(ÄÄÄÄÄÄÄÄÄÅçÖ¡—’…ïëΩ’π–Ä¨ÙÄƒÏ(ÄÄÄÄÄÄÄÅÙ(ÄÄÄÄÄÅÙ(ÄÄÄÄÄÅ…ï¡Ω…—·ïç’—•Ω∏†(ÄÄÄÄÄÄÄÅ…ï≈’ïÕ—%ê∞(ÄÄÄÄÄÄÄÄâçÖ¡—’…ïêà∞(ÄÄÄÄÄÄÄÅÄëÌçÖ¡—’…ïëΩ’π—ÙÉñÚÉñn˚û&ñﬁÀ¢´ñ*£ñn{ñ"√ûRÔñ‚Ä(ÄÄÄÄÄÄ§Ï(ÄÄÄÄÄÅÕ°Ω›QΩÖÕ–°ÄëÌçÖ¡—’…ïëΩ’π—ÙÉñÚÉñn˚û&ñﬁÀ¢´ñ*£ñ*ÉñóûRÔñ‚Ä§Ï(ÄÄÄÄÄÅ…ï—’…∏Ï(ÄÄÄÅÙ((ÄÄÄÅ—°…Ω‹Åπï‹Å……Ω»†ãû∂'ñ˙ûRö"Cñn˚û&¢⁄ö^€æÚ3¢æﬂöéö~îÅ°Ö—APÉöbøñBõûRö"Cö"Cñ*|à§Ï(ÄÅÙ((ÄÅÖÕÂπåÅô’πç—•Ω∏Åï·ïç’—ïA…Ωµ¡–°µïÕÕÖùî§ÅÏ(ÄÄÄÅçΩπÕ–Å…ï≈’ïÕ—%êÄÙÅM—…•πú°µïÕÕÖùîπ…ï≈’ïÕ—%êÅÒÄàà§Ï(ÄÄÄÅ•òÄ†Ö…ï≈’ïÕ—%ê§Å…ï—’…∏Ï(ÄÄÄÅ•òÄ°Öç—•Ÿï·ïç’—•Ω∏§ÅÏ(ÄÄÄÄÄÅ…ï¡Ω…—·ïç’—•Ω∏°…ï≈’ïÕ—%ê∞ÄâôÖ•±ïêà∞Äãñ>õí‚í‚´¢*û
-Áö∂èñr£ö&ü¢Ü0à∞ÅÏ(ÄÄÄÄÄÄÄÅ¡…Ωµ¡—%êËÅM—…•πú°µïÕÕÖùîπ¡…Ωµ¡—%êÅÒÄàà§∞(ÄÄÄÄÄÄÄÅçÖπŸÖÕ%êËÅM—…•πú°µïÕÕÖùîπçÖπŸÖÕ%êÅÒÄàà§(ÄÄÄÄÄÅÙ§Ï(ÄÄÄÄÄÅ…ï—’…∏Ï(ÄÄÄÅÙ((ÄÄÄÅçΩπÕ–Åï·ïç’—•Ω∏ÄÙÅÏ(ÄÄÄÄÄÅ…ï≈’ïÕ—%ê∞(ÄÄÄÄÄÅçÖπŸÖÕ%êËÅM—…•πú°µïÕÕÖùîπçÖπŸÖÕ%êÅÒÄàà§∞(ÄÄÄÄÄÅ¡…Ωµ¡—%êËÅM—…•πú°µïÕÕÖùîπ¡…Ωµ¡—%êÅÒÄàà§∞(ÄÄÄÄÄÅçÖπçï±±ïêËÅôÖ±Õî∞(ÄÄÄÄÄÅçΩπ—…Ω±±ï»ËÅπï‹ÅâΩ…—Ωπ—…Ω±±ï»†§(ÄÄÄÅÙÏ(ÄÄÄÅÖç—•Ÿï·ïç’—•Ω∏ÄÙÅï·ïç’—•Ω∏Ï(ÄÄÄÅ—…‰ÅÏ(ÄÄÄÄÄÅçΩπÕ–Å¡…Ωµ¡–ÄÙÅM—…•πú°µïÕÕÖùîπ¡…Ωµ¡–ÅÒÄàà§π—…•¥†§Ï(ÄÄÄÄÄÅ•òÄ†Ö¡…Ωµ¡–§Å—°…Ω‹Åπï‹Å……Ω»†ãö>CûíÎ¢æ7öbøû¶Îûjà§Ï((ÄÄÄÄÄÅ•òÄ°µïÕÕÖùîπ…ïôï…ïπçï%µÖùî¸πëÖ—ÖU…∞§ÅÏ(ÄÄÄÄÄÄÄÅ…ï¡Ω…—·ïç’—•Ω∏°…ï≈’ïÕ—%ê∞ÄâÖ——Öç°•πúà∞Äãö∂èñr£¶fñ*Éí‚+ö‚„ñ>¢ñn¯à§Ï(ÄÄÄÄÄÄÄÅÖ›Ö•–ÅÖ——Öç°Iïôï…ïπçï%µÖùî†(ÄÄÄÄÄÄÄÄÄÅµïÕÕÖùîπ…ïôï…ïπçï%µÖùî∞(ÄÄÄÄÄÄÄÄÄÅï·ïç’—•Ω∏πçΩπ—…Ω±±ï»πÕ•ùπÖ∞(ÄÄÄÄÄÄÄÄ§Ï(ÄÄÄÄÄÅÙ((ÄÄÄÄÄÅÖÕÕï…—·ïç’—•Ωπç—•Ÿî°ï·ïç’—•Ω∏§Ï(ÄÄÄÄÄÅ…ï¡Ω…—·ïç’—•Ω∏°…ï≈’ïÕ—%ê∞Äâô•±±•πúà∞Äãö∂èñr£ñÜØñîÅ°Ö—APà§Ï(ÄÄÄÄÄÅÖ›Ö•–Åô•±±Ωµ¡ΩÕï»°¡…Ωµ¡–∞Åï·ïç’—•Ω∏§Ï((ÄÄÄÄÄÅÖÕÕï…—·ïç’—•Ωπç—•Ÿî°ï·ïç’—•Ω∏§Ï(ÄÄÄÄÄÅ…ï¡Ω…—·ïç’—•Ω∏°…ï≈’ïÕ—%ê∞ÄâÕïπë•πúà∞Äãö∂èñr£ñ>G¶à§Ï(ÄÄÄÄÄÅçΩπÕ–ÅâÖÕï±•πïQ’…∏ÄÙÅ±Ö—ïÕ—ΩπŸï…ÕÖ—•ΩπQ’…∏†§Ï(ÄÄÄÄÄÅçΩπÕ–ÅâÖÕï±•πï-ïÂÃÄÙÅùïπï…Ö—ïë%µÖùï-ïÂÃ†§Ï(ÄÄÄÄÄÅçΩπÕ–ÅÕïπë	’——Ω∏ÄÙÅÖ›Ö•–Å›Ö•—Ω…Mïπë	’——Ω∏°ï·ïç’—•Ω∏§Ï(ÄÄÄÄÄÅÖÕÕï…—·ïç’—•Ωπç—•Ÿî°ï·ïç’—•Ω∏§Ï(ÄÄÄÄÄÅÕïπë	’——Ω∏πç±•ç¨†§Ï(ÄÄÄÄÄÅ…ï¡Ω…—·ïç’—•Ω∏°…ï≈’ïÕ—%ê∞ÄâÕïπ–à∞ÄãñﬁÀûÓ?ñ>G¶æÚ3û∂'ñ˙Å°Ö—APÉûRö"@à§Ï(ÄÄÄÄÄÅÖ›Ö•–Å›Ö•—Ω…ïπï…Ö—ïëIïÕ’±—Ã°Ï(ÄÄÄÄÄÄÄÅ…ï≈’ïÕ—%ê∞(ÄÄÄÄÄÄÄÅçÖπŸÖÕ%êËÅï·ïç’—•Ω∏πçÖπŸÖÕ%ê∞(ÄÄÄÄÄÄÄÅ¡…Ωµ¡—%êËÅM—…•πú°µïÕÕÖùîπ¡…Ωµ¡—%êÅÒÄàà§∞(ÄÄÄÄÄÄÄÅ—•—±îËÅM—…•πú°µïÕÕÖùîπ—•—±îÅÒÄàà§∞(ÄÄÄÄÄÄÄÅâÖÕï±•πïQ’…∏∞(ÄÄÄÄÄÄÄÅâÖÕï±•πï-ïÂÃ∞(ÄÄÄÄÄÄÄÅï·ïç’—•Ω∏(ÄÄÄÄÄÅÙ§Ï(ÄÄÄÅÙÅçÖ—ç†Ä°ï……Ω»§ÅÏ(ÄÄÄÄÄÅ•òÄ°ï……Ω»Å•πÕ—ÖπçïΩòÅ=5·çï¡—•Ω∏ÄòòÅï……Ω»ππÖµîÄÙÙÙÄââΩ…—……Ω»à§Å…ï—’…∏Ï(ÄÄÄÄÄÅçΩπÕ–ÅµïÕÕÖùïQï·–ÄÙ(ÄÄÄÄÄÄÄÅï……Ω»Å•πÕ—ÖπçïΩòÅ……Ω»Ä¸Åï……Ω»πµïÕÕÖùîÄËÅM—…•πú°ï……Ω»§Ï(ÄÄÄÄÄÅ…ï¡Ω…—·ïç’—•Ω∏°…ï≈’ïÕ—%ê∞ÄâôÖ•±ïêà∞ÅµïÕÕÖùïQï·–§Ï(ÄÄÄÄÄÅÕ°Ω›QΩÖÕ–°µïÕÕÖùïQï·–∞Å—…’î§Ï(ÄÄÄÅÙÅô•πÖ±±‰ÅÏ(ÄÄÄÄÄÅ•òÄ°Öç—•Ÿï·ïç’—•Ω∏ÄÙÙÙÅï·ïç’—•Ω∏§ÅÖç—•Ÿï·ïç’—•Ω∏ÄÙÅπ’±∞Ï(ÄÄÄÅÙ(ÄÅÙ((ÄÅô’πç—•Ω∏ÅçÖπçï±·ïç’—•Ω∏°¡…Ωµ¡—%ëÃ§ÅÏ(ÄÄÄÅ•òÄ†ÖÖç—•Ÿï·ïç’—•Ω∏ÅÒÄÖ¡…Ωµ¡—%ëÃπ•πç±’ëïÃ°Öç—•Ÿï·ïç’—•Ω∏π¡…Ωµ¡—%ê§§ÅÏ(ÄÄÄÄÄÅ…ï—’…∏Ï(ÄÄÄÅÙ(ÄÄÄÅçΩπÕ–Åï·ïç’—•Ω∏ÄÙÅÖç—•Ÿï·ïç’—•Ω∏Ï(ÄÄÄÅï·ïç’—•Ω∏πçÖπçï±±ïêÄÙÅ—…’îÏ(ÄÄÄÅï·ïç’—•Ω∏πçΩπ—…Ω±±ï»πÖâΩ…–†§Ï(ÄÄÄÅÖç—•Ÿï·ïç’—•Ω∏ÄÙÅπ’±∞Ï(ÄÄÄÅô•πëM—Ω¡	’——Ω∏†§¸πç±•ç¨†§Ï(ÄÄÄÅ…ï¡Ω…—·ïç’—•Ω∏†(ÄÄÄÄÄÅï·ïç’—•Ω∏π…ï≈’ïÕ—%ê∞(ÄÄÄÄÄÄâçÖπçï±±ïêà∞(ÄÄÄÄÄÄã¢*û
-ÁñﬁÀñ"É¶fìæÚ3¢˛C¢Ü3ñﬁÀñ>[ö⁄ à∞(ÄÄÄÄÄÅÏ(ÄÄÄÄÄÄÄÅ¡…Ωµ¡—%êËÅï·ïç’—•Ω∏π¡…Ωµ¡—%ê∞(ÄÄÄÄÄÄÄÅçÖπŸÖÕ%êËÅï·ïç’—•Ω∏πçÖπŸÖÕ%ê(ÄÄÄÄÄÅÙ(ÄÄÄÄ§Ï(ÄÄÄÅÕ°Ω›QΩÖÕ–†ãñﬁÀñ>[ö⁄#¢äØñ"É¶fì¢*û
-Áûj¢˛C¢Ü0à§Ï(ÄÅÙ((ÄÅΩ…àπÖëëŸïπ—1•Õ—ïπï»†âç±•ç¨à∞Ä†§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ°Ö—îππΩ‹†§ÄÅÕ’¡¡…ïÕÕ=…â±•ç≠Uπ—•∞§Å…ï—’…∏Ï(ÄÄÄÅÕï—=¡ï∏°—…’î§Ï(ÄÅÙ§Ï(ÄÅΩ…àπÖëëŸïπ—1•Õ—ïπï»†â¡Ω•π—ï…ëΩ›∏à∞Ä°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ°ïŸïπ–πâ’——Ω∏ÄÑÙÙÄ¿§Å…ï—’…∏Ï(ÄÄÄÅçΩπÕ–Å…ïç–ÄÙÅ°ΩÕ–πùï—	Ω’πë•πù±•ïπ—Iïç–†§Ï(ÄÄÄÅ°ΩÕ–πÕ—Â±îπ±ïô–ÄÙÅÄëÌ…ïç–π±ïô—ı¡·ÄÏ(ÄÄÄÅ°ΩÕ–πÕ—Â±îπ—Ω¿ÄÙÅÄëÌ…ïç–π—Ω¡ı¡·ÄÏ(ÄÄÄÅ°ΩÕ–πÕ—Â±îπ…•ù°–ÄÙÄâÖ’—ºàÏ(ÄÄÄÅ°ΩÕ–πÕ—Â±îπâΩ——Ω¥ÄÙÄâÖ’—ºàÏ(ÄÄÄÅΩ…â…ÖùM—Ö—îÄÙÅÏ(ÄÄÄÄÄÅ¡Ω•π—ï…%êËÅïŸïπ–π¡Ω•π—ï…%ê∞(ÄÄÄÄÄÅÕ—Ö…—`ËÅïŸïπ–πç±•ïπ—`∞(ÄÄÄÄÄÅÕ—Ö…—dËÅïŸïπ–πç±•ïπ—d∞(ÄÄÄÄÄÅΩôôÕï—`ËÅïŸïπ–πç±•ïπ—`Ä¥Å…ïç–π±ïô–∞(ÄÄÄÄÄÅΩôôÕï—dËÅïŸïπ–πç±•ïπ—dÄ¥Å…ïç–π—Ω¿∞(ÄÄÄÄÄÅµΩŸïêËÅôÖ±Õî(ÄÄÄÅÙÏ(ÄÅÙ§Ï(ÄÅ›•πëΩ‹πÖëëŸïπ—1•Õ—ïπï»†â¡Ω•π—ï…µΩŸîà∞Ä°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ†ÖΩ…â…ÖùM—Ö—îÅÒÅΩ…â…ÖùM—Ö—îπ¡Ω•π—ï…%êÄÑÙÙÅïŸïπ–π¡Ω•π—ï…%ê§Å…ï—’…∏Ï(ÄÄÄÅ•òÄ†(ÄÄÄÄÄÅ5Ö—†π°Â¡Ω–†(ÄÄÄÄÄÄÄÅïŸïπ–πç±•ïπ—`Ä¥ÅΩ…â…ÖùM—Ö—îπÕ—Ö…—`∞(ÄÄÄÄÄÄÄÅïŸïπ–πç±•ïπ—dÄ¥ÅΩ…â…ÖùM—Ö—îπÕ—Ö…—d(ÄÄÄÄÄÄ§Ä¯ÙÄ–(ÄÄÄÄ§ÅÏ(ÄÄÄÄÄÅΩ…â…ÖùM—Ö—îπµΩŸïêÄÙÅ—…’îÏ(ÄÄÄÄÄÅΩ…àπç±ÖÕÕ1•Õ–πÖëê†âë…Öùù•πúà§Ï(ÄÄÄÅÙ(ÄÄÄÅ•òÄ†ÖΩ…â…ÖùM—Ö—îπµΩŸïê§Å…ï—’…∏Ï(ÄÄÄÅçΩπÕ–ÅµÖ·1ïô–ÄÙÅ5Ö—†πµÖ‡†ÿ∞Å›•πëΩ‹π•ππï…]•ë—†Ä¥Ä‘ÿ§Ï(ÄÄÄÅçΩπÕ–ÅµÖ·QΩ¿ÄÙÅ5Ö—†πµÖ‡†ÿ∞Å›•πëΩ‹π•ππï…!ï•ù°–Ä¥Ä‘ÿ§Ï(ÄÄÄÅ°ΩÕ–πÕ—Â±îπ±ïô–ÄÙ(ÄÄÄÄÄÅÄëÌ5Ö—†πµ•∏°µÖ·1ïô–∞Å5Ö—†πµÖ‡†ÿ∞ÅïŸïπ–πç±•ïπ—`Ä¥ÅΩ…â…ÖùM—Ö—îπΩôôÕï—`§•ı¡·ÄÏ(ÄÄÄÅ°ΩÕ–πÕ—Â±îπ—Ω¿ÄÙ(ÄÄÄÄÄÅÄëÌ5Ö—†πµ•∏°µÖ·QΩ¿∞Å5Ö—†πµÖ‡†ÿ∞ÅïŸïπ–πç±•ïπ—dÄ¥ÅΩ…â…ÖùM—Ö—îπΩôôÕï—d§•ı¡·ÄÏ(ÄÅÙ∞Å—…’î§Ï(ÄÅ›•πëΩ‹πÖëëŸïπ—1•Õ—ïπï»†â¡Ω•π—ï…’¿à∞Ä°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ†ÖΩ…â…ÖùM—Ö—îÅÒÅΩ…â…ÖùM—Ö—îπ¡Ω•π—ï…%êÄÑÙÙÅïŸïπ–π¡Ω•π—ï…%ê§Å…ï—’…∏Ï(ÄÄÄÅçΩπÕ–ÅµΩŸïêÄÙÅΩ…â…ÖùM—Ö—îπµΩŸïêÏ(ÄÄÄÅΩ…â…ÖùM—Ö—îÄÙÅπ’±∞Ï(ÄÄÄÅΩ…àπç±ÖÕÕ1•Õ–π…ïµΩŸî†âë…Öùù•πúà§Ï(ÄÄÄÅ•òÄ°µΩŸïê§ÅÏ(ÄÄÄÄÄÅÕ’¡¡…ïÕÕ=…â±•ç≠Uπ—•∞ÄÙÅÖ—îππΩ‹†§Ä¨Ä»‘¿Ï(ÄÄÄÄÄÅŸΩ•êÅ¡ï…Õ•Õ—=…âAΩÕ•—•Ω∏†§Ï(ÄÄÄÅÙ(ÄÅÙ∞Å—…’î§Ï(ÄÅ›•πëΩ‹πÖëëŸïπ—1•Õ—ïπï»†â¡Ω•π—ï…çÖπçï∞à∞Ä°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ†ÖΩ…â…ÖùM—Ö—îÅÒÅΩ…â…ÖùM—Ö—îπ¡Ω•π—ï…%êÄÑÙÙÅïŸïπ–π¡Ω•π—ï…%ê§Å…ï—’…∏Ï(ÄÄÄÅΩ…â…ÖùM—Ö—îÄÙÅπ’±∞Ï(ÄÄÄÅΩ…àπç±ÖÕÕ1•Õ–π…ïµΩŸî†âë…Öùù•πúà§Ï(ÄÄÄÅÖ¡¡±Â=…âAΩÕ•—•Ω∏†§Ï(ÄÅÙ∞Å—…’î§Ï(ÄÅµ•π•µ•ÈîπÖëëŸïπ—1•Õ—ïπï»†âç±•ç¨à∞Ä†§ÄÙ¯ÅÕï—=¡ï∏°ôÖ±Õî§§Ï(ÄÅµÖ·•µ•ÈîπÖëëŸïπ—1•Õ—ïπï»†âç±•ç¨à∞Ä†§ÄÙ¯ÅÕï—5Ö·•µ•Èïê†ÖµÖ·•µ•Èïê§§Ï((ÄÅ°ïÖëï»πÖëëŸïπ—1•Õ—ïπï»†â¡Ω•π—ï…ëΩ›∏à∞Ä°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ°µÖ·•µ•ÈïêÅÒÅïŸïπ–π—Ö…ùï–πç±ΩÕïÕ–†ââ’——Ω∏à§§Å…ï—’…∏Ï(ÄÄÄÅçΩπÕ–Å…ïç–ÄÙÅ°ΩÕ–πùï—	Ω’πë•πù±•ïπ—Iïç–†§Ï(ÄÄÄÅë…ÖùM—Ö—îÄÙÅÏ(ÄÄÄÄÄÅ¡Ω•π—ï…%êËÅïŸïπ–π¡Ω•π—ï…%ê∞(ÄÄÄÄÄÅΩôôÕï—`ËÅïŸïπ–πç±•ïπ—`Ä¥Å…ïç–π±ïô–∞(ÄÄÄÄÄÅΩôôÕï—dËÅïŸïπ–πç±•ïπ—dÄ¥Å…ïç–π—Ω¿(ÄÄÄÅÙÏ(ÄÄÄÅ°ïÖëï»πÕï—AΩ•π—ï…Ö¡—’…î°ïŸïπ–π¡Ω•π—ï…%ê§Ï(ÄÅÙ§Ï(ÄÅ°ïÖëï»πÖëëŸïπ—1•Õ—ïπï»†â¡Ω•π—ï…µΩŸîà∞Ä°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ†Öë…ÖùM—Ö—îÅÒÅë…ÖùM—Ö—îπ¡Ω•π—ï…%êÄÑÙÙÅïŸïπ–π¡Ω•π—ï…%ê§Å…ï—’…∏Ï(ÄÄÄÅçΩπÕ–ÅµÖ·1ïô–ÄÙÅ5Ö—†πµÖ‡†ÿ∞Å›•πëΩ‹π•ππï…]•ë—†Ä¥Å°ΩÕ–πΩôôÕï—]•ë—†Ä¥Äÿ§Ï(ÄÄÄÅçΩπÕ–ÅµÖ·QΩ¿ÄÙÅ5Ö—†πµÖ‡†ÿ∞Å›•πëΩ‹π•ππï…!ï•ù°–Ä¥Å°ΩÕ–πΩôôÕï—!ï•ù°–Ä¥Äÿ§Ï(ÄÄÄÅ°ΩÕ–πÕ—Â±îπ±ïô–ÄÙÅÄëÌ5Ö—†πµ•∏°µÖ·1ïô–∞Å5Ö—†πµÖ‡†ÿ∞ÅïŸïπ–πç±•ïπ—`Ä¥Åë…ÖùM—Ö—îπΩôôÕï—`§•ı¡·ÄÏ(ÄÄÄÅ°ΩÕ–πÕ—Â±îπ—Ω¿ÄÙÅÄëÌ5Ö—†πµ•∏°µÖ·QΩ¿∞Å5Ö—†πµÖ‡†ÿ∞ÅïŸïπ–πç±•ïπ—dÄ¥Åë…ÖùM—Ö—îπΩôôÕï—d§•ı¡·ÄÏ(ÄÄÄÅ°ΩÕ–πÕ—Â±îπ…•ù°–ÄÙÄâÖ’—ºàÏ(ÄÄÄÅ°ΩÕ–πÕ—Â±îπâΩ——Ω¥ÄÙÄâÖ’—ºàÏ(ÄÅÙ§Ï(ÄÅ°ïÖëï»πÖëëŸïπ—1•Õ—ïπï»†â¡Ω•π—ï…’¿à∞Ä°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ°ë…ÖùM—Ö—î¸π¡Ω•π—ï…%êÄÙÙÙÅïŸïπ–π¡Ω•π—ï…%ê§ÅÏ(ÄÄÄÄÄÅ°ïÖëï»π…ï±ïÖÕïAΩ•π—ï…Ö¡—’…î°ïŸïπ–π¡Ω•π—ï…%ê§Ï(ÄÄÄÄÄÅë…ÖùM—Ö—îÄÙÅπ’±∞Ï(ÄÄÄÄÄÅŸΩ•êÅ¡ï…Õ•Õ—ïΩµï—…‰†§Ï(ÄÄÄÅÙ(ÄÅÙ§Ï((ÄÅ…ïÕ•Èï!Öπë±îπÖëëŸïπ—1•Õ—ïπï»†â¡Ω•π—ï…ëΩ›∏à∞Ä°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ°µÖ·•µ•Èïê§Å…ï—’…∏Ï(ÄÄÄÅïŸïπ–π¡…ïŸïπ—ïôÖ’±–†§Ï(ÄÄÄÅïŸïπ–πÕ—Ω¡A…Ω¡ÖùÖ—•Ω∏†§Ï(ÄÄÄÅçΩπÕ–Å°ΩÕ—Iïç–ÄÙÅ°ΩÕ–πùï—	Ω’πë•πù±•ïπ—Iïç–†§Ï(ÄÄÄÅçΩπÕ–Åô±ΩÖ—•πùIïç–ÄÙÅô±ΩÖ—•πúπùï—	Ω’πë•πù±•ïπ—Iïç–†§Ï(ÄÄÄÅ°ΩÕ–πÕ—Â±îπ±ïô–ÄÙÅÄëÌ°ΩÕ—Iïç–π±ïô—ı¡·ÄÏ(ÄÄÄÅ°ΩÕ–πÕ—Â±îπ—Ω¿ÄÙÅÄëÌ°ΩÕ—Iïç–π—Ω¡ı¡·ÄÏ(ÄÄÄÅ°ΩÕ–πÕ—Â±îπ…•ù°–ÄÙÄâÖ’—ºàÏ(ÄÄÄÅ°ΩÕ–πÕ—Â±îπâΩ——Ω¥ÄÙÄâÖ’—ºàÏ(ÄÄÄÅ…ïÕ•ÈïM—Ö—îÄÙÅÏ(ÄÄÄÄÄÅ¡Ω•π—ï…%êËÅïŸïπ–π¡Ω•π—ï…%ê∞(ÄÄÄÄÄÅÕ—Ö…—`ËÅïŸïπ–πç±•ïπ—`∞(ÄÄÄÄÄÅÕ—Ö…—dËÅïŸïπ–πç±•ïπ—d∞(ÄÄÄÄÄÅ›•ë—†ËÅô±ΩÖ—•πùIïç–π›•ë—†∞(ÄÄÄÄÄÅ°ï•ù°–ËÅô±ΩÖ—•πùIïç–π°ï•ù°–∞(ÄÄÄÄÄÅ±ïô–ËÅ°ΩÕ—Iïç–π±ïô–∞(ÄÄÄÄÄÅ—Ω¿ËÅ°ΩÕ—Iïç–π—Ω¿(ÄÄÄÅÙÏ(ÄÄÄÅ…ïÕ•Èï!Öπë±îπÕï—AΩ•π—ï…Ö¡—’…î°ïŸïπ–π¡Ω•π—ï…%ê§Ï(ÄÅÙ§Ï(ÄÅ…ïÕ•Èï!Öπë±îπÖëëŸïπ—1•Õ—ïπï»†â¡Ω•π—ï…µΩŸîà∞Ä°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ†Ö…ïÕ•ÈïM—Ö—îÅÒÅ…ïÕ•ÈïM—Ö—îπ¡Ω•π—ï…%êÄÑÙÙÅïŸïπ–π¡Ω•π—ï…%ê§Å…ï—’…∏Ï(ÄÄÄÅçΩπÕ–Åµ•π]•ë—†ÄÙÅ5Ö—†πµ•∏†‘»¿∞Å›•πëΩ‹π•ππï…]•ë—†Ä¥Äƒÿ§Ï(ÄÄÄÅçΩπÕ–Åµ•π!ï•ù°–ÄÙÅ5Ö—†πµ•∏†–»¿∞Å›•πëΩ‹π•ππï…!ï•ù°–Ä¥Äƒÿ§Ï(ÄÄÄÅçΩπÕ–ÅµÖ·]•ë—†ÄÙÅ5Ö—†πµÖ‡°µ•π]•ë—†∞Å›•πëΩ‹π•ππï…]•ë—†Ä¥Å…ïÕ•ÈïM—Ö—îπ±ïô–Ä¥Ä‡§Ï(ÄÄÄÅçΩπÕ–ÅµÖ·!ï•ù°–ÄÙÅ5Ö—†πµÖ‡°µ•π!ï•ù°–∞Å›•πëΩ‹π•ππï…!ï•ù°–Ä¥Å…ïÕ•ÈïM—Ö—îπ—Ω¿Ä¥Ä‡§Ï(ÄÄÄÅçΩπÕ–Å›•ë—†ÄÙÅ5Ö—†πµ•∏†(ÄÄÄÄÄÅµÖ·]•ë—†∞(ÄÄÄÄÄÅ5Ö—†πµÖ‡°µ•π]•ë—†∞Å…ïÕ•ÈïM—Ö—îπ›•ë—†Ä¨ÅïŸïπ–πç±•ïπ—`Ä¥Å…ïÕ•ÈïM—Ö—îπÕ—Ö…—`§(ÄÄÄÄ§Ï(ÄÄÄÅçΩπÕ–Å°ï•ù°–ÄÙÅ5Ö—†πµ•∏†(ÄÄÄÄÄÅµÖ·!ï•ù°–∞(ÄÄÄÄÄÅ5Ö—†πµÖ‡°µ•π!ï•ù°–∞Å…ïÕ•ÈïM—Ö—îπ°ï•ù°–Ä¨ÅïŸïπ–πç±•ïπ—dÄ¥Å…ïÕ•ÈïM—Ö—îπÕ—Ö…—d§(ÄÄÄÄ§Ï(ÄÄÄÅô±ΩÖ—•πúπÕ—Â±îπ›•ë—†ÄÙÅÄëÌ›•ë—°ı¡·ÄÏ(ÄÄÄÅô±ΩÖ—•πúπÕ—Â±îπ°ï•ù°–ÄÙÅÄëÌ°ï•ù°—ı¡·ÄÏ(ÄÅÙ§Ï(ÄÅ…ïÕ•Èï!Öπë±îπÖëëŸïπ—1•Õ—ïπï»†â¡Ω•π—ï…’¿à∞Ä°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ°…ïÕ•ÈïM—Ö—î¸π¡Ω•π—ï…%êÄÙÙÙÅïŸïπ–π¡Ω•π—ï…%ê§ÅÏ(ÄÄÄÄÄÅ…ïÕ•Èï!Öπë±îπ…ï±ïÖÕïAΩ•π—ï…Ö¡—’…î°ïŸïπ–π¡Ω•π—ï…%ê§Ï(ÄÄÄÄÄÅ…ïÕ•ÈïM—Ö—îÄÙÅπ’±∞Ï(ÄÄÄÄÄÅŸΩ•êÅ¡ï…Õ•Õ—ïΩµï—…‰†§Ï(ÄÄÄÅÙ(ÄÅÙ§Ï((ÄÅëΩç’µïπ–πÖëëŸïπ—1•Õ—ïπï»†(ÄÄÄÄâë…Öùïπ—ï»à∞(ÄÄÄÄ°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÄÄÅ•òÄ†ÖΩ¡ï∏§Å…ï—’…∏Ï(ÄÄÄÄÄÅë…Öùï¡—†Ä¨ÙÄƒÏ(ÄÄÄÄÄÅ•òÄ°ïŸïπ–πëÖ—ÖQ…ÖπÕôï»¸π—Â¡ïÃ¸π±ïπù—†§ÅÏ(ÄÄÄÄÄÄÄÅë…Ω¡Ö—ç°ï»πç±ÖÕÕ1•Õ–πÖëê†âÖç—•Ÿîà§Ï(ÄÄÄÄÄÅÙ(ÄÄÄÅÙ∞(ÄÄÄÅ—…’î(ÄÄ§Ï(ÄÅëΩç’µïπ–πÖëëŸïπ—1•Õ—ïπï»†(ÄÄÄÄâë…Öù±ïÖŸîà∞(ÄÄÄÄ†§ÄÙ¯ÅÏ(ÄÄÄÄÄÅ•òÄ†ÖΩ¡ï∏§Å…ï—’…∏Ï(ÄÄÄÄÄÅë…Öùï¡—†ÄÙÅ5Ö—†πµÖ‡†¿∞Åë…Öùï¡—†Ä¥Äƒ§Ï(ÄÄÄÄÄÅ•òÄ°ë…Öùï¡—†ÄÙÙÙÄ¿§Åë…Ω¡Ö—ç°ï»πç±ÖÕÕ1•Õ–π…ïµΩŸî†âÖç—•Ÿîà§Ï(ÄÄÄÅÙ∞(ÄÄÄÅ—…’î(ÄÄ§Ï(ÄÅë…Ω¡Ö—ç°ï»πÖëëŸïπ—1•Õ—ïπï»†âë…ÖùΩŸï»à∞Ä°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÅïŸïπ–π¡…ïŸïπ—ïôÖ’±–†§Ï(ÄÄÄÅ•òÄ°ïŸïπ–πëÖ—ÖQ…ÖπÕôï»§ÅïŸïπ–πëÖ—ÖQ…ÖπÕôï»πë…Ω¡ôôïç–ÄÙÄâçΩ¡‰àÏ(ÄÅÙ§Ï(ÄÅë…Ω¡Ö—ç°ï»πÖëëŸïπ—1•Õ—ïπï»†âë…Ω¿à∞Ä°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÅïŸïπ–π¡…ïŸïπ—ïôÖ’±–†§Ï(ÄÄÄÅïŸïπ–πÕ—Ω¡A…Ω¡ÖùÖ—•Ω∏†§Ï(ÄÄÄÅë…Öùï¡—†ÄÙÄ¿Ï(ÄÄÄÅë…Ω¡Ö—ç°ï»πç±ÖÕÕ1•Õ–π…ïµΩŸî†âÖç—•Ÿîà§Ï(ÄÄÄÅ•òÄ†ÖïŸïπ–πëÖ—ÖQ…ÖπÕôï»§Å…ï—’…∏Ï(ÄÄÄÅŸΩ•êÅ…ïçï•Ÿï…Ω¿°ïŸïπ–πëÖ—ÖQ…ÖπÕôï»§πçÖ—ç††°ï……Ω»§ÄÙ¯(ÄÄÄÄÄÅÕ°Ω›QΩÖÕ–°ï……Ω»Å•πÕ—ÖπçïΩòÅ……Ω»Ä¸Åï……Ω»πµïÕÕÖùîÄËÅM—…•πú°ï……Ω»§∞Å—…’î§(ÄÄÄÄ§Ï(ÄÅÙ§Ï((ÄÅ›•πëΩ‹πÖëëŸïπ—1•Õ—ïπï»†âµïÕÕÖùîà∞Ä°ïŸïπ–§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ°ïŸïπ–πÕΩ’…çîÄÑÙÙÅô…ÖµîπçΩπ—ïπ—]•πëΩ‹§Å…ï—’…∏Ï(ÄÄÄÅ•òÄ°ïŸïπ–πëÖ—Ñ¸π—Â¡îÄÙÙÙÄââ…Öπç°âΩÖ…êÈ—°ïµîµç°Öπùîà§ÅÏ(ÄÄÄÄÄÅ°ΩÕ–πç±ÖÕÕ1•Õ–π—Ωùù±î†â—°ïµîµ±•ù°–à∞ÅïŸïπ–πëÖ—Ñπ—°ïµîÄÙÙÙÄâ±•ù°–à§Ï(ÄÄÄÄÄÅ…ï—’…∏Ï(ÄÄÄÅÙ(ÄÄÄÅ•òÄ°ïŸïπ–πëÖ—Ñ¸π—Â¡îÄÙÙÙÄââ…Öπç°âΩÖ…êÈµ•π•µ•Èîµô±ΩÖ—•πúµçÖπŸÖÃà§ÅÏ(ÄÄÄÄÄÅÕï—=¡ï∏°ôÖ±Õî§Ï(ÄÄÄÄÄÅ…ï—’…∏Ï(ÄÄÄÅÙ(ÄÄÄÅ•òÄ°ïŸïπ–πëÖ—Ñ¸π—Â¡îÄÙÙÙÄââ…Öπç°âΩÖ…êÈï·ïç’—îµ¡…Ωµ¡–à§ÅÏ(ÄÄÄÄÄÅŸΩ•êÅï·ïç’—ïA…Ωµ¡–°ïŸïπ–πëÖ—Ñ§Ï(ÄÄÄÄÄÅ…ï—’…∏Ï(ÄÄÄÅÙ(ÄÄÄÅ•òÄ°ïŸïπ–πëÖ—Ñ¸π—Â¡îÄÙÙÙÄââ…Öπç°âΩÖ…êÈ•µ¡Ω…–µë…Ω¡¡ïêµ•µÖùîà§ÅÏ(ÄÄÄÄÄÅŸΩ•êÅ…ïçï•Ÿï…Ω¡¡ïë%µÖùïU…∞°ïŸïπ–πëÖ—Ñ§πçÖ—ç††°ï……Ω»§ÄÙ¯(ÄÄÄÄÄÄÄÅÕ°Ω›QΩÖÕ–°ï……Ω»Å•πÕ—ÖπçïΩòÅ……Ω»Ä¸Åï……Ω»πµïÕÕÖùîÄËÅM—…•πú°ï……Ω»§∞Å—…’î§(ÄÄÄÄÄÄ§Ï(ÄÄÄÄÄÅ…ï—’…∏Ï(ÄÄÄÅÙ(ÄÄÄÅ•òÄ°ïŸïπ–πëÖ—Ñ¸π—Â¡îÄÙÙÙÄââ…Öπç°âΩÖ…êÈçÖπçï∞µï·ïç’—•Ω∏à§ÅÏ(ÄÄÄÄÄÅçÖπçï±·ïç’—•Ω∏†(ÄÄÄÄÄÄÄÅ……Ö‰π•Õ……Ö‰°ïŸïπ–πëÖ—Ñπ¡…Ωµ¡—%ëÃ§(ÄÄÄÄÄÄÄÄÄÄ¸ÅïŸïπ–πëÖ—Ñπ¡…Ωµ¡—%ëÃπµÖ¿°M—…•πú§(ÄÄÄÄÄÄÄÄÄÄËÅmt(ÄÄÄÄÄÄ§Ï(ÄÄÄÅÙ(ÄÅÙ§Ï((ÄÅç°…Ωµîπ…’π—•µîπΩπ5ïÕÕÖùîπÖëë1•Õ—ïπï»†°µïÕÕÖùî§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ°µïÕÕÖùî¸π—Â¡îÄÙÙÙÄââ…Öπç°âΩÖ…êÈ—Ωùù±îµô±ΩÖ—•πúµçÖπŸÖÃà§ÅÏ(ÄÄÄÄÄÅÕï—=¡ï∏†ÖΩ¡ï∏§Ï(ÄÄÄÅÙ(ÄÅÙ§Ï((ÄÅ±ï–ÅŸ•ï›¡Ω…—IïÕ•ÈïQ•µï»ÄÙÅπ’±∞Ï(ÄÅ›•πëΩ‹πÖëëŸïπ—1•Õ—ïπï»†â…ïÕ•Èîà∞Ä†§ÄÙ¯ÅÏ(ÄÄÄÅ•òÄ°µÖ·•µ•Èïê§Å…ï—’…∏Ï(ÄÄÄÅ•òÄ°Ÿ•ï›¡Ω…—IïÕ•ÈïQ•µï»§Åç±ïÖ…Q•µïΩ’–°Ÿ•ï›¡Ω…—IïÕ•ÈïQ•µï»§Ï(ÄÄÄÅŸ•ï›¡Ω…—IïÕ•ÈïQ•µï»ÄÙÅ›•πëΩ‹πÕï—Q•µïΩ’–††§ÄÙ¯ÅÏ(ÄÄÄÄÄÅ•òÄ°Ω¡ï∏§ÅÏ(ÄÄÄÄÄÄÄÅô±ΩÖ—•πùïΩµï—…‰ÄÙÅ…ïÖë±ΩÖ—•πùïΩµï—…‰†§Ï(ÄÄÄÄÄÄÄÅÖ¡¡±Â±ΩÖ—•πùïΩµï—…‰†§Ï(ÄÄÄÄÄÄÄÅŸΩ•êÅ¡ï…Õ•Õ—ïΩµï—…‰†§Ï(ÄÄÄÄÄÅÙÅï±ÕîÅÏ(ÄÄÄÄÄÄÄÅÖ¡¡±Â=…âAΩÕ•—•Ω∏†§Ï(ÄÄÄÄÄÄÄÅŸΩ•êÅ¡ï…Õ•Õ—=…âAΩÕ•—•Ω∏†§Ï(ÄÄÄÄÄÅÙ(ÄÄÄÅÙ∞Ä‡¿§Ï(ÄÅÙ§Ï((ÄÅŸΩ•êÅ…ïÕ—Ω…ïïΩµï—…‰†§Ï)Ù§†§Ï(
+      },
+      {
+        minWidth: 520,
+        minHeight: 420,
+        defaultWidth: 860,
+        defaultHeight: 690,
+        margin: 8
+      }
+    );
+    floatingGeometry = {
+      left: `${Math.round(normalized.left)}px`,
+      top: `${Math.round(normalized.top)}px`,
+      width: `${Math.round(normalized.width)}px`,
+      height: `${Math.round(normalized.height)}px`
+    };
+    host.style.left = floatingGeometry.left;
+    host.style.top = floatingGeometry.top;
+    host.style.right = "auto";
+    host.style.bottom = "auto";
+    floating.style.width = floatingGeometry.width;
+    floating.style.height = floatingGeometry.height;
+  }
+
+  function applyOrbPosition() {
+    const left = Number(orbPosition?.left);
+    const top = Number(orbPosition?.top);
+    host.style.left = "";
+    host.style.top = "";
+    host.style.right = "18px";
+    host.style.bottom = "18px";
+    if (!Number.isFinite(left) || !Number.isFinite(top)) return;
+    const maxLeft = Math.max(6, window.innerWidth - 56);
+    const maxTop = Math.max(6, window.innerHeight - 56);
+    host.style.left = `${Math.min(maxLeft, Math.max(6, left))}px`;
+    host.style.top = `${Math.min(maxTop, Math.max(6, top))}px`;
+    host.style.right = "auto";
+    host.style.bottom = "auto";
+  }
+
+  async function persistOrbPosition() {
+    const rect = host.getBoundingClientRect();
+    orbPosition = {
+      left: Math.round(rect.left),
+      top: Math.round(rect.top)
+    };
+    await chrome.storage.local.set({
+      floatingOrbPosition: orbPosition
+    });
+  }
+
+  async function restoreGeometry() {
+    const restored = await chrome.storage.local.get([
+      "floatingCanvasGeometry",
+      "floatingOrbPosition",
+      "branchboardExecutionSettings"
+    ]);
+    floatingGeometry = restored.floatingCanvasGeometry || null;
+    orbPosition = restored.floatingOrbPosition || null;
+    host.classList.toggle(
+      "theme-light",
+      restored.branchboardExecutionSettings?.theme === "light"
+    );
+    if (open) {
+      applyFloatingGeometry();
+    } else {
+      applyOrbPosition();
+    }
+  }
+
+  function fileToDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function saveImageBlob(
+    blob,
+    name,
+    parentPromptId,
+    canvasId,
+    position
+  ) {
+    if (!blob.type.startsWith("image/")) {
+      throw new Error("ÊãñÂÖ•ÁöÑÂÜÖÂÆπ‰∏çÊòØÂõæÁâá");
+    }
+    const dataUrl = await fileToDataUrl(blob);
+    const response = await chrome.runtime.sendMessage({
+      type: "branchboard:store-image",
+      dataUrl,
+      name,
+      parentPromptId,
+      canvasId,
+      position
+    });
+    if (!response?.ok) throw new Error(response?.error || "‰øùÂ≠òÂõæÁâáÂ§±Ë¥•");
+    showToast("ÂõæÁâáÂ∑≤Âä†ÂÖ•ÁîªÂ∏É");
+  }
+
+  function imageUrlFromTransfer(transfer) {
+    const html = transfer.getData("text/html");
+    if (html) {
+      const parsed = new DOMParser().parseFromString(html, "text/html");
+      const source = parsed.querySelector("img")?.src || "";
+      if (source) return source;
+    }
+
+    const uri = transfer
+      .getData("text/uri-list")
+      .split(/\r?\n/)
+      .find((line) => line && !line.startsWith("#"));
+    if (uri) return uri;
+    return "";
+  }
+
+  async function receiveDrop(transfer) {
+    const files = Array.from(transfer.files).filter((file) =>
+      file.type.startsWith("image/")
+    );
+    if (files[0]) {
+      await saveImageBlob(files[0], files[0].name || "ChatGPT ÁîüÊàêÁªìÊûú");
+      return;
+    }
+
+    const imageUrl = imageUrlFromTransfer(transfer);
+    if (!imageUrl) throw new Error("ÊãñÊãΩÊ≤°ÊúâÊê∫Â∏¶ÂõæÁâáÔºåËØ∑ÊîπÁî®Â§çÂà∂Á≤òË¥¥");
+    const response = await fetch(imageUrl, { credentials: "include" });
+    if (!response.ok) throw new Error("ÂõæÁâáÊãñÂèñÂèóÈôêÔºåËØ∑ÊîπÁî®Â§çÂà∂Á≤òË¥¥");
+    const blob = await response.blob();
+    await saveImageBlob(blob, "ChatGPT ÁîüÊàêÁªìÊûú");
+  }
+
+  async function receiveDroppedImageUrl(message) {
+    const imageUrl = String(message.imageUrl || "");
+    if (!imageUrl) throw new Error("ÊãñÊãΩÊ≤°ÊúâÊê∫Â∏¶ÂõæÁâáÂú∞ÂùÄ");
+    const response = await fetch(imageUrl, { credentials: "include" });
+    if (!response.ok) throw new Error("ÂõæÁâáÊãñÂèñÂèóÈôêÔºåËØ∑ÊîπÁî®Â§çÂà∂Á≤òË¥¥");
+    const blob = await response.blob();
+    await saveImageBlob(
+      blob,
+      "ÊãñÂÖ•ÂõæÁâá",
+      String(message.parentPromptId || ""),
+      String(message.canvasId || ""),
+      message.position
+    );
+  }
+
+  function wait(milliseconds) {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  }
+
+  function reportExecution(requestId, stage, message, details = {}) {
+    const matchingExecution =
+      activeExecution?.requestId === requestId ? activeExecution : null;
+    frame.contentWindow?.postMessage(
+      {
+        type: "branchboard:execution-progress",
+        requestId,
+        promptId: details.promptId || matchingExecution?.promptId || "",
+        canvasId: details.canvasId || matchingExecution?.canvasId || "",
+        stage,
+        message
+      },
+      "*"
+    );
+  }
+
+  function findComposer() {
+    const selectors = [
+      "#prompt-textarea",
+      "textarea[data-testid='prompt-textarea']",
+      "form textarea",
+      "main [contenteditable='true'][data-virtualkeyboard='true']",
+      "main form [contenteditable='true']"
+    ];
+    for (const selector of selectors) {
+      const element = document.querySelector(selector);
+      if (
+        element instanceof HTMLTextAreaElement ||
+        (element instanceof HTMLElement && element.isContentEditable)
+      ) {
+        return element;
+      }
+    }
+    return null;
+  }
+
+  async function waitForComposer(execution, timeout = 10_000) {
+    const startedAt = Date.now();
+    while (Date.now() - startedAt < timeout) {
+      if (execution) assertExecutionActive(execution);
+      const composer = findComposer();
+      if (composer) return composer;
+      await wait(180);
+    }
+    throw new Error("Ê≤°ÊúâÊâæÂà∞ ChatGPT ËæìÂÖ•Ê°ÜÔºåËØ∑Âà∑Êñ∞È°µÈù¢ÂêéÈáçËØï");
+  }
+
+  function setTextareaValue(textarea, text) {
+    const setter = Object.getOwnPropertyDescriptor(
+      HTMLTextAreaElement.prototype,
+      "value"
+    )?.set;
+    if (setter) setter.call(textarea, text);
+    else textarea.value = text;
+    textarea.dispatchEvent(
+      new InputEvent("input", {
+        bubbles: true,
+        inputType: "insertText",
+        data: text
+      })
+    );
+    textarea.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  function setContentEditableValue(element, text) {
+    element.focus();
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+
+    const inserted = document.execCommand("insertText", false, text);
+    if (!inserted) {
+      element.textContent = text;
+      element.dispatchEvent(
+        new InputEvent("input", {
+          bubbles: true,
+          inputType: "insertText",
+          data: text
+        })
+      );
+    }
+  }
+
+  async function fillComposer(prompt, execution) {
+    const composer = await waitForComposer(execution);
+    if (execution) assertExecutionActive(execution);
+    composer.focus();
+    if (composer instanceof HTMLTextAreaElement) {
+      setTextareaValue(composer, prompt);
+    } else {
+      setContentEditableValue(composer, prompt);
+    }
+    await wait(180);
+  }
+
+  function findFileInput() {
+    const composerRoot = findComposer()?.closest("form");
+    const inputs = Array.from(
+      (composerRoot || document).querySelectorAll("input[type='file']")
+    );
+    return inputs.find((input) => {
+      if (!(input instanceof HTMLInputElement)) return false;
+      const accept = input.accept.toLowerCase();
+      return (
+        !accept ||
+        accept.includes("image") ||
+        /\.(?:png|jpe?g|webp|gif)/.test(accept)
+      );
+    });
+  }
+
+  async function waitForFileInput(timeout = 2400) {
+    const startedAt = Date.now();
+    while (Date.now() - startedAt < timeout) {
+      const input = findFileInput();
+      if (input) return input;
+      await wait(120);
+    }
+    return null;
+  }
+
+  function findAttachButton() {
+    const selectors = [
+      "button[data-testid='composer-plus-btn']",
+      "button[aria-label*='Attach' i]",
+      "button[aria-label*='Upload' i]",
+      "button[aria-label*='Ê∑ªÂä†']",
+      "button[aria-label*='‰∏ä‰º†']"
+    ];
+    for (const selector of selectors) {
+      const button = document.querySelector(selector);
+      if (button instanceof HTMLButtonElement) return button;
+    }
+    return null;
+  }
+
+  async function attachReferenceImage(referenceImage, signal) {
+    let input = findFileInput();
+    if (!input) {
+      findAttachButton()?.click();
+      input = await waitForFileInput();
+    }
+    if (!input) {
+      throw new Error("Êâæ‰∏çÂà∞ÂèÇËÄÉÂõæ‰∏ä‰º†ÂÖ•Âè£ÔºåËØ∑ÊîπÁî®Ê†áÊ≥®Ê®°ÂºèÊ∑ªÂä†ÂõæÁâá");
+    }
+
+    const blob = await fetch(referenceImage.dataUrl, { signal }).then((response) =>
+      response.blob()
+    );
+    const extension = blob.type.split("/")[1]?.replace("jpeg", "jpg") || "png";
+    const file = new File(
+      [blob],
+      referenceImage.name || `branchboard-reference.${extension}`,
+      { type: blob.type || "image/png" }
+    );
+    const transfer = new DataTransfer();
+    transfer.items.add(file);
+    const filesSetter = Object.getOwnPropertyDescriptor(
+      HTMLInputElement.prototype,
+      "files"
+    )?.set;
+    if (filesSetter) filesSetter.call(input, transfer.files);
+    else input.files = transfer.files;
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+    await wait(850);
+  }
+
+  function findSendButton() {
+    const scope = findComposer()?.closest("form") || document;
+    const selectors = [
+      "button[data-testid='send-button']",
+      "button[aria-label*='Send' i]",
+      "button[aria-label*='ÂèëÈÄÅ']"
+    ];
+    for (const selector of selectors) {
+      const button = scope.querySelector(selector);
+      if (
+        button instanceof HTMLButtonElement &&
+        !button.disabled &&
+        !button.hidden &&
+        button.getClientRects().length
+      ) {
+        return button;
+      }
+    }
+    return null;
+  }
+
+  async function waitForSendButton(execution, timeout = 10_000) {
+    const startedAt = Date.now();
+    while (Date.now() - startedAt < timeout) {
+      assertExecutionActive(execution);
+      const button = findSendButton();
+      if (button) return button;
+      await wait(180);
+    }
+    throw new Error("ÊèêÁ§∫ËØçÂ∑≤Â°´ÂÖ•Ôºå‰ΩÜÂèëÈÄÅÊåâÈíÆÊöÇÊó∂‰∏çÂèØÁî®");
+  }
+
+  function conversationTurnNumber(element) {
+    const section = element.closest("section[data-testid^='conversation-turn-']");
+    const match = section?.getAttribute("data-testid")?.match(/conversation-turn-(\d+)/);
+    return match ? Number(match[1]) : -1;
+  }
+
+  function latestConversationTurn() {
+    return Math.max(
+      -1,
+      ...Array.from(
+        document.querySelectorAll("section[data-testid^='conversation-turn-']")
+      ).map((section) => {
+        const match = section
+          .getAttribute("data-testid")
+          ?.match(/conversation-turn-(\d+)/);
+        return match ? Number(match[1]) : -1;
+      })
+    );
+  }
+
+  function isGeneratedImage(image) {
+    const alt = image.getAttribute("alt") || "";
+    return (
+      /^(?:Â∑≤ÁîüÊàêÂõæÁâá|generated image)\s*[:Ôºö]/i.test(alt) ||
+      Boolean(image.closest('[class*="imagegen-image"]'))
+    );
+  }
+
+  function generatedImageKey(image) {
+    return image.currentSrc || image.src || "";
+  }
+
+  function generatedImageKeys() {
+    return new Set(
+      Array.from(document.querySelectorAll("img"))
+        .filter((image) => image instanceof HTMLImageElement && isGeneratedImage(image))
+        .map(generatedImageKey)
+        .filter(Boolean)
+    );
+  }
+
+  function newGeneratedImages(baselineTurn, baselineKeys) {
+    const candidates = Array.from(document.querySelectorAll("img")).filter(
+      (image) => {
+        if (!(image instanceof HTMLImageElement)) return false;
+        if (!isGeneratedImage(image)) return false;
+        const key = generatedImageKey(image);
+        if (!key || baselineKeys.has(key)) return false;
+        const turn = conversationTurnNumber(image);
+        if (baselineTurn >= 0 && turn >= 0 && turn <= baselineTurn) return false;
+        return (
+          image.complete &&
+          image.naturalWidth >= 256 &&
+          image.naturalHeight >= 256
+        );
+      }
+    );
+    return uniqueByKey(candidates, generatedImageKey);
+  }
+
+  function generatedImageName(image, fallbackTitle) {
+    const alt = (image.getAttribute("alt") || "").replace(
+      /^(?:Â∑≤ÁîüÊàêÂõæÁâá|generated image)\s*[:Ôºö]\s*/i,
+      ""
+    );
+    return alt || fallbackTitle || "ChatGPT ÁîüÊàêÁªìÊûú";
+  }
+
+  async function blobFingerprint(blob) {
+    return sha256Hex(await blob.arrayBuffer());
+  }
+
+  async function captureGeneratedImage(
+    image,
+    canvasId,
+    promptId,
+    fallbackTitle,
+    signal,
+    capturedFingerprints
+  ) {
+    const imageUrl = generatedImageKey(image);
+    if (!imageUrl) throw new Error("ÁîüÊàêÂõæÁâáÊ≤°ÊúâÂèØËØªÂèñÁöÑÂú∞ÂùÄ");
+    const response = await fetch(imageUrl, {
+      credentials: "include",
+      signal
+    });
+    if (!response.ok) {
+      throw new Error(`ËØªÂèñÁîüÊàêÂõæÁâáÂ§±Ë¥• (${response.status})`);
+    }
+    const blob = await response.blob();
+    const fingerprint = await blobFingerprint(blob);
+    if (capturedFingerprints.has(fingerprint)) return false;
+    capturedFingerprints.add(fingerprint);
+    await saveImageBlob(
+      blob,
+      generatedImageName(image, fallbackTitle),
+      promptId,
+      canvasId
+    );
+    return true;
+  }
+
+  function findStopButton() {
+    const selectors = [
+      "button[data-testid='stop-button']",
+      "button[aria-label*='Stop generating' i]",
+      "button[aria-label*='Stop streaming' i]",
+      "button[aria-label*='ÂÅúÊ≠¢ÁîüÊàê']",
+      "button[aria-label*='ÂÅúÊ≠¢ÂõûÂ§ç']"
+    ];
+    for (const selector of selectors) {
+      const button = document.querySelector(selector);
+      if (button instanceof HTMLButtonElement) return button;
+    }
+    return null;
+  }
+
+  function isResponseGenerating() {
+    return Boolean(findStopButton());
+  }
+
+  function newAssistantTurns(baselineTurn) {
+    const minimumTurn = baselineTurn + 2;
+    return Array.from(
+      document.querySelectorAll("section[data-testid^='conversation-turn-']")
+    ).filter((section) => {
+      const match = section
+        .getAttribute("data-testid")
+        ?.match(/conversation-turn-(\d+)/);
+      const turn = match ? Number(match[1]) : -1;
+      if (turn >= minimumTurn) return true;
+      const heading = Array.from(section.querySelectorAll("h4, h5, h6"))
+        .map((element) => element.textContent || "")
+        .join(" ");
+      return (
+        turn > baselineTurn &&
+        /ChatGPT|assistant|Âä©Êâã/i.test(heading)
+      );
+    });
+  }
+
+  function hasImageGenerationPlaceholder(turns) {
+    return turns.some(
+      (turn) =>
+        turn.querySelector('[class*="imagegen"]') ||
+        Array.from(turn.querySelectorAll("img")).some(
+          (image) =>
+            image instanceof HTMLImageElement && isGeneratedImage(image)
+        )
+    );
+  }
+
+  function assertExecutionActive(execution) {
+    if (execution.cancelled || execution.controller.signal.aborted) {
+      throw new DOMException("ËøêË°åÂ∑≤ÂèñÊ∂à", "AbortError");
+    }
+  }
+
+  async function waitForGeneratedResults({
+    requestId,
+    canvasId,
+    promptId,
+    title,
+    baselineTurn,
+    baselineKeys,
+    execution,
+    timeout = 360_000
+  }) {
+    const startedAt = Date.now();
+    let firstReadyAt = 0;
+    let textResponseReadyAt = 0;
+
+    reportExecution(requestId, "waiting", "ChatGPT Ê≠£Âú®ÁîüÊàêÂõæÁâá");
+    while (Date.now() - startedAt < timeout) {
+      assertExecutionActive(execution);
+      const candidates = newGeneratedImages(baselineTurn, baselineKeys);
+      if (!candidates.length) {
+        firstReadyAt = 0;
+        const assistantTurns = newAssistantTurns(baselineTurn);
+        const responseStillRunning = isResponseGenerating();
+        const imagePlaceholder = hasImageGenerationPlaceholder(assistantTurns);
+        if (
+          assistantTurns.length &&
+          !responseStillRunning &&
+          !imagePlaceholder
+        ) {
+          if (!textResponseReadyAt) textResponseReadyAt = Date.now();
+          if (Date.now() - textResponseReadyAt >= TEXT_RESPONSE_GRACE_MS) {
+            throw new Error("ChatGPT ËøîÂõû‰∫ÜÊñáÂ≠óÔºåÊ≤°ÊúâÁîüÊàêÂõæÁâá");
+          }
+        } else {
+          textResponseReadyAt = 0;
+        }
+        await wait(900);
+        continue;
+      }
+
+      textResponseReadyAt = 0;
+      if (!firstReadyAt) firstReadyAt = Date.now();
+      if (Date.now() - firstReadyAt < 1600) {
+        await wait(500);
+        continue;
+      }
+
+      reportExecution(
+        requestId,
+        "capturing",
+        `Ê≠£Âú®Ê£ÄÊü• ${candidates.length} ‰∏™ÁîüÊàêÁªìÊûú`
+      );
+      const capturedFingerprints = new Set();
+      let capturedCount = 0;
+      for (const image of candidates) {
+        assertExecutionActive(execution);
+        if (await captureGeneratedImage(
+          image,
+          canvasId,
+          promptId,
+          title,
+          execution.controller.signal,
+          capturedFingerprints
+        )) {
+          capturedCount += 1;
+        }
+      }
+      reportExecution(
+        requestId,
+        "captured",
+        `${capturedCount} Âº†ÂõæÁâáÂ∑≤Ëá™Âä®ÂõûÂà∞ÁîªÂ∏É`
+      );
+      showToast(`${capturedCount} Âº†ÂõæÁâáÂ∑≤Ëá™Âä®Âä†ÂÖ•ÁîªÂ∏É`);
+      return;
+    }
+
+    throw new Error("Á≠âÂæÖÁîüÊàêÂõæÁâáË∂ÖÊó∂ÔºåËØ∑Ê£ÄÊü• ChatGPT ÊòØÂê¶ÁîüÊàêÊàêÂäü");
+  }
+
+  async function executePrompt(message) {
+    const requestId = String(message.requestId || "");
+    if (!requestId) return;
+    if (activeExecution) {
+      reportExecution(requestId, "failed", "Âè¶‰∏Ä‰∏™ËäÇÁÇπÊ≠£Âú®ÊâßË°å", {
+        promptId: String(message.promptId || ""),
+        canvasId: String(message.canvasId || "")
+      });
+      return;
+    }
+
+    const execution = {
+      requestId,
+      canvasId: String(message.canvasId || ""),
+      promptId: String(message.promptId || ""),
+      cancelled: false,
+      controller: new AbortController()
+    };
+    activeExecution = execution;
+    try {
+      const prompt = String(message.prompt || "").trim();
+      if (!prompt) throw new Error("ÊèêÁ§∫ËØçÊòØÁ©∫ÁöÑ");
+
+      if (message.referenceImage?.dataUrl) {
+        reportExecution(requestId, "attaching", "Ê≠£Âú®ÈôÑÂä†‰∏äÊ∏∏ÂèÇËÄÉÂõæ");
+        await attachReferenceImage(
+          message.referenceImage,
+          execution.controller.signal
+        );
+      }
+
+      assertExecutionActive(execution);
+      reportExecution(requestId, "filling", "Ê≠£Âú®Â°´ÂÖ• ChatGPT");
+      await fillComposer(prompt, execution);
+
+      assertExecutionActive(execution);
+      reportExecution(requestId, "sending", "Ê≠£Âú®ÂèëÈÄÅ");
+      const baselineTurn = latestConversationTurn();
+      const baselineKeys = generatedImageKeys();
+      const sendButton = await waitForSendButton(execution);
+      assertExecutionActive(execution);
+      sendButton.click();
+      reportExecution(requestId, "sent", "Â∑≤ÁªèÂèëÈÄÅÔºåÁ≠âÂæÖ ChatGPT ÁîüÊàê");
+      await waitForGeneratedResults({
+        requestId,
+        canvasId: execution.canvasId,
+        promptId: String(message.promptId || ""),
+        title: String(message.title || ""),
+        baselineTurn,
+        baselineKeys,
+        execution
+      });
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      const messageText =
+        error instanceof Error ? error.message : String(error);
+      reportExecution(requestId, "failed", messageText);
+      showToast(messageText, true);
+    } finally {
+      if (activeExecution === execution) activeExecution = null;
+    }
+  }
+
+  function cancelExecution(promptIds) {
+    if (!activeExecution || !promptIds.includes(activeExecution.promptId)) {
+      return;
+    }
+    const execution = activeExecution;
+    execution.cancelled = true;
+    execution.controller.abort();
+    activeExecution = null;
+    findStopButton()?.click();
+    reportExecution(
+      execution.requestId,
+      "cancelled",
+      "ËäÇÁÇπÂ∑≤Âà†Èô§ÔºåËøêË°åÂ∑≤ÂèñÊ∂à",
+      {
+        promptId: execution.promptId,
+        canvasId: execution.canvasId
+      }
+    );
+    showToast("Â∑≤ÂèñÊ∂àË¢´Âà†Èô§ËäÇÁÇπÁöÑËøêË°å");
+  }
+
+  orb.addEventListener("click", () => {
+    if (Date.now() < suppressOrbClickUntil) return;
+    setOpen(true);
+  });
+  orb.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    const rect = host.getBoundingClientRect();
+    host.style.left = `${rect.left}px`;
+    host.style.top = `${rect.top}px`;
+    host.style.right = "auto";
+    host.style.bottom = "auto";
+    orbDragState = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      offsetX: event.clientX - rect.left,
+      offsetY: event.clientY - rect.top,
+      moved: false
+    };
+  });
+  window.addEventListener("pointermove", (event) => {
+    if (!orbDragState || orbDragState.pointerId !== event.pointerId) return;
+    if (
+      Math.hypot(
+        event.clientX - orbDragState.startX,
+        event.clientY - orbDragState.startY
+      ) >= 4
+    ) {
+      orbDragState.moved = true;
+      orb.classList.add("dragging");
+    }
+    if (!orbDragState.moved) return;
+    const maxLeft = Math.max(6, window.innerWidth - 56);
+    const maxTop = Math.max(6, window.innerHeight - 56);
+    host.style.left =
+      `${Math.min(maxLeft, Math.max(6, event.clientX - orbDragState.offsetX))}px`;
+    host.style.top =
+      `${Math.min(maxTop, Math.max(6, event.clientY - orbDragState.offsetY))}px`;
+  }, true);
+  window.addEventListener("pointerup", (event) => {
+    if (!orbDragState || orbDragState.pointerId !== event.pointerId) return;
+    const moved = orbDragState.moved;
+    orbDragState = null;
+    orb.classList.remove("dragging");
+    if (moved) {
+      suppressOrbClickUntil = Date.now() + 250;
+      void persistOrbPosition();
+    }
+  }, true);
+  window.addEventListener("pointercancel", (event) => {
+    if (!orbDragState || orbDragState.pointerId !== event.pointerId) return;
+    orbDragState = null;
+    orb.classList.remove("dragging");
+    applyOrbPosition();
+  }, true);
+  minimize.addEventListener("click", () => setOpen(false));
+  maximize.addEventListener("click", () => setMaximized(!maximized));
+
+  header.addEventListener("pointerdown", (event) => {
+    if (maximized || event.target.closest("button")) return;
+    const rect = host.getBoundingClientRect();
+    dragState = {
+      pointerId: event.pointerId,
+      offsetX: event.clientX - rect.left,
+      offsetY: event.clientY - rect.top
+    };
+    header.setPointerCapture(event.pointerId);
+  });
+  header.addEventListener("pointermove", (event) => {
+    if (!dragState || dragState.pointerId !== event.pointerId) return;
+    const maxLeft = Math.max(6, window.innerWidth - host.offsetWidth - 6);
+    const maxTop = Math.max(6, window.innerHeight - host.offsetHeight - 6);
+    host.style.left = `${Math.min(maxLeft, Math.max(6, event.clientX - dragState.offsetX))}px`;
+    host.style.top = `${Math.min(maxTop, Math.max(6, event.clientY - dragState.offsetY))}px`;
+    host.style.right = "auto";
+    host.style.bottom = "auto";
+  });
+  header.addEventListener("pointerup", (event) => {
+    if (dragState?.pointerId === event.pointerId) {
+      header.releasePointerCapture(event.pointerId);
+      dragState = null;
+      void persistGeometry();
+    }
+  });
+
+  resizeHandle.addEventListener("pointerdown", (event) => {
+    if (maximized) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const hostRect = host.getBoundingClientRect();
+    const floatingRect = floating.getBoundingClientRect();
+    host.style.left = `${hostRect.left}px`;
+    host.style.top = `${hostRect.top}px`;
+    host.style.right = "auto";
+    host.style.bottom = "auto";
+    resizeState = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      width: floatingRect.width,
+      height: floatingRect.height,
+      left: hostRect.left,
+      top: hostRect.top
+    };
+    resizeHandle.setPointerCapture(event.pointerId);
+  });
+  resizeHandle.addEventListener("pointermove", (event) => {
+    if (!resizeState || resizeState.pointerId !== event.pointerId) return;
+    const minWidth = Math.min(520, window.innerWidth - 16);
+    const minHeight = Math.min(420, window.innerHeight - 16);
+    const maxWidth = Math.max(minWidth, window.innerWidth - resizeState.left - 8);
+    const maxHeight = Math.max(minHeight, window.innerHeight - resizeState.top - 8);
+    const width = Math.min(
+      maxWidth,
+      Math.max(minWidth, resizeState.width + event.clientX - resizeState.startX)
+    );
+    const height = Math.min(
+      maxHeight,
+      Math.max(minHeight, resizeState.height + event.clientY - resizeState.startY)
+    );
+    floating.style.width = `${width}px`;
+    floating.style.height = `${height}px`;
+  });
+  resizeHandle.addEventListener("pointerup", (event) => {
+    if (resizeState?.pointerId === event.pointerId) {
+      resizeHandle.releasePointerCapture(event.pointerId);
+      resizeState = null;
+      void persistGeometry();
+    }
+  });
+
+  document.addEventListener(
+    "dragenter",
+    (event) => {
+      if (!open) return;
+      dragDepth += 1;
+      if (event.dataTransfer?.types?.length) {
+        dropCatcher.classList.add("active");
+      }
+    },
+    true
+  );
+  document.addEventListener(
+    "dragleave",
+    () => {
+      if (!open) return;
+      dragDepth = Math.max(0, dragDepth - 1);
+      if (dragDepth === 0) dropCatcher.classList.remove("active");
+    },
+    true
+  );
+  dropCatcher.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
+  });
+  dropCatcher.addEventListener("drop", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dragDepth = 0;
+    dropCatcher.classList.remove("active");
+    if (!event.dataTransfer) return;
+    void receiveDrop(event.dataTransfer).catch((error) =>
+      showToast(error instanceof Error ? error.message : String(error), true)
+    );
+  });
+
+  window.addEventListener("message", (event) => {
+    if (event.source !== frame.contentWindow) return;
+    if (event.data?.type === "branchboard:theme-change") {
+      host.classList.toggle("theme-light", event.data.theme === "light");
+      return;
+    }
+    if (event.data?.type === "branchboard:minimize-floating-canvas") {
+      setOpen(false);
+      return;
+    }
+    if (event.data?.type === "branchboard:execute-prompt") {
+      void executePrompt(event.data);
+      return;
+    }
+    if (event.data?.type === "branchboard:import-dropped-image") {
+      void receiveDroppedImageUrl(event.data).catch((error) =>
+        showToast(error instanceof Error ? error.message : String(error), true)
+      );
+      return;
+    }
+    if (event.data?.type === "branchboard:cancel-execution") {
+      cancelExecution(
+        Array.isArray(event.data.promptIds)
+          ? event.data.promptIds.map(String)
+          : []
+      );
+    }
+  });
+
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message?.type === "branchboard:toggle-floating-canvas") {
+      setOpen(!open);
+    }
+  });
+
+  let viewportResizeTimer = null;
+  window.addEventListener("resize", () => {
+    if (maximized) return;
+    if (viewportResizeTimer) clearTimeout(viewportResizeTimer);
+    viewportResizeTimer = window.setTimeout(() => {
+      if (open) {
+        floatingGeometry = readFloatingGeometry();
+        applyFloatingGeometry();
+        void persistGeometry();
+      } else {
+        applyOrbPosition();
+        void persistOrbPosition();
+      }
+    }, 80);
+  });
+
+  void restoreGeometry();
+})();
