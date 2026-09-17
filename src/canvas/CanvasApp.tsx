@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { DragEvent as ReactDragEvent } from "react";
+import type {
+  DragEvent as ReactDragEvent,
+  MouseEvent as ReactMouseEvent
+} from "react";
 import {
   Background,
   BackgroundVariant,
@@ -44,6 +47,7 @@ import {
 } from "./ExecutionSessionContext";
 import { ImageNode } from "./nodes/ImageNode";
 import { PromptNode } from "./nodes/PromptNode";
+import { findFreePosition } from "./layout";
 import "./styles.css";
 
 const nodeTypes: NodeTypes = {
@@ -122,20 +126,20 @@ function integrateInbox(
     const imageId = `image-${image.id}`;
     if (nodes.some((node) => node.id === imageId)) continue;
 
+    const desired = image.position
+      ? { x: image.position.x + index * 28, y: image.position.y + index * 28 }
+      : parent
+        ? {
+            x: parent.position.x + 430,
+            y: parent.position.y + outgoingCount * 360
+          }
+        : { x: 560, y: 160 };
+    const position = findFreePosition(nodes, desired);
+
     nodes.push({
       id: imageId,
       type: "image",
-      position: image.position
-        ? {
-            x: image.position.x + index * 28,
-            y: image.position.y + index * 28
-          }
-        : parent
-          ? {
-              x: parent.position.x + 430,
-              y: parent.position.y + outgoingCount * 360
-            }
-          : { x: 560 + index * 40, y: 160 + index * 40 },
+      position,
       data: {
         kind: "image",
         name: image.name,
@@ -292,6 +296,14 @@ function CanvasWorkspace() {
   const saveLoopRef = useRef<Promise<void> | null>(null);
   const editingCanvasIdRef = useRef("");
   const dragDepthRef = useRef(0);
+  const [contextMenu, setContextMenu] = useState<
+    { x: number; y: number; nodeId?: string } | null
+  >(null);
+  const undoStackRef = useRef<
+    { nodes: CanvasNode[]; edges: CanvasEdge[] }[]
+  >([]);
+  const [confirmDeleteCanvasId, setConfirmDeleteCanvasId] = useState("");
+  const confirmDeleteTimerRef = useRef(0);
   const {
     screenToFlowPosition,
     fitView,
@@ -553,10 +565,12 @@ function CanvasWorkspace() {
     return () => window.removeEventListener("message", handleParentMessage);
   }, [fitViewCrisp]);
 
-  const insertImages = useCallback(
-    async (files: File[], dropPosition?: { x: number; y: number }) => {
-      if (!files.length) return;
-      const dataUrls = await Promise.all(files.map(fileToDataUrl));
+  const insertImageDataUrls = useCallback(
+    async (
+      entries: { dataUrl: string; name?: string }[],
+      dropPosition?: { x: number; y: number }
+    ) => {
+      if (!entries.length) return;
       const currentNodes = nodesRef.current;
       const currentEdges = edgesRef.current;
       const parent =
@@ -568,10 +582,9 @@ function CanvasWorkspace() {
       const outgoingCount = parent
         ? currentEdges.filter((edge) => edge.source === parent.id).length
         : 0;
-      const addedNodes: CanvasNode[] = dataUrls.map((dataUrl, index) => ({
-        id: crypto.randomUUID(),
-        type: "image",
-        position: dropPosition
+      const addedNodes: CanvasNode[] = [];
+      entries.forEach(({ dataUrl, name }, index) => {
+        const desired = dropPosition
           ? {
               x: dropPosition.x + index * 28,
               y: dropPosition.y + index * 28
@@ -581,14 +594,23 @@ function CanvasWorkspace() {
                 x: parent.position.x + 430,
                 y: parent.position.y + (outgoingCount + index) * 360
               }
-            : { x: 520 + index * 40, y: 180 + index * 40 },
-        data: {
-          kind: "image",
-          name: files[index]?.name || `粘贴图片 ${index + 1}`,
-          dataUrl,
-          createdAt: new Date().toISOString()
-        }
-      }));
+            : { x: 520, y: 180 };
+        const position = findFreePosition(
+          [...currentNodes, ...addedNodes],
+          desired
+        );
+        addedNodes.push({
+          id: crypto.randomUUID(),
+          type: "image",
+          position,
+          data: {
+            kind: "image",
+            name: name || `粘贴图片 ${index + 1}`,
+            dataUrl,
+            createdAt: new Date().toISOString()
+          }
+        });
+      });
       const addedEdges: CanvasEdge[] = parent
         ? addedNodes.map((node) => ({
             id: `edge-${parent.id}-${node.id}`,
@@ -602,6 +624,20 @@ function CanvasWorkspace() {
       setEdges((existing) => [...existing, ...addedEdges]);
     },
     [setEdges, setNodes]
+  );
+
+  const insertImages = useCallback(
+    async (files: File[], dropPosition?: { x: number; y: number }) => {
+      if (!files.length) return;
+      const entries = await Promise.all(
+        files.map(async (file) => ({
+          dataUrl: await fileToDataUrl(file),
+          name: file.name
+        }))
+      );
+      await insertImageDataUrls(entries, dropPosition);
+    },
+    [insertImageDataUrls]
   );
 
   const handleCanvasDragEnter = useCallback(
@@ -721,10 +757,13 @@ function CanvasWorkspace() {
       const text = event.clipboardData?.getData("text/plain").trim();
       if (!text) return;
       event.preventDefault();
-      const position = screenToFlowPosition({
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2
-      });
+      const position = findFreePosition(
+        nodesRef.current,
+        screenToFlowPosition({
+          x: window.innerWidth / 2,
+          y: window.innerHeight / 2
+        })
+      );
       const node = newPromptNode(position);
       node.data = { ...node.data, title: "粘贴的提示词", prompt: text };
       setNodes((existing) => [...existing, node]);
@@ -734,17 +773,132 @@ function CanvasWorkspace() {
     return () => window.removeEventListener("paste", handlePaste);
   }, [insertImages, screenToFlowPosition, setNodes]);
 
-  const addPrompt = () => {
-    const position = screenToFlowPosition({
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2
-    });
-    const node = newPromptNode(position);
-    node.data = { ...node.data, title: "新提示词" };
-    setNodes((existing) => [
-      ...existing.map((item) => ({ ...item, selected: false })),
-      { ...node, selected: true }
-    ]);
+  useEffect(() => {
+    const handleForwardedPaste = (event: MessageEvent) => {
+      if (event.source !== window.parent) return;
+      if (event.data?.type !== "branchboard:forwarded-paste") return;
+      const dataUrl = event.data.dataUrl;
+      if (typeof dataUrl !== "string" || !dataUrl.startsWith("data:image/")) {
+        return;
+      }
+      const name =
+        typeof event.data.name === "string" && event.data.name
+          ? event.data.name
+          : "粘贴图片";
+      void insertImageDataUrls([{ dataUrl, name }]);
+    };
+
+    window.addEventListener("message", handleForwardedPaste);
+    return () => window.removeEventListener("message", handleForwardedPaste);
+  }, [insertImageDataUrls]);
+
+  const addPromptAt = useCallback(
+    (screenPosition?: { x: number; y: number }) => {
+      const position = findFreePosition(
+        nodesRef.current,
+        screenToFlowPosition(
+          screenPosition ?? {
+            x: window.innerWidth / 2,
+            y: window.innerHeight / 2
+          }
+        )
+      );
+      const node = newPromptNode(position);
+      node.data = { ...node.data, title: "新提示词" };
+      setNodes((existing) => [
+        ...existing.map((item) => ({ ...item, selected: false })),
+        { ...node, selected: true }
+      ]);
+    },
+    [screenToFlowPosition, setNodes]
+  );
+
+  const addPrompt = useCallback(() => addPromptAt(), [addPromptAt]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        if (isTextInput(event.target)) return;
+        if (
+          document.querySelector(".annotation-overlay, .image-preview-overlay")
+        ) {
+          return;
+        }
+        if (contextMenu) {
+          setContextMenu(null);
+          return;
+        }
+        if (
+          new URLSearchParams(window.location.search).get("embedded") === "1"
+        ) {
+          event.preventDefault();
+          window.parent.postMessage(
+            { type: "branchboard:minimize-floating-canvas", reason: "escape" },
+            "*"
+          );
+        }
+        return;
+      }
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.key.toLowerCase() === "z" &&
+        !event.shiftKey
+      ) {
+        if (isTextInput(event.target)) return;
+        if (
+          document.querySelector(".annotation-overlay, .image-preview-overlay")
+        ) {
+          return;
+        }
+        const snapshot = undoStackRef.current.pop();
+        if (!snapshot) return;
+        event.preventDefault();
+        setNodes(snapshot.nodes.map((node) => ({ ...node, selected: false })));
+        setEdges(snapshot.edges);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [contextMenu, setEdges, setNodes]);
+
+  const handleNodeContextMenu = useCallback(
+    (event: ReactMouseEvent, node: CanvasNode) => {
+      event.preventDefault();
+      setContextMenu({
+        x: event.clientX,
+        y: event.clientY,
+        nodeId: node.id
+      });
+    },
+    []
+  );
+
+  const handlePaneContextMenu = useCallback(
+    (event: ReactMouseEvent | MouseEvent) => {
+      event.preventDefault();
+      setContextMenu({ x: event.clientX, y: event.clientY });
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (!contextMenu) return;
+    const closeMenu = () => setContextMenu(null);
+    window.addEventListener("pointerdown", closeMenu);
+    window.addEventListener("blur", closeMenu);
+    return () => {
+      window.removeEventListener("pointerdown", closeMenu);
+      window.removeEventListener("blur", closeMenu);
+    };
+  }, [contextMenu]);
+
+  const contextMenuTarget = contextMenu?.nodeId
+    ? nodes.find((node) => node.id === contextMenu.nodeId)
+    : undefined;
+
+  const runContextMenuAction = (action: () => void) => {
+    setContextMenu(null);
+    action();
   };
 
   const snapshotOfCurrentCanvas = useCallback(
@@ -913,13 +1067,8 @@ function CanvasWorkspace() {
     [canvasTitleDraft, workspace]
   );
 
-  const deleteCanvas = useCallback(
+  const performDeleteCanvas = useCallback(
     async (canvas: CanvasTab) => {
-      if (canvasActionPending || canvasTabsRef.current.length <= 1) return;
-      if (!window.confirm(`删除“${canvas.title}”？其中的节点和图片也会删除。`)) {
-        return;
-      }
-
       setCanvasActionPending(true);
       setSaveState("saving");
       setSaveError("");
@@ -964,10 +1113,35 @@ function CanvasWorkspace() {
     [
       applyWorkspaceView,
       cancelPrompts,
-      canvasActionPending,
       executions,
       snapshotOfCurrentCanvas,
       workspace
+    ]
+  );
+
+  const requestDeleteCanvas = useCallback(
+    (canvas: CanvasTab) => {
+      if (canvasActionPending || canvasTabsRef.current.length <= 1) return;
+      if (confirmDeleteCanvasId !== canvas.id) {
+        if (confirmDeleteTimerRef.current) {
+          window.clearTimeout(confirmDeleteTimerRef.current);
+        }
+        setConfirmDeleteCanvasId(canvas.id);
+        confirmDeleteTimerRef.current = window.setTimeout(() => {
+          setConfirmDeleteCanvasId("");
+        }, 3200);
+        return;
+      }
+      if (confirmDeleteTimerRef.current) {
+        window.clearTimeout(confirmDeleteTimerRef.current);
+      }
+      setConfirmDeleteCanvasId("");
+      void performDeleteCanvas(canvas);
+    },
+    [
+      canvasActionPending,
+      confirmDeleteCanvasId,
+      performDeleteCanvas
     ]
   );
 
@@ -1059,28 +1233,178 @@ function CanvasWorkspace() {
     return tones;
   }, [executions]);
 
-  const handleNodesDelete = useCallback((deletedNodes: CanvasNode[]) => {
-    const promptIds = deletedNodes
-      .filter((node) => node.data.kind === "prompt")
-      .map((node) => node.id);
-    if (!promptIds.length) return;
-    cancelPrompts(promptIds);
-    if (promptIds.includes(selectedPromptId.current || "")) {
-      selectedPromptId.current = null;
-      void setActivePrompt(null);
-    }
-    if (
-      new URLSearchParams(window.location.search).get("embedded") === "1"
-    ) {
-      window.parent.postMessage(
-        {
-          type: "branchboard:cancel-execution",
-          promptIds
-        },
-        "*"
+  const pushUndoSnapshot = useCallback(() => {
+    undoStackRef.current.push({
+      nodes: nodesRef.current,
+      edges: edgesRef.current
+    });
+    if (undoStackRef.current.length > 50) undoStackRef.current.shift();
+  }, []);
+
+  const cleanupDeletedNodes = useCallback(
+    (deletedNodes: CanvasNode[]) => {
+      const promptIds = deletedNodes
+        .filter((node) => node.data.kind === "prompt")
+        .map((node) => node.id);
+      if (!promptIds.length) return;
+      cancelPrompts(promptIds);
+      if (promptIds.includes(selectedPromptId.current || "")) {
+        selectedPromptId.current = null;
+        void setActivePrompt(null);
+      }
+      if (
+        new URLSearchParams(window.location.search).get("embedded") === "1"
+      ) {
+        window.parent.postMessage(
+          {
+            type: "branchboard:cancel-execution",
+            promptIds
+          },
+          "*"
+        );
+      }
+    },
+    [cancelPrompts]
+  );
+
+  const handleNodesDelete = useCallback(
+    (deletedNodes: CanvasNode[]) => {
+      if (!deletedNodes.length) return;
+      pushUndoSnapshot();
+      cleanupDeletedNodes(deletedNodes);
+    },
+    [cleanupDeletedNodes, pushUndoSnapshot]
+  );
+
+  const deleteNodeById = useCallback(
+    (nodeId: string) => {
+      const targets = nodesRef.current.filter((node) => node.id === nodeId);
+      if (!targets.length) return;
+      pushUndoSnapshot();
+      setNodes((nodes) => nodes.filter((node) => node.id !== nodeId));
+      setEdges((edges) =>
+        edges.filter(
+          (edge) => edge.source !== nodeId && edge.target !== nodeId
+        )
       );
-    }
-  }, [cancelPrompts]);
+      cleanupDeletedNodes(targets);
+    },
+    [cleanupDeletedNodes, pushUndoSnapshot, setEdges, setNodes]
+  );
+
+  const branchFromNode = useCallback(
+    (nodeId: string) => {
+      const parent = nodesRef.current.find((node) => node.id === nodeId);
+      if (!parent || parent.data.kind !== "prompt") return;
+      const parentPrompt = parent.data.prompt;
+      const childId = crypto.randomUUID();
+      const siblingCount = edgesRef.current.filter(
+        (edge) => edge.source === nodeId
+      ).length;
+      const desired = {
+        x: parent.position.x + 430,
+        y: parent.position.y + siblingCount * 330
+      };
+      setNodes((nodes) => {
+        const position = findFreePosition(nodes, desired);
+        return [
+          ...nodes.map((node) => ({ ...node, selected: false })),
+          {
+            id: childId,
+            type: "prompt",
+            position,
+            selected: true,
+            data: {
+              kind: "prompt",
+              title: "新提示词",
+              prompt: parentPrompt,
+              createdAt: new Date().toISOString()
+            } satisfies PromptNodeData
+          }
+        ];
+      });
+      setEdges((edges) => [
+        ...edges,
+        {
+          id: `edge-${nodeId}-${childId}`,
+          source: nodeId,
+          target: childId,
+          type: "smoothstep",
+          label: "提示词分支"
+        }
+      ]);
+    },
+    [setEdges, setNodes]
+  );
+
+  const continueFromImage = useCallback(
+    (nodeId: string) => {
+      const parent = nodesRef.current.find((node) => node.id === nodeId);
+      if (!parent || parent.data.kind !== "image") return;
+      const childId = crypto.randomUUID();
+      const siblingCount = edgesRef.current.filter(
+        (edge) => edge.source === nodeId
+      ).length;
+      const desired = {
+        x: parent.position.x + 430,
+        y: parent.position.y + siblingCount * 330
+      };
+      setNodes((nodes) => {
+        const position = findFreePosition(nodes, desired);
+        return [
+          ...nodes.map((node) => ({ ...node, selected: false })),
+          {
+            id: childId,
+            type: "prompt",
+            position,
+            selected: true,
+            data: {
+              kind: "prompt",
+              title: "继续修改",
+              prompt: "",
+              createdAt: new Date().toISOString()
+            } satisfies PromptNodeData
+          }
+        ];
+      });
+      setEdges((edges) => [
+        ...edges,
+        {
+          id: `edge-${nodeId}-${childId}`,
+          source: nodeId,
+          target: childId,
+          type: "smoothstep",
+          label: "参考图"
+        }
+      ]);
+    },
+    [setEdges, setNodes]
+  );
+
+  const duplicateNode = useCallback(
+    (nodeId: string) => {
+      const source = nodesRef.current.find((node) => node.id === nodeId);
+      if (!source) return;
+      const position = findFreePosition(nodesRef.current, {
+        x: source.position.x + 56,
+        y: source.position.y + 56
+      });
+      setNodes((nodes) => [
+        ...nodes.map((node) => ({ ...node, selected: false })),
+        {
+          ...source,
+          id: crypto.randomUUID(),
+          position,
+          selected: true,
+          data:
+            source.data.kind === "prompt"
+              ? { ...source.data, title: `${source.data.title} 副本` }
+              : { ...source.data }
+        }
+      ]);
+    },
+    [setNodes]
+  );
 
   return (
     <main className="canvas-shell">
@@ -1226,17 +1550,27 @@ function CanvasWorkspace() {
                     </button>
                     <button
                       type="button"
-                      className="canvas-tab-delete"
-                      aria-label={`删除${canvas.title}`}
+                      className={`canvas-tab-delete${
+                        confirmDeleteCanvasId === canvas.id ? " confirm" : ""
+                      }`}
+                      aria-label={
+                        confirmDeleteCanvasId === canvas.id
+                          ? `确认删除${canvas.title}`
+                          : `删除${canvas.title}`
+                      }
                       title={
-                        canvasTabs.length <= 1
-                          ? "至少保留一个画布"
-                          : "删除画布"
+                        confirmDeleteCanvasId === canvas.id
+                          ? "再点一次确认删除"
+                          : canvasTabs.length <= 1
+                            ? "至少保留一个画布"
+                            : "删除画布"
                       }
                       disabled={canvasActionPending || canvasTabs.length <= 1}
-                      onClick={() => void deleteCanvas(canvas)}
+                      onClick={() => requestDeleteCanvas(canvas)}
                     >
-                      ×
+                      {confirmDeleteCanvasId === canvas.id
+                        ? "确认删除"
+                        : "×"}
                     </button>
                   </>
                 )}
@@ -1276,7 +1610,22 @@ function CanvasWorkspace() {
         onDragLeave={handleCanvasDragLeave}
         onDragOver={handleCanvasDragOver}
         onDrop={(event) => void handleCanvasDrop(event)}
+        onDoubleClick={(event) => {
+          if (!(event.target instanceof HTMLElement)) return;
+          if (!event.target.classList.contains("react-flow__pane")) return;
+          addPromptAt({ x: event.clientX, y: event.clientY });
+        }}
       >
+        {hydrated && !nodes.length ? (
+          <div className="canvas-empty-state" aria-live="polite">
+            <strong>画布还空着</strong>
+            <p>
+              双击任意空白处落下第一句提示词，
+              <br />
+              或把图片直接拖进来。
+            </p>
+          </div>
+        ) : null}
         <ReactFlow<CanvasNode, CanvasEdge>
           nodes={nodes}
           edges={edges}
@@ -1285,6 +1634,8 @@ function CanvasWorkspace() {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onNodesDelete={handleNodesDelete}
+          onNodeContextMenu={handleNodeContextMenu}
+          onPaneContextMenu={handlePaneContextMenu}
           onSelectionChange={handleSelectionChange}
           fitView
           fitViewOptions={{ padding: 0.2, maxZoom: 1 }}
@@ -1325,6 +1676,113 @@ function CanvasWorkspace() {
           <strong>松开以加入图片</strong>
           <small>支持电脑文件和 ChatGPT 生成图</small>
         </div>
+        {contextMenu ? (
+          <div
+            className="canvas-context-menu"
+            style={{ left: contextMenu.x, top: contextMenu.y }}
+            role="menu"
+            onPointerDown={(event) => event.stopPropagation()}
+          >
+            {contextMenuTarget ? (
+              contextMenuTarget.data.kind === "prompt" ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      runContextMenuAction(() =>
+                        branchFromNode(contextMenuTarget.id)
+                      )
+                    }
+                  >
+                    创建分支
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      runContextMenuAction(() =>
+                        duplicateNode(contextMenuTarget.id)
+                      )
+                    }
+                  >
+                    复制节点
+                  </button>
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={() =>
+                      runContextMenuAction(() =>
+                        deleteNodeById(contextMenuTarget.id)
+                      )
+                    }
+                  >
+                    删除节点
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      runContextMenuAction(() =>
+                        continueFromImage(contextMenuTarget.id)
+                      )
+                    }
+                  >
+                    继续修改
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      runContextMenuAction(() =>
+                        duplicateNode(contextMenuTarget.id)
+                      )
+                    }
+                  >
+                    复制节点
+                  </button>
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={() =>
+                      runContextMenuAction(() =>
+                        deleteNodeById(contextMenuTarget.id)
+                      )
+                    }
+                  >
+                    删除节点
+                  </button>
+                </>
+              )
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() =>
+                    runContextMenuAction(() =>
+                      addPromptAt({ x: contextMenu.x, y: contextMenu.y })
+                    )
+                  }
+                >
+                  新建提示词
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    runContextMenuAction(() =>
+                      void fitView({
+                        padding: 0.2,
+                        duration: 400,
+                        maxZoom: 1
+                      })
+                    )
+                  }
+                >
+                  查看全部内容
+                </button>
+              </>
+            )}
+          </div>
+        ) : null}
       </div>
 
       <aside className="canvas-note">

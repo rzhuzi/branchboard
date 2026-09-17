@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   Handle,
@@ -14,6 +14,14 @@ import type {
 } from "../../shared/types";
 import { copyImage } from "../../shared/browser";
 import { AnnotationEditor } from "../AnnotationEditor";
+import { findFreePosition } from "../layout";
+
+function downloadFileName(name: string, dataUrl: string): string {
+  const mime = dataUrl.slice(5, dataUrl.indexOf(";"));
+  const extension = mime.split("/")[1]?.replace("jpeg", "jpg") || "png";
+  const base = name.replace(/[\\/:*?"<>|]/g, "_").trim() || "branchboard-image";
+  return `${base}.${extension}`;
+}
 
 export function ImageNode(props: NodeProps<CanvasNode>) {
   const { id, data: rawData, selected } = props;
@@ -22,10 +30,20 @@ export function ImageNode(props: NodeProps<CanvasNode>) {
     "idle"
   );
   const [isAnnotating, setIsAnnotating] = useState(false);
+  const [isPreviewing, setIsPreviewing] = useState(false);
   const { setNodes, setEdges, getNode, getEdges } = useReactFlow<
     CanvasNode,
     CanvasEdge
   >();
+
+  useEffect(() => {
+    if (!isPreviewing) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsPreviewing(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isPreviewing]);
 
   const handleCopy = async () => {
     try {
@@ -49,19 +67,22 @@ export function ImageNode(props: NodeProps<CanvasNode>) {
       createdAt: new Date().toISOString()
     };
 
-    setNodes((nodes) => [
-      ...nodes.map((node) => ({ ...node, selected: false })),
-      {
-        id: childId,
-        type: "prompt",
-        position: {
-          x: parent.position.x + 430,
-          y: parent.position.y + siblingCount * 330
-        },
-        selected: true,
-        data: promptData
-      }
-    ]);
+    setNodes((nodes) => {
+      const position = findFreePosition(nodes, {
+        x: parent.position.x + 430,
+        y: parent.position.y + siblingCount * 330
+      });
+      return [
+        ...nodes.map((node) => ({ ...node, selected: false })),
+        {
+          id: childId,
+          type: "prompt",
+          position,
+          selected: true,
+          data: promptData
+        }
+      ];
+    });
     setEdges((edges) => [
       ...edges,
       {
@@ -100,7 +121,13 @@ export function ImageNode(props: NodeProps<CanvasNode>) {
         className="node-handle"
         isConnectable={false}
       />
-      <div className="image-frame">
+      <div
+        className="image-frame nodrag"
+        title="点击查看大图"
+        role="button"
+        aria-label="查看大图"
+        onClick={() => setIsPreviewing(true)}
+      >
         <img src={data.dataUrl} alt={data.name || "生成图片"} draggable={false} />
       </div>
       <div className="image-meta">
@@ -145,6 +172,44 @@ export function ImageNode(props: NodeProps<CanvasNode>) {
               onCancel={() => setIsAnnotating(false)}
               onSave={handleSaveAnnotation}
             />,
+            document.body
+          )
+        : null}
+      {isPreviewing
+        ? createPortal(
+            <div
+              className="image-preview-overlay"
+              role="dialog"
+              aria-modal="true"
+              aria-label="图片预览"
+              onClick={() => setIsPreviewing(false)}
+            >
+              <div
+                className="image-preview-body"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <img src={data.dataUrl} alt={data.name || "生成图片"} />
+                <div className="image-preview-actions">
+                  <span className="image-preview-name">
+                    {data.name || "生成结果"}
+                  </span>
+                  <a
+                    className="node-button"
+                    download={downloadFileName(data.name || "", data.dataUrl)}
+                    href={data.dataUrl}
+                  >
+                    下载图片
+                  </a>
+                  <button
+                    className="node-button"
+                    type="button"
+                    onClick={() => setIsPreviewing(false)}
+                  >
+                    关闭
+                  </button>
+                </div>
+              </div>
+            </div>,
             document.body
           )
         : null}

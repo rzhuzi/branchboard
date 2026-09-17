@@ -17,6 +17,7 @@ import type {
 } from "../../shared/types";
 import { useExecutionSession } from "../ExecutionSessionContext";
 import { useExecutionSettings } from "../ExecutionSettingsContext";
+import { findFreePosition } from "../layout";
 
 function createPromptData(prompt = ""): PromptNodeData {
   return {
@@ -106,7 +107,10 @@ export function PromptNode(props: NodeProps<CanvasNode>) {
     if (!(await handleCopy())) return;
     if (isEmbedded) {
       window.parent.postMessage(
-        { type: "branchboard:minimize-floating-canvas" },
+        {
+          type: "branchboard:minimize-floating-canvas",
+          reason: "copied"
+        },
         "*"
       );
       return;
@@ -161,19 +165,22 @@ export function PromptNode(props: NodeProps<CanvasNode>) {
     const childId = crypto.randomUUID();
     const siblingCount = getEdges().filter((edge) => edge.source === id).length;
 
-    setNodes((nodes) => [
-      ...nodes.map((node) => ({ ...node, selected: false })),
-      {
-        id: childId,
-        type: "prompt",
-        position: {
-          x: parent.position.x + 430,
-          y: parent.position.y + siblingCount * 330
-        },
-        selected: true,
-        data: createPromptData(data.prompt)
-      }
-    ]);
+    setNodes((nodes) => {
+      const position = findFreePosition(nodes, {
+        x: parent.position.x + 430,
+        y: parent.position.y + siblingCount * 330
+      });
+      return [
+        ...nodes.map((node) => ({ ...node, selected: false })),
+        {
+          id: childId,
+          type: "prompt",
+          position,
+          selected: true,
+          data: createPromptData(data.prompt)
+        }
+      ];
+    });
     setEdges((edges) => [
       ...edges,
       {

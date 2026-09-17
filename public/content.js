@@ -68,6 +68,7 @@
       * { box-sizing: border-box; }
       button { font: inherit; }
       .orb {
+        position: relative;
         display: grid;
         pointer-events: auto;
         width: 50px;
@@ -82,6 +83,35 @@
         cursor: grab;
         touch-action: none;
         transition: transform .16s ease, box-shadow .16s ease;
+      }
+      .orb::after {
+        content: "";
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 12px;
+        height: 12px;
+        border: 2px solid var(--canvas-bg);
+        border-radius: 50%;
+        background: transparent;
+        opacity: 0;
+        transform: scale(.4);
+        transition: opacity .18s ease, transform .18s ease;
+      }
+      .orb.running::after {
+        background: var(--accent);
+        opacity: 1;
+        transform: scale(1);
+        animation: orb-pulse 1.4s ease-in-out infinite;
+      }
+      .orb.done::after {
+        background: var(--success);
+        opacity: 1;
+        transform: scale(1);
+      }
+      @keyframes orb-pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(233,120,62,.5); }
+        50% { box-shadow: 0 0 0 7px rgba(233,120,62,0); }
       }
       .orb svg {
         width: 31px;
@@ -269,13 +299,14 @@
         font-size: 11px;
       }
       .toast {
-        position: absolute;
+        position: fixed;
         z-index: 8;
-        right: 14px;
-        bottom: 14px;
+        right: 18px;
+        bottom: 80px;
         display: none;
         align-items: center;
         gap: 8px;
+        max-width: min(340px, calc(100vw - 36px));
         padding: 10px 12px;
         border: 1px solid var(--border-default);
         border-radius: 9px;
@@ -284,10 +315,13 @@
         box-shadow: 0 16px 40px var(--shadow-card);
         font-size: 10px;
         font-weight: 700;
+        pointer-events: none;
+        animation: toast-in .18s ease-out;
       }
       .toast.show { display: flex; }
       .toast i {
         display: grid;
+        flex: none;
         width: 18px;
         height: 18px;
         place-items: center;
@@ -300,6 +334,9 @@
       .toast.warn i {
         color: var(--inner-bg);
         background: var(--warning);
+      }
+      @keyframes toast-in {
+        from { opacity: 0; transform: translateY(6px); }
       }
       .resize-handle {
         position: absolute;
@@ -371,9 +408,9 @@
         <strong>放到画布里</strong>
         <span>图片会连接到当前选中的提示词节点</span>
       </div>
-      <div class="toast"><i>✓</i><span></span></div>
       <button class="resize-handle" type="button" title="拖动调整画布大小"></button>
     </section>
+    <div class="toast"><i>✓</i><span></span></div>
   `;
 
   const orb = root.querySelector(".orb");
@@ -1093,6 +1130,8 @@
       controller: new AbortController()
     };
     activeExecution = execution;
+    orb.classList.add("running");
+    let succeeded = false;
     try {
       const prompt = String(message.prompt || "").trim();
       if (!prompt) throw new Error("提示词是空的");
@@ -1126,6 +1165,7 @@
         baselineKeys,
         execution
       });
+      succeeded = true;
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
       const messageText =
@@ -1133,7 +1173,12 @@
       reportExecution(requestId, "failed", messageText);
       showToast(messageText, true);
     } finally {
+      orb.classList.remove("running");
       if (activeExecution === execution) activeExecution = null;
+      if (succeeded) {
+        orb.classList.add("done");
+        setTimeout(() => orb.classList.remove("done"), 3600);
+      }
     }
   }
 
@@ -1145,6 +1190,7 @@
     execution.cancelled = true;
     execution.controller.abort();
     activeExecution = null;
+    orb.classList.remove("running");
     findStopButton()?.click();
     reportExecution(
       execution.requestId,
@@ -1242,6 +1288,10 @@
       void persistGeometry();
     }
   });
+  header.addEventListener("dblclick", (event) => {
+    if (event.target.closest("button")) return;
+    setMaximized(!maximized);
+  });
 
   resizeHandle.addEventListener("pointerdown", (event) => {
     if (maximized) return;
@@ -1332,6 +1382,11 @@
     }
     if (event.data?.type === "branchboard:minimize-floating-canvas") {
       setOpen(false);
+      showToast(
+        event.data.reason === "copied"
+          ? "已复制提示词 · Ctrl+V 发送后点图标回画布"
+          : "画布已收起 · 点图标回来"
+      );
       return;
     }
     if (event.data?.type === "branchboard:execute-prompt") {
@@ -1358,6 +1413,43 @@
       setOpen(!open);
     }
   });
+
+  window.addEventListener(
+    "paste",
+    (event) => {
+      if (!open) return;
+      const items = event.clipboardData?.items;
+      if (!items) return;
+      const imageItem = Array.from(items).find(
+        (item) => item.kind === "file" && item.type.startsWith("image/")
+      );
+      if (!imageItem) return;
+      const target = event.target instanceof Element ? event.target : null;
+      if (
+        target?.closest("textarea, input, [contenteditable='true'], form")
+      ) {
+        return;
+      }
+      const file = imageItem.getAsFile();
+      if (!file) return;
+      event.preventDefault();
+      event.stopPropagation();
+      fileToDataUrl(file)
+        .then((dataUrl) => {
+          frame.contentWindow?.postMessage(
+            {
+              type: "branchboard:forwarded-paste",
+              dataUrl,
+              name: file.name || "粘贴图片"
+            },
+            "*"
+          );
+          showToast("图片已粘贴进画布");
+        })
+        .catch(() => showToast("粘贴图片失败", true));
+    },
+    true
+  );
 
   let viewportResizeTimer = null;
   window.addEventListener("resize", () => {
