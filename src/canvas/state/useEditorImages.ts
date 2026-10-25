@@ -347,3 +347,5 @@ export function useEditorImages(
     integratePending
   };
 }
+
+export type ImagesApi = ReturnType<typeof useEditorImages>;

@@ -109,3 +109,5 @@ export function useEditorHistory(
 
   return { undo, redo, forgetCanvas, onNodeDragStart, onNodeDragStop };
 }
+
+export type HistoryApi = ReturnType<typeof useEditorHistory>;

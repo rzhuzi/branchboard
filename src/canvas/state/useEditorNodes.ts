@@ -467,3 +467,5 @@ export function useEditorNodes(
     onEdgesChange
   };
 }
+
+export type NodesApi = ReturnType<typeof useEditorNodes>;

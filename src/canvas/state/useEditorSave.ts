@@ -157,3 +157,5 @@ export function useEditorSave(core: EditorCore, workspace: WorkspaceSession) {
 
   return { saveNow, retrySave, flush, isDirty };
 }
+
+export type SaveApi = ReturnType<typeof useEditorSave>;
