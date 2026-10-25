@@ -296,3 +296,5 @@ export function useEditorViewport(core: EditorCore) {
     onMoveEnd
   };
 }
+
+export type ViewportApi = ReturnType<typeof useEditorViewport>;
