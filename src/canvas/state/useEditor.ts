@@ -49,6 +49,7 @@ import {
   type HistoryEntry
 } from "./editorPure";
 import { useEditorCore } from "./editorCore";
+import { useEditorSave } from "./useEditorSave";
 
 export function useEditor({
   workspace,
@@ -70,6 +71,7 @@ export function useEditor({
   const { cancelPrompt, runPrompt } = useExecution();
   const { pushToast } = useToast();
 
+  const core = useEditorCore({ canvasId, document: initialDocument });
   const {
     nodes,
     edges,
@@ -107,70 +109,7 @@ export function useEditor({
     markDirty,
     pushHistoryEntry,
     pushHistory
-  } = useEditorCore({ canvasId, document: initialDocument });
-
-  const saveNow = useCallback(async (): Promise<boolean> => {
-    if (saveTimerRef.current) {
-      window.clearTimeout(saveTimerRef.current);
-      saveTimerRef.current = null;
-    }
-    if (saveLoopRef.current) {
-      await saveLoopRef.current;
-      if (!dirtyRef.current) return saveStateRef.current !== "error";
-    }
-
-    const run = async (): Promise<boolean> => {
-      let loops = 0;
-      while (dirtyRef.current && loops < 4) {
-        loops += 1;
-        const targetCanvasId = canvasIdRef.current;
-        const versionAtStart = changeVersionRef.current;
-        const candidate = snapshotNow();
-        const result = await workspace.commit(targetCanvasId, candidate);
-        if (canvasIdRef.current !== targetCanvasId) return true;
-        if (!result.ok) {
-          setSaveStatus("error", result.message);
-          return false;
-        }
-        revisionRef.current = result.document.revision;
-        if (result.merged) {
-          const merged =
-            changeVersionRef.current === versionAtStart
-              ? snapshotFromDocument(result.document)
-              : mergeCanvasSnapshots(
-                  candidate,
-                  snapshotNow(),
-                  snapshotFromDocument(result.document)
-                );
-          applyState(prepareNodes(merged.nodes), merged.edges);
-        }
-        if (changeVersionRef.current === versionAtStart) {
-          dirtyRef.current = false;
-          setSaveStatus("saved");
-          return true;
-        }
-      }
-      if (dirtyRef.current) {
-        saveStateRef.current = "saving";
-        setSaveState("saving");
-        saveTimerRef.current = window.setTimeout(() => {
-          saveTimerRef.current = null;
-          if (dirtyRef.current) void saveNowRef.current?.();
-        }, 480);
-      }
-      return !dirtyRef.current && saveStateRef.current !== "error";
-    };
-
-    const promise = run();
-    saveLoopRef.current = promise;
-    try {
-      return await promise;
-    } finally {
-      if (saveLoopRef.current === promise) saveLoopRef.current = null;
-    }
-  }, [applyState, setSaveStatus, snapshotNow, workspace]);
-
-  saveNowRef.current = saveNow;
+  } = core;
 
   const reconcileRemovedPrompts = useCallback(
     (before: CanvasNode[], after: CanvasNode[]) => {
@@ -1106,29 +1045,6 @@ export function useEditor({
     setHistoryVersion((value) => value + 1);
   }, []);
 
-  const retrySave = useCallback(() => {
-    if (!dirtyRef.current) {
-      setSaveStatus("saved");
-      return;
-    }
-    setSaveStatus("saving");
-    void saveNow();
-  }, [saveNow, setSaveStatus]);
-
-  const flush = useCallback(async (): Promise<boolean> => {
-    if (saveTimerRef.current) {
-      window.clearTimeout(saveTimerRef.current);
-      saveTimerRef.current = null;
-    }
-    for (let attempt = 0; attempt < 3 && dirtyRef.current; attempt += 1) {
-      await saveNow();
-    }
-    if (saveLoopRef.current) await saveLoopRef.current;
-    return !dirtyRef.current && saveStateRef.current !== "error";
-  }, [saveNow]);
-
-  const isDirty = useCallback(() => dirtyRef.current, []);
-
   const onNodesChange = useCallback(
     (changes: NodeChange<CanvasNode>[]) => {
       const next = applyNodeChanges(changes, nodesRef.current);
@@ -1221,48 +1137,7 @@ export function useEditor({
     };
   }, [canvasId, recordViewport]);
 
-  useEffect(() => {
-    const unsubscribe = workspace.subscribe((change) => {
-      if (change.kind !== "canvas" || change.canvasId !== canvasIdRef.current) return;
-      if (dirtyRef.current) return;
-      void workspace.refreshDocument(change.canvasId).then((documentData) => {
-        if (
-          !documentData ||
-          dirtyRef.current ||
-          canvasIdRef.current !== change.canvasId ||
-          documentData.revision <= revisionRef.current
-        ) {
-          return;
-        }
-        revisionRef.current = documentData.revision;
-        const nextNodes = prepareNodes(documentData.nodes);
-        const nextEdges = prepareEdges(documentData.edges, nextNodes);
-        applyState(nextNodes, nextEdges);
-        historiesRef.current.set(change.canvasId, { past: [], future: [] });
-        setHistoryVersion((value) => value + 1);
-        setSaveStatus("saved");
-      });
-    });
-    return unsubscribe;
-  }, [applyState, setSaveStatus, workspace]);
-
-  useEffect(() => {
-    const flushOnHide = () => {
-      if (document.visibilityState === "hidden" && dirtyRef.current) {
-        void saveNowRef.current?.();
-      }
-    };
-    const flushOnPageHide = () => {
-      if (dirtyRef.current) void saveNowRef.current?.();
-    };
-    document.addEventListener("visibilitychange", flushOnHide);
-    window.addEventListener("pagehide", flushOnPageHide);
-    return () => {
-      document.removeEventListener("visibilitychange", flushOnHide);
-      window.removeEventListener("pagehide", flushOnPageHide);
-      if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
-    };
-  }, []);
+  const { retrySave, flush, isDirty } = useEditorSave(core, workspace);
 
   const history = historiesRef.current.get(canvasId);
   const canUndo = Boolean(history?.past.length);
