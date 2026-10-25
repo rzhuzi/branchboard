@@ -23,7 +23,7 @@ export type AssetEntry = {
   name?: string;
 };
 
-type StoreBlobOptions = {
+export type StoreBlobOptions = {
   name?: string;
   width?: number;
   height?: number;
