@@ -18,12 +18,20 @@ if (manifest.version !== packageJson.version) {
 if (manifest.manifest_version !== 3) {
   throw new Error("Only Manifest V3 release packages are supported");
 }
+if (manifest.content_scripts?.length !== 1) {
+  throw new Error("Expected exactly one content script entry");
+}
+if (manifest.content_scripts[0].js?.join(",") !== "content.js") {
+  throw new Error("Content script must be bundled into content.js");
+}
+if (manifest.background?.service_worker !== "background.js") {
+  throw new Error("Background service worker must be background.js");
+}
 
 const requiredFiles = [
   "manifest.json",
   "background.js",
   "content.js",
-  "runtime-utils.js",
   "offscreen.html",
   "offscreen.js",
   "canvas.html",
@@ -39,6 +47,16 @@ for (const relativePath of requiredFiles) {
   if ((await stat(filePath)).size === 0) {
     throw new Error(`Release file is empty: ${relativePath}`);
   }
+}
+
+const canvasHtml = await readFile(resolve(projectRoot, "dist", "canvas.html"), "utf8");
+if (!/assets\/[^"']+\.js/.test(canvasHtml)) {
+  throw new Error("canvas.html is missing its bundled script");
+}
+
+const canvasAssets = manifest.web_accessible_resources?.[0]?.resources ?? [];
+if (!canvasAssets.includes("canvas.html") || !canvasAssets.includes("assets/*")) {
+  throw new Error("Canvas page and bundled assets must be web accessible");
 }
 
 console.log(

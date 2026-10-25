@@ -1,218 +1,229 @@
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { memo, useEffect, useState } from "react";
+import { Handle, Position, type NodeProps } from "@xyflow/react";
+import type { CanvasNode, ImageNodeData } from "../../shared/types";
+import { AnnotationEditor } from "../overlays/AnnotationEditor";
+import { ImagePreview } from "../overlays/ImagePreview";
+import { useAsset } from "../state/AssetProvider";
+import { useEditorActions } from "../state/EditorContext";
+import { IconButton } from "../ui/controls";
 import {
-  Handle,
-  Position,
-  useReactFlow,
-  type NodeProps
-} from "@xyflow/react";
-import type {
-  CanvasEdge,
-  CanvasNode,
-  ImageNodeData,
-  PromptNodeData
-} from "../../shared/types";
-import { copyImage } from "../../shared/browser";
-import { AnnotationEditor } from "../AnnotationEditor";
-import { findFreePosition } from "../layout";
+  BranchIcon,
+  CopyIcon,
+  DownloadIcon,
+  ImageIcon,
+  MoreIcon,
+  PenIcon,
+  TrashIcon
+} from "../ui/icons";
+import { Menu, type MenuEntry } from "../ui/Menu";
 
-function downloadFileName(name: string, dataUrl: string): string {
-  const mime = dataUrl.slice(5, dataUrl.indexOf(";"));
-  const extension = mime.split("/")[1]?.replace("jpeg", "jpg") || "png";
-  const base = name.replace(/[\\/:*?"<>|]/g, "_").trim() || "branchboard-image";
-  return `${base}.${extension}`;
-}
+type MenuState = { x: number; y: number };
 
-export function ImageNode(props: NodeProps<CanvasNode>) {
-  const { id, data: rawData, selected } = props;
+export const ImageNode = memo(function ImageNode({
+  id,
+  data: rawData,
+  selected
+}: NodeProps<CanvasNode>) {
   const data = rawData as ImageNodeData;
-  const [copyState, setCopyState] = useState<"idle" | "copied" | "error">(
-    "idle"
-  );
-  const [isAnnotating, setIsAnnotating] = useState(false);
-  const [isPreviewing, setIsPreviewing] = useState(false);
-  const { setNodes, setEdges, getNode, getEdges } = useReactFlow<
-    CanvasNode,
-    CanvasEdge
-  >();
+  const actions = useEditorActions();
+  const { asset, error, loading } = useAsset(data.assetId);
+  const [menu, setMenu] = useState<MenuState | null>(null);
+  const [previewing, setPreviewing] = useState(false);
+  const [annotating, setAnnotating] = useState(false);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
 
   useEffect(() => {
-    if (!isPreviewing) return;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsPreviewing(false);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isPreviewing]);
+    if (copyState === "idle") return;
+    const timer = window.setTimeout(() => setCopyState("idle"), 1600);
+    return () => window.clearTimeout(timer);
+  }, [copyState]);
 
-  const handleCopy = async () => {
-    try {
-      await copyImage(data.dataUrl);
-      setCopyState("copied");
-    } catch {
-      setCopyState("error");
+  const handleCopy = async (): Promise<boolean> => {
+    const copied = await actions.copyImage(id);
+    setCopyState(copied ? "copied" : "error");
+    return copied;
+  };
+
+  const menuItems: MenuEntry[] = [
+    {
+      label: "预览大图",
+      icon: <ImageIcon size={14} />,
+      disabled: !asset,
+      onSelect: () => setPreviewing(true)
+    },
+    {
+      label: "继续修改",
+      icon: <BranchIcon size={14} />,
+      onSelect: () => actions.continueFromImage(id)
+    },
+    "separator",
+    {
+      label: "复制图片",
+      icon: <CopyIcon size={14} />,
+      disabled: !asset,
+      onSelect: () => void handleCopy()
+    },
+    {
+      label: "下载图片",
+      icon: <DownloadIcon size={14} />,
+      disabled: !asset,
+      onSelect: () => actions.downloadImage(id)
+    },
+    {
+      label: "标注图片",
+      icon: <PenIcon size={14} />,
+      disabled: !asset,
+      onSelect: () => setAnnotating(true)
+    },
+    ...(data.originalAssetId
+      ? [
+          {
+            label: "恢复原图",
+            icon: <ImageIcon size={14} />,
+            onSelect: () => actions.restoreOriginal(id)
+          } satisfies MenuEntry
+        ]
+      : []),
+    "separator",
+    {
+      label: "删除节点",
+      icon: <TrashIcon size={14} />,
+      danger: true,
+      onSelect: () => actions.deleteNode(id)
     }
-    window.setTimeout(() => setCopyState("idle"), 1600);
-  };
-
-  const handleContinue = () => {
-    const parent = getNode(id);
-    if (!parent) return;
-    const childId = crypto.randomUUID();
-    const siblingCount = getEdges().filter((edge) => edge.source === id).length;
-    const promptData: PromptNodeData = {
-      kind: "prompt",
-      title: "继续修改",
-      prompt: "",
-      createdAt: new Date().toISOString()
-    };
-
-    setNodes((nodes) => {
-      const position = findFreePosition(nodes, {
-        x: parent.position.x + 430,
-        y: parent.position.y + siblingCount * 330
-      });
-      return [
-        ...nodes.map((node) => ({ ...node, selected: false })),
-        {
-          id: childId,
-          type: "prompt",
-          position,
-          selected: true,
-          data: promptData
-        }
-      ];
-    });
-    setEdges((edges) => [
-      ...edges,
-      {
-        id: `edge-${id}-${childId}`,
-        source: id,
-        target: childId,
-        type: "smoothstep",
-        label: "参考图"
-      }
-    ]);
-  };
-
-  const handleSaveAnnotation = (dataUrl: string) => {
-    setNodes((nodes) =>
-      nodes.map((node) =>
-        node.id === id && node.data.kind === "image"
-          ? {
-              ...node,
-              data: {
-                ...node.data,
-                dataUrl,
-                annotatedAt: new Date().toISOString()
-              }
-            }
-          : node
-      )
-    );
-    setIsAnnotating(false);
-  };
+  ];
 
   return (
-    <article className={`image-node ${selected ? "is-selected" : ""}`}>
-      <Handle
-        type="target"
-        position={Position.Left}
-        className="node-handle"
-        isConnectable={false}
-      />
+    <article
+      className={`bb-node bb-image-node ${selected ? "is-selected" : ""}`.trim()}
+      style={{ width: 320 }}
+      onContextMenu={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setMenu({ x: event.clientX, y: event.clientY });
+      }}
+    >
+      <Handle type="target" position={Position.Left} className="bb-handle" />
       <div
-        className="image-frame nodrag"
-        title="点击查看大图"
-        role="button"
-        aria-label="查看大图"
-        onClick={() => setIsPreviewing(true)}
+        className="bb-image-frame"
+        onDoubleClick={() => {
+          if (asset) setPreviewing(true);
+        }}
+        title={asset ? "双击预览大图" : error || "图片加载中"}
       >
-        <img src={data.dataUrl} alt={data.name || "生成图片"} draggable={false} />
-      </div>
-      <div className="image-meta">
-        <div>
-          <strong>{data.name || "生成结果"}</strong>
-          <span>{new Date(data.createdAt).toLocaleString("zh-CN")}</span>
-        </div>
-        <div className="image-actions">
-          <button
-            className="node-button nodrag"
-            type="button"
-            onClick={() => setIsAnnotating(true)}
-          >
-            标注
-          </button>
-          <button className="node-button nodrag" type="button" onClick={() => void handleCopy()}>
-            {copyState === "copied"
-              ? "已复制"
-              : copyState === "error"
-                ? "复制失败"
-                : "复制图片"}
-          </button>
-          <button
-            className="node-button node-button-primary nodrag"
-            type="button"
-            onClick={handleContinue}
-          >
-            继续修改
-          </button>
-        </div>
-      </div>
-      <Handle
-        type="source"
-        position={Position.Right}
-        className="node-handle"
-        isConnectable={false}
-      />
-      {isAnnotating
-        ? createPortal(
-            <AnnotationEditor
-              dataUrl={data.dataUrl}
-              onCancel={() => setIsAnnotating(false)}
-              onSave={handleSaveAnnotation}
-            />,
-            document.body
-          )
-        : null}
-      {isPreviewing
-        ? createPortal(
-            <div
-              className="image-preview-overlay"
-              role="dialog"
-              aria-modal="true"
-              aria-label="图片预览"
-              onClick={() => setIsPreviewing(false)}
+        {asset ? (
+          <img src={asset.url} alt={data.name || "图片"} draggable={false} />
+        ) : (
+          <div className={`bb-image-placeholder ${error ? "error" : ""}`}>
+            {loading ? <span className="bb-image-loading">正在加载图片</span> : null}
+            {error ? (
+              <>
+                <ImageIcon size={18} />
+                <span>图片不可用</span>
+              </>
+            ) : null}
+          </div>
+        )}
+
+        {data.originalAssetId ? (
+          <span className="bb-image-badge" title="已标注，可从菜单恢复原图">
+            已标注
+          </span>
+        ) : null}
+        {copyState !== "idle" ? (
+          <span className={`bb-image-feedback ${copyState}`}>
+            {copyState === "copied" ? "已复制" : "复制失败"}
+          </span>
+        ) : null}
+
+        <button
+          type="button"
+          className="bb-image-menu-button nodrag"
+          aria-label="图片操作"
+          title="图片操作"
+          onClick={(event) => {
+            const rect = event.currentTarget.getBoundingClientRect();
+            setMenu({ x: rect.left, y: rect.bottom + 4 });
+          }}
+        >
+          <MoreIcon size={14} />
+        </button>
+
+        {asset ? (
+          <div className="bb-image-toolbar nodrag">
+            <button
+              type="button"
+              className="bb-image-continue"
+              onClick={() => actions.continueFromImage(id)}
             >
-              <div
-                className="image-preview-body"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <img src={data.dataUrl} alt={data.name || "生成图片"} />
-                <div className="image-preview-actions">
-                  <span className="image-preview-name">
-                    {data.name || "生成结果"}
-                  </span>
-                  <a
-                    className="node-button"
-                    download={downloadFileName(data.name || "", data.dataUrl)}
-                    href={data.dataUrl}
-                  >
-                    下载图片
-                  </a>
-                  <button
-                    className="node-button"
-                    type="button"
-                    onClick={() => setIsPreviewing(false)}
-                  >
-                    关闭
-                  </button>
-                </div>
-              </div>
-            </div>,
-            document.body
-          )
-        : null}
+              <BranchIcon size={13} />
+              继续修改
+            </button>
+            <IconButton
+              label="复制图片"
+              size="sm"
+              onClick={() => void handleCopy()}
+            >
+              <CopyIcon size={13} />
+            </IconButton>
+            <IconButton
+              label="下载图片"
+              size="sm"
+              onClick={() => actions.downloadImage(id)}
+            >
+              <DownloadIcon size={13} />
+            </IconButton>
+            <IconButton
+              label="标注图片"
+              size="sm"
+              onClick={() => setAnnotating(true)}
+            >
+              <PenIcon size={13} />
+            </IconButton>
+          </div>
+        ) : null}
+      </div>
+      <Handle type="source" position={Position.Right} className="bb-handle" />
+
+      {menu ? (
+        <Menu
+          x={menu.x}
+          y={menu.y}
+          header={data.name || "图片"}
+          items={menuItems}
+          onClose={() => setMenu(null)}
+        />
+      ) : null}
+
+      {previewing && asset ? (
+        <ImagePreview
+          url={asset.url}
+          name={data.name}
+          onClose={() => setPreviewing(false)}
+          onContinue={() => {
+            setPreviewing(false);
+            actions.continueFromImage(id);
+          }}
+          onCopy={handleCopy}
+          onDownload={() => actions.downloadImage(id)}
+          onAnnotate={() => {
+            setPreviewing(false);
+            setAnnotating(true);
+          }}
+        />
+      ) : null}
+
+      {annotating && asset ? (
+        <AnnotationEditor
+          url={asset.url}
+          name={data.name}
+          onCancel={() => setAnnotating(false)}
+          onSave={(blob, size) => {
+            setAnnotating(false);
+            void actions.annotateImage(id, blob, size);
+          }}
+        />
+      ) : null}
     </article>
   );
-}
+});

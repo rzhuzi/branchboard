@@ -75,7 +75,7 @@ async function runTextCopy({ clipboardError = null } = {}) {
     const keepAlive = listener(
       {
         target: "offscreen",
-        type: "branchboard:offscreen-clipboard-write",
+        type: "branchboard:v2:offscreen-write",
         format: "text",
         text: "manual-copy-test"
       },
@@ -219,7 +219,7 @@ async function runImageCopy({ clipboardError = null } = {}) {
     const keepAlive = listener(
       {
         target: "offscreen",
-        type: "branchboard:offscreen-clipboard-write",
+        type: "branchboard:v2:offscreen-write",
         format: "image",
         dataUrl: "data:image/png;base64,aW1hZ2U="
       },

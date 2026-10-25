@@ -1,13 +1,17 @@
 {
   "name": "branchboard",
   "private": true,
-  "version": "1.0.1",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "test": "node --test tests/*.test.mjs",
+    "test:e2e": "node tests/e2e/ui.mjs",
+    "test:extension": "node tests/e2e/shell.mjs",
+    "test:migration": "node tests/e2e/migration.mjs",
+    "test:performance": "node tests/e2e/performance.mjs",
     "icons": "node scripts/generate-icons.mjs",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/build-ext.mjs",
     "typecheck": "tsc -b",
     "preview": "vite preview",
     "release:check": "node scripts/validate-release.mjs"
@@ -23,6 +27,8 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "esbuild": "^0.25.0",
+    "puppeteer-core": "^25.16.0",
     "typescript": "^5.8.3",
     "vite": "^7.0.0"
   }

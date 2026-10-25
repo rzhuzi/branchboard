@@ -136,7 +136,7 @@ async function writeClipboard(message) {
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (
     message?.target !== "offscreen" ||
-    message?.type !== "branchboard:offscreen-clipboard-write"
+    message?.type !== "branchboard:v2:offscreen-write"
   ) {
     return;
   }
