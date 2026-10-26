@@ -1,3 +1,4 @@
+import type { Viewport } from "@xyflow/react";
 import type {
   CanvasDocument,
   CanvasRegistry,
@@ -8,11 +9,18 @@ import type {
 } from "./types";
 
 export const V2_DB_NAME = "branchboard-v2";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const DOCUMENTS_STORE = "documents";
 const ASSETS_STORE = "assets";
 const PENDING_STORE = "pending";
 const REGISTRY_STORE = "registry";
+const VIEWPORTS_STORE = "viewports";
+
+export type StoredViewport = {
+  canvasId: string;
+  viewport: Viewport;
+  updatedAt: string;
+};
 
 export type CanvasCommitAttempt =
   | { ok: true; document: CanvasDocument }
@@ -66,6 +74,9 @@ export function openV2Database(): Promise<IDBDatabase> {
       }
       if (!database.objectStoreNames.contains(REGISTRY_STORE)) {
         database.createObjectStore(REGISTRY_STORE, { keyPath: "id" });
+      }
+      if (!database.objectStoreNames.contains(VIEWPORTS_STORE)) {
+        database.createObjectStore(VIEWPORTS_STORE, { keyPath: "canvasId" });
       }
     };
     request.onsuccess = () => resolve(request.result);
@@ -290,7 +301,7 @@ export async function removeCanvasTab(canvasId: string): Promise<CanvasRemovalRe
   const database = await openV2Database();
   try {
     const transaction = database.transaction(
-      [REGISTRY_STORE, DOCUMENTS_STORE, PENDING_STORE],
+      [REGISTRY_STORE, DOCUMENTS_STORE, PENDING_STORE, VIEWPORTS_STORE],
       "readwrite"
     );
     const registryStore = transaction.objectStore(REGISTRY_STORE);
@@ -320,6 +331,7 @@ export async function removeCanvasTab(canvasId: string): Promise<CanvasRemovalRe
     };
     registryStore.put(registry);
     transaction.objectStore(DOCUMENTS_STORE).delete(canvasId);
+    transaction.objectStore(VIEWPORTS_STORE).delete(canvasId);
     const pendingStore = transaction.objectStore(PENDING_STORE);
     const pendingImages = await requestToPromise(
       pendingStore.getAll() as IDBRequest<PendingImage[]>
@@ -329,6 +341,32 @@ export async function removeCanvasTab(canvasId: string): Promise<CanvasRemovalRe
     }
     await transactionDone(transaction);
     return { ok: true, registry };
+  } finally {
+    database.close();
+  }
+}
+
+export async function putViewport(record: StoredViewport): Promise<void> {
+  const database = await openV2Database();
+  try {
+    const transaction = database.transaction(VIEWPORTS_STORE, "readwrite");
+    transaction.objectStore(VIEWPORTS_STORE).put(record);
+    await transactionDone(transaction);
+  } finally {
+    database.close();
+  }
+}
+
+export async function getViewport(canvasId: string): Promise<Viewport | null> {
+  const database = await openV2Database();
+  try {
+    const transaction = database.transaction(VIEWPORTS_STORE, "readonly");
+    const record = await requestToPromise(
+      transaction.objectStore(VIEWPORTS_STORE).get(canvasId) as IDBRequest<
+        StoredViewport | undefined
+      >
+    );
+    return record?.viewport ?? null;
   } finally {
     database.close();
   }

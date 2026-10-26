@@ -106,9 +106,13 @@ export function mergeCanvasSnapshots(
   local: CanvasSnapshot,
   remote: CanvasSnapshot
 ): CanvasSnapshot {
+  const nodes = mergeEntities<CanvasNode>(base.nodes, local.nodes, remote.nodes);
+  const nodeIds = new Set(nodes.map((node) => node.id));
   return {
-    nodes: mergeEntities<CanvasNode>(base.nodes, local.nodes, remote.nodes),
-    edges: mergeEntities<CanvasEdge>(base.edges, local.edges, remote.edges),
+    nodes,
+    edges: mergeEntities<CanvasEdge>(base.edges, local.edges, remote.edges).filter(
+      (edge) => nodeIds.has(edge.source) && nodeIds.has(edge.target)
+    ),
     // A viewport is per-tab attention, not shared document content. Keep the
     // viewport of the tab that is saving.
     viewport: local.viewport,

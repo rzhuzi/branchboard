@@ -6,6 +6,7 @@ import type {
 } from "../shared/types";
 import {
   attachReferenceImages,
+  captureConversationBaseline,
   composerText,
   fillComposer,
   findComposer,
@@ -14,11 +15,13 @@ import {
   generatedImageKeys,
   generatedImageName,
   hasImageGenerationPlaceholder,
+  isAssistantResponseComplete,
+  isGeneratedImage,
   isResponseGenerating,
-  latestConversationTurn,
   newAssistantTurns,
   newGeneratedImages,
-  wait
+  wait,
+  type ConversationBaseline
 } from "./dom";
 
 const TEXT_RESPONSE_GRACE_MS = 10_000;
@@ -129,11 +132,12 @@ async function waitForGeneratedResults(
   request: RunPromptRequest,
   execution: ActiveExecution,
   hooks: AutomationHooks,
-  baselineTurn: number,
+  baselineTurn: ConversationBaseline,
   baselineKeys: Set<string>
-): Promise<void> {
+): Promise<string> {
   const startedAt = Date.now();
   let firstReadyAt = 0;
+  let readyImageKeys = "";
   let textResponseReadyAt = 0;
   let lastHeartbeatAt = Date.now();
   hooks.report(request, "waiting", "ChatGPT 正在生成图片");
@@ -147,12 +151,13 @@ async function waitForGeneratedResults(
     }
 
     const candidates = newGeneratedImages(baselineTurn, baselineKeys);
+    const assistantTurns = newAssistantTurns(baselineTurn);
     if (!candidates.length) {
       firstReadyAt = 0;
-      const assistantTurns = newAssistantTurns(baselineTurn);
-      const stillRunning = isResponseGenerating();
+      readyImageKeys = "";
+      const stillRunning = isResponseGenerating(assistantTurns);
       const imagePlaceholder = hasImageGenerationPlaceholder(assistantTurns);
-      if (assistantTurns.length && !stillRunning && !imagePlaceholder) {
+      if (isAssistantResponseComplete(assistantTurns) && !stillRunning && !imagePlaceholder) {
         if (!textResponseReadyAt) textResponseReadyAt = Date.now();
         if (Date.now() - textResponseReadyAt >= TEXT_RESPONSE_GRACE_MS) {
           throw new Error("ChatGPT 返回了文字，没有生成图片");
@@ -165,6 +170,24 @@ async function waitForGeneratedResults(
     }
 
     textResponseReadyAt = 0;
+    const candidateKeys = candidates
+      .map((image) => image.currentSrc || image.src)
+      .sort()
+      .join("\n");
+    if (candidateKeys !== readyImageKeys) {
+      readyImageKeys = candidateKeys;
+      firstReadyAt = 0;
+    }
+    const unfinishedImages = assistantTurns.some((turn) =>
+      Array.from(turn.querySelectorAll<HTMLImageElement>("img")).some(
+        (image) => isGeneratedImage(image) && !image.complete
+      )
+    );
+    if (isResponseGenerating(assistantTurns) || unfinishedImages) {
+      firstReadyAt = 0;
+      await wait(400);
+      continue;
+    }
     if (!firstReadyAt) firstReadyAt = Date.now();
     if (Date.now() - firstReadyAt < 1600) {
       await wait(400);
@@ -187,14 +210,9 @@ async function waitForGeneratedResults(
         capturedCount += 1;
       }
     }
-    hooks.report(
-      request,
-      "captured",
-      capturedCount > 0
-        ? `${capturedCount} 张图片已加入画布`
-        : "生成图片与已有结果相同，未重复加入"
-    );
-    return;
+    return capturedCount > 0
+      ? `${capturedCount} 张图片已加入画布`
+      : "生成图片与已有结果相同，未重复加入";
   }
 
   throw new Error("等待生成图片超时，请检查 ChatGPT 是否生成成功");
@@ -206,13 +224,12 @@ export function hasActiveAutomation(): boolean {
 
 export function cancelAutomation(
   requestIds: string[],
-  hooks: AutomationHooks
+  _hooks: AutomationHooks
 ): void {
   if (!active || !requestIds.includes(active.request.requestId)) return;
   active.cancelled = true;
   active.controller.abort();
   findStopButton()?.click();
-  hooks.report(active.request, "cancelled", "已取消生成");
 }
 
 export async function executePrompt(
@@ -232,6 +249,7 @@ export async function executePrompt(
   active = execution;
   hooks.onRunning();
   let outcome: "done" | "error" | "cancelled" = "error";
+  let terminalMessage = "";
   try {
     const prompt = String(request.prompt || "").trim();
     if (!prompt) throw new Error("提示词是空的");
@@ -259,31 +277,40 @@ export async function executePrompt(
 
     hooks.report(request, "sending", "正在发送");
     const sendButton = await waitForSendButton(execution);
-    const baselineTurn = latestConversationTurn();
+    const baselineTurn = captureConversationBaseline();
     const baselineKeys = generatedImageKeys();
     assertActive(execution);
     sendButton.click();
     await waitForSendStarted(execution);
     hooks.report(request, "sent", "已发送，等待生成图片");
-    await waitForGeneratedResults(
+    terminalMessage = await waitForGeneratedResults(
       request,
       execution,
       hooks,
       baselineTurn,
       baselineKeys
     );
+    assertActive(execution);
     outcome = "done";
   } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") {
+    if (
+      execution.cancelled ||
+      (error instanceof DOMException && error.name === "AbortError")
+    ) {
       outcome = "cancelled";
+      terminalMessage = "已取消生成";
     } else {
-      const message = error instanceof Error ? error.message : String(error);
+      terminalMessage = error instanceof Error ? error.message : String(error);
       outcome = "error";
-      hooks.report(request, "failed", message);
-      hooks.onError(message);
     }
   } finally {
     if (active === execution) active = null;
     hooks.onFinished(outcome);
+    hooks.report(
+      request,
+      outcome === "done" ? "captured" : outcome === "cancelled" ? "cancelled" : "failed",
+      terminalMessage
+    );
+    if (outcome === "error") hooks.onError(terminalMessage);
   }
 }

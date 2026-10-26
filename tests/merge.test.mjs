@@ -105,3 +105,28 @@ test("keeps the viewport of the tab that saves", () => {
   );
   assert.deepEqual(merged.viewport, localViewport);
 });
+
+test("keeps a remote result without a dangling edge when its prompt was deleted locally", () => {
+  const prompt = promptNode();
+  const image = {
+    id: "image-result-1",
+    type: "image",
+    position: { x: 500, y: 180 },
+    data: { kind: "image", assetId: "asset-1" }
+  };
+  const generated = {
+    id: "generated-1",
+    source: prompt.id,
+    target: image.id,
+    data: { relation: "generated" }
+  };
+
+  const merged = mergeCanvasSnapshots(
+    snapshot([prompt]),
+    snapshot([]),
+    snapshot([prompt, image], [generated])
+  );
+
+  assert.deepEqual(merged.nodes.map((node) => node.id), [image.id]);
+  assert.deepEqual(merged.edges, []);
+});

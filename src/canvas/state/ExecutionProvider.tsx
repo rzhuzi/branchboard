@@ -282,12 +282,13 @@ export function ExecutionProvider({
       const requestId = String(data.requestId || "");
       if (!promptId || !requestId) return;
       const active = activeRef.current;
-      const isActive = active?.requestId === requestId;
+      const known = entriesRef.current[promptId];
+      const isActive = active?.requestId === requestId && active.promptId === promptId;
+      if (!isActive && known?.requestId !== requestId) return;
       if (isActive) lastProgressAtRef.current = Date.now();
 
       const stage = String(data.stage || "waiting") as ExecutionStage;
       const tone = toneForStage(stage);
-      const known = entriesRef.current[promptId];
       const now = Date.now();
       const entry: PromptExecution = {
         requestId,

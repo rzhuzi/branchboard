@@ -6,8 +6,8 @@ OpenAI API，而是直接使用当前已登录的 ChatGPT 页面，把提示词�
 
 核心流程只有一条：**创建 → 编写 → 生成 → 查看 → 修改 → 再生成。**
 
-当前版本：**2.0.0**。V2 是在独立分支上完成的产品级重构，旧版
-`main` 分支保留可回退。
+当前版本：**2.0.1**。默认分支为 `v2`，包含 V2 重构及生图回收、任务状态、
+保存与同步修复。旧版源码保留在 `archive-main-2026-10-26` 归档标签中。
 
 ## V2 交互规则
 
@@ -61,7 +61,7 @@ OpenAI API，而是直接使用当前已登录的 ChatGPT 页面，把提示词�
 
 ### 发布包
 
-1. 解压 `branchboard-v2.0.0.zip`。
+1. 从 [GitHub Releases](https://github.com/rzhuzi/branchboard/releases/latest) 下载并解压 `branchboard-v2.0.1.zip`。
 2. 打开 `chrome://extensions`。
 3. 开启右上角「开发者模式」。
 4. 点击「加载已解压的扩展程序」，选择解压后的目录。
@@ -116,6 +116,7 @@ npm run preview -- --port 4173 --strictPort
 
 ```powershell
 npm run test:e2e          # 浏览器交互走查
+npm run test:content      # ChatGPT 新旧页面结构的图片识别与回收边界
 npm run test:migration    # 旧版 IndexedDB 迁移
 npm run test:performance  # 64 节点 / 16 张图片压力冒烟
 npm run test:extension    # 真实扩展加载 + 后台回收 + 浮窗

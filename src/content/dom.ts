@@ -118,8 +118,12 @@ export function findStopButton(): HTMLButtonElement | null {
   return null;
 }
 
-export function isResponseGenerating(): boolean {
-  return Boolean(findStopButton());
+export function isResponseGenerating(turns: Element[] = []): boolean {
+  return Boolean(findStopButton()) || turns.some((turn) => {
+    const state = responseStateElement(turn)?.getAttribute("data-talvt-turn-state");
+    return (state !== undefined && state !== null && state !== "complete") ||
+      hasImageGenerationProgress(turn);
+  });
 }
 
 export function findFileInput(): HTMLInputElement | null {
@@ -158,31 +162,80 @@ export function findAttachButton(): HTMLButtonElement | null {
   return null;
 }
 
+const LEGACY_TURN_SELECTOR = "[data-testid^='conversation-turn-']";
+const CURRENT_TURN_SELECTOR = "[data-turn-key]";
+const GENERATED_IMAGE_CONTAINER =
+  "[data-testid='generated-image-preview'], [data-testid='generated-image-gallery'], [class*='imagegen']";
+const GENERATED_IMAGE_ALT = /^(?:已生成(?:图片|图像)|generated image)(?=$|[\s:：])/i;
+const USER_MESSAGE_SELECTOR =
+  "[data-message-author-role='user'], [data-user-message-bubble], [data-chatgpt-search-unit-key$=':user']";
+const IMAGE_PROGRESS_LABEL = /^(?:正在(?:勾勒草图|生成(?:图片|图像)|绘制(?:图片|图像)|添加细节)|(?:creating|generating|drawing) (?:an? )?image)[.。…\s]*$/i;
+
+function responseStateElement(turn: Element): Element | null {
+  return turn.matches("[data-talvt-turn-state]")
+    ? turn
+    : turn.querySelector("[data-talvt-turn-state]");
+}
+
+function hasImageGenerationProgress(turn: Element): boolean {
+  const indicators = turn.querySelectorAll("[role='progressbar'], [aria-busy='true'], span, p, div");
+  return Array.from(indicators).some((element) => {
+    if (element.closest(USER_MESSAGE_SELECTOR) || element.closest("[aria-hidden='true']") || !visible(element)) return false;
+    return element.matches("[role='progressbar'], [aria-busy='true']") ||
+      (!element.childElementCount && IMAGE_PROGRESS_LABEL.test(element.textContent?.trim() || ""));
+  });
+}
+
+export function isAssistantResponseComplete(turns: Element[]): boolean {
+  if (!turns.length || isResponseGenerating(turns)) return false;
+  return turns.every((turn) => {
+    const state = responseStateElement(turn);
+    if (state) return state.getAttribute("data-talvt-turn-state") === "complete";
+    // Older pages expose final-answer actions instead of an explicit turn state.
+    return Array.from(turn.querySelectorAll(
+      "[data-testid='copy-turn-action-button'], [data-testid='good-response-turn-action-button'], [data-testid='bad-response-turn-action-button']"
+    )).some(visible);
+  });
+}
+
+export type ConversationBaseline = {
+  latestTurn: number;
+  turnKeys: Set<string>;
+};
+
 function conversationTurnNumber(element: Element): number {
-  const section = element.closest("section[data-testid^='conversation-turn-']");
-  const match = section?.getAttribute("data-testid")?.match(/conversation-turn-(\d+)/);
+  const turn = element.closest(LEGACY_TURN_SELECTOR);
+  const match = turn?.getAttribute("data-testid")?.match(/conversation-turn-(\d+)/);
   return match ? Number(match[1]) : -1;
 }
 
-export function latestConversationTurn(): number {
-  return Math.max(
-    -1,
-    ...Array.from(
-      document.querySelectorAll("section[data-testid^='conversation-turn-']")
-    ).map((section) => {
-      const match = section
-        .getAttribute("data-testid")
-        ?.match(/conversation-turn-(\d+)/);
-      return match ? Number(match[1]) : -1;
-    })
-  );
+export function captureConversationBaseline(): ConversationBaseline {
+  return {
+    latestTurn: Math.max(
+      -1,
+      ...Array.from(document.querySelectorAll(LEGACY_TURN_SELECTOR)).map(conversationTurnNumber)
+    ),
+    turnKeys: new Set(
+      Array.from(document.querySelectorAll(CURRENT_TURN_SELECTOR)).map(
+        (turn) => turn.getAttribute("data-turn-key")!
+      )
+    )
+  };
+}
+
+function isNewConversationTurn(element: Element, baseline: ConversationBaseline): boolean {
+  const key = element.closest(CURRENT_TURN_SELECTOR)?.getAttribute("data-turn-key");
+  if (key && baseline.turnKeys.has(key)) return false;
+  const turn = conversationTurnNumber(element);
+  return turn < 0 || turn > baseline.latestTurn;
 }
 
 export function isGeneratedImage(image: HTMLImageElement): boolean {
+  if (image.closest(USER_MESSAGE_SELECTOR)) return false;
   const alt = image.getAttribute("alt") || "";
   return (
-    /^(?:已生成图片|generated image)\s*[:：]/i.test(alt) ||
-    Boolean(image.closest('[class*="imagegen-image"], [class*="imagegen"]'))
+    GENERATED_IMAGE_ALT.test(alt) ||
+    Boolean(image.closest(GENERATED_IMAGE_CONTAINER))
   );
 }
 
@@ -203,7 +256,7 @@ export function generatedImageKeys(): Set<string> {
 }
 
 export function newGeneratedImages(
-  baselineTurn: number,
+  baselineTurn: ConversationBaseline,
   baselineKeys: Set<string>
 ): HTMLImageElement[] {
   const candidates = Array.from(document.querySelectorAll("img")).filter(
@@ -212,8 +265,7 @@ export function newGeneratedImages(
       if (!isGeneratedImage(image)) return false;
       const key = generatedImageKey(image);
       if (!key || baselineKeys.has(key)) return false;
-      const turn = conversationTurnNumber(image);
-      if (baselineTurn >= 0 && turn >= 0 && turn <= baselineTurn) return false;
+      if (!isNewConversationTurn(image, baselineTurn)) return false;
       return (
         image.complete &&
         image.naturalWidth >= 256 &&
@@ -229,32 +281,39 @@ export function generatedImageName(
   fallbackTitle: string
 ): string {
   const alt = (image.getAttribute("alt") || "").replace(
-    /^(?:已生成图片|generated image)\s*[:：]\s*/i,
+    /^(?:已生成(?:图片|图像)|generated image)(?:\s*[:：]\s*|\s+\d+\s*$|\s*$)/i,
     ""
   );
   return alt || fallbackTitle || "ChatGPT 生成结果";
 }
 
-export function newAssistantTurns(baselineTurn: number): Element[] {
+export function newAssistantTurns(baselineTurn: ConversationBaseline): Element[] {
   return Array.from(
-    document.querySelectorAll("section[data-testid^='conversation-turn-']")
-  ).filter((section) => {
-    const match = section
-      .getAttribute("data-testid")
-      ?.match(/conversation-turn-(\d+)/);
-    const turn = match ? Number(match[1]) : -1;
-    if (turn >= baselineTurn + 2) return true;
-    const heading = Array.from(section.querySelectorAll("h4, h5, h6"))
+    document.querySelectorAll(`${LEGACY_TURN_SELECTOR}, ${CURRENT_TURN_SELECTOR}`)
+  ).filter((element) => {
+    if (!isNewConversationTurn(element, baselineTurn)) return false;
+    if (element.matches(CURRENT_TURN_SELECTOR)) {
+      // A current turn contains both the user bubble and the assistant response.
+      if (element.querySelector(LEGACY_TURN_SELECTOR)) return false;
+      return Boolean(element.querySelector("[data-chatgpt-agent-turn-start]"));
+    }
+    const role = element.getAttribute("data-message-author-role") ??
+      element.querySelector("[data-message-author-role]")?.getAttribute("data-message-author-role");
+    if (role) return role === "assistant";
+    const turn = conversationTurnNumber(element);
+    if (turn >= baselineTurn.latestTurn + 2) return true;
+    const heading = Array.from(element.querySelectorAll("h4, h5, h6"))
       .map((element) => element.textContent || "")
       .join(" ");
-    return turn > baselineTurn && /ChatGPT|assistant|助手/i.test(heading);
+    return /ChatGPT|assistant|助手/i.test(heading);
   });
 }
 
 export function hasImageGenerationPlaceholder(turns: Element[]): boolean {
   return turns.some(
     (turn) =>
-      Boolean(turn.querySelector('[class*="imagegen"]')) ||
+      hasImageGenerationProgress(turn) ||
+      Boolean(turn.querySelector(GENERATED_IMAGE_CONTAINER)) ||
       Array.from(turn.querySelectorAll("img")).some(
         (image) =>
           image instanceof HTMLImageElement && isGeneratedImage(image)

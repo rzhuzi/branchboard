@@ -84,6 +84,29 @@ async function viewportState() {
   });
 }
 
+async function activePersistence() {
+  return page.evaluate(async () => {
+    const database = await new Promise((resolve, reject) => {
+      const request = indexedDB.open("branchboard-v2");
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    const read = (store, id) => new Promise((resolve, reject) => {
+      const request = database.transaction(store).objectStore(store).get(id);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    try {
+      const registry = await read("registry", "registry");
+      const document = await read("documents", registry.activeCanvasId);
+      const record = await read("viewports", registry.activeCanvasId);
+      return { revision: document.revision, viewport: record?.viewport };
+    } finally {
+      database.close();
+    }
+  });
+}
+
 async function promptCount() {
   return page.$$eval(".bb-prompt-node", (nodes) => nodes.length);
 }
@@ -232,6 +255,8 @@ try {
   await screenshot("05-light-theme");
 
   log("cursor-anchored zoom and wheel panning");
+  await waitForSaved();
+  const persistenceBeforePan = await activePersistence();
   const client = await page.createCDPSession();
   rect = await canvasRect();
   const centerX = rect.x + rect.width / 2;
@@ -260,6 +285,15 @@ try {
   const afterPan = await viewportState();
   assert.notEqual(Math.round(afterPan.y), Math.round(beforePan.y));
   assert.equal(Math.round(afterPan.zoom * 100), Math.round(beforePan.zoom * 100));
+
+  log("panning saves only the viewport without rewriting document content");
+  await wait(1600);
+  const persistenceAfterPan = await activePersistence();
+  assert.equal(persistenceAfterPan.revision, persistenceBeforePan.revision);
+  assert.ok(persistenceAfterPan.viewport, "viewport was not persisted separately");
+  assert.ok(Math.abs(persistenceAfterPan.viewport.x - afterPan.x) <= 1);
+  assert.ok(Math.abs(persistenceAfterPan.viewport.y - afterPan.y) <= 1);
+  assert.ok(Math.abs(persistenceAfterPan.viewport.zoom - afterPan.zoom) <= 0.001);
 
   log("paste an image without auto-connecting it");
   await clickBlank();

@@ -1,12 +1,13 @@
 {
   "name": "branchboard",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "test": "node --test tests/*.test.mjs",
     "test:e2e": "node tests/e2e/ui.mjs",
+    "test:content": "node --test tests/e2e/content-dom.mjs",
     "test:extension": "node tests/e2e/shell.mjs",
     "test:migration": "node tests/e2e/migration.mjs",
     "test:performance": "node tests/e2e/performance.mjs",

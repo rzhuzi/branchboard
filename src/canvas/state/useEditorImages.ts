@@ -136,6 +136,7 @@ export function useEditorImages(
     async (nodeId: string) => {
       const node = nodesRef.current.find((item) => item.id === nodeId);
       if (!node || node.data.kind !== "prompt") return;
+      const originCanvasId = canvasIdRef.current;
       const prompt = node.data.prompt.trim();
       if (!prompt) {
         pushToast("先写一段提示词", { tone: "info" });
@@ -181,9 +182,23 @@ export function useEditorImages(
           }
         })
       );
+      if (canvasIdRef.current !== originCanvasId) {
+        pushToast("画布已切换，本次生成未发送", { tone: "info" });
+        return;
+      }
+      if (!nodesRef.current.some((item) => item.id === nodeId && item.data.kind === "prompt")) {
+        return;
+      }
+      const failedReferences = references.filter((reference) => !reference).length;
+      if (failedReferences) {
+        pushToast(`${failedReferences} 张参考图读取失败，请检查图片后重试`, {
+          tone: "error"
+        });
+        return;
+      }
       runPrompt({
         requestId: crypto.randomUUID(),
-        canvasId: canvasIdRef.current,
+        canvasId: originCanvasId,
         promptId: node.id,
         title: firstLineTitle(prompt),
         prompt,

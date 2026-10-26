@@ -277,10 +277,12 @@ export function createWorkspaceSession({ createEmptySnapshot }: WorkspaceSession
     return registry;
   };
 
-  const refreshDocument = async (canvasId: string): Promise<CanvasDocument | null> => {
-    const document = await getDocument(canvasId);
-    if (document) documents.set(canvasId, document);
-    return document;
+  const refreshDocument = (canvasId: string): Promise<CanvasDocument | null> =>
+    getDocument(canvasId);
+
+  const acceptDocument = (document: CanvasDocument): void => {
+    // Advance the merge base only after the editor has adopted the remote state.
+    documents.set(document.id, document);
   };
 
   const applyToCanvas = async (
@@ -337,6 +339,7 @@ export function createWorkspaceSession({ createEmptySnapshot }: WorkspaceSession
     deleteCanvas,
     renameCanvas,
     refreshDocument,
+    acceptDocument,
     refreshRegistry,
     applyToCanvas,
     subscribe

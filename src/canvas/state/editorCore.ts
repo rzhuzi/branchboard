@@ -1,5 +1,6 @@
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useReactFlow, type Viewport } from "@xyflow/react";
+import { putViewport } from "../../shared/db";
 import type {
   CanvasDocument,
   CanvasEdge,
@@ -64,6 +65,11 @@ export function useEditorCore({
   const initialDocumentRef = useRef(initialDocument);
   const saveNowRef = useRef<(() => Promise<boolean>) | null>(null);
   const undoRef = useRef<() => void>(() => {});
+  const viewportDirtyRef = useRef(false);
+  const viewportVersionRef = useRef(0);
+  const viewportTimerRef = useRef<number | null>(null);
+  const mountedRef = useRef(true);
+  const saveViewportNowRef = useRef<(() => Promise<boolean>) | null>(null);
   initialDocumentRef.current = initialDocument;
   canvasIdRef.current = canvasId;
 
@@ -134,6 +140,68 @@ export function useEditorCore({
 
   const getSnapshot = useCallback((): CanvasSnapshot => snapshotNow(), [snapshotNow]);
 
+  const scheduleViewportSave = useCallback((delay = 1500) => {
+    if (!mountedRef.current) return;
+    if (viewportTimerRef.current) window.clearTimeout(viewportTimerRef.current);
+    viewportTimerRef.current = window.setTimeout(() => {
+      viewportTimerRef.current = null;
+      if (viewportDirtyRef.current) void saveViewportNowRef.current?.();
+    }, delay);
+  }, []);
+
+  const markViewportDirty = useCallback(() => {
+    viewportVersionRef.current += 1;
+    viewportDirtyRef.current = true;
+    scheduleViewportSave();
+  }, [scheduleViewportSave]);
+
+  const saveViewportNow = useCallback(async (): Promise<boolean> => {
+    if (viewportTimerRef.current) {
+      window.clearTimeout(viewportTimerRef.current);
+      viewportTimerRef.current = null;
+    }
+    if (!viewportDirtyRef.current) return true;
+    const targetCanvasId = canvasIdRef.current;
+    const versionAtStart = viewportVersionRef.current;
+    const viewport: Viewport = { ...viewportRef.current };
+    try {
+      await putViewport({
+        canvasId: targetCanvasId,
+        viewport,
+        updatedAt: nowIso()
+      });
+    } catch {
+      scheduleViewportSave(3000);
+      return false;
+    }
+    if (viewportVersionRef.current === versionAtStart) {
+      viewportDirtyRef.current = false;
+      return true;
+    }
+    scheduleViewportSave(600);
+    return false;
+  }, [scheduleViewportSave]);
+
+  saveViewportNowRef.current = saveViewportNow;
+
+  const flushViewport = useCallback(async (): Promise<boolean> => {
+    if (viewportTimerRef.current) {
+      window.clearTimeout(viewportTimerRef.current);
+      viewportTimerRef.current = null;
+    }
+    if (!viewportDirtyRef.current) return true;
+    return saveViewportNowRef.current?.() ?? true;
+  }, []);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      if (viewportTimerRef.current) window.clearTimeout(viewportTimerRef.current);
+      viewportTimerRef.current = null;
+    };
+  }, []);
+
   useLayoutEffect(() => {
     if (loadedCanvasRef.current === canvasId) return;
     loadedCanvasRef.current = canvasId;
@@ -154,6 +222,12 @@ export function useEditorCore({
     dragStartRef.current = null;
     dirtyRef.current = false;
     changeVersionRef.current += 1;
+    viewportDirtyRef.current = false;
+    viewportVersionRef.current += 1;
+    if (viewportTimerRef.current) {
+      window.clearTimeout(viewportTimerRef.current);
+      viewportTimerRef.current = null;
+    }
     setSaveStatus("saved");
     setHistoryVersion((value) => value + 1);
   }, [canvasId, setSaveStatus]);
@@ -196,6 +270,10 @@ export function useEditorCore({
     getSnapshot,
     scheduleSave,
     markDirty,
+    markViewportDirty,
+    viewportDirtyRef,
+    viewportVersionRef,
+    flushViewport,
     pushHistoryEntry,
     pushHistory
   };

@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from "react";
 import type { Viewport } from "@xyflow/react";
+import { getViewport } from "../../shared/db";
 import { clamp, zoomAtPoint } from "../../shared/geometry";
 import { measuredNodeSize, type Point } from "../../shared/placement";
 import type { CanvasNode } from "../../shared/types";
@@ -11,17 +12,18 @@ export function useEditorViewport(core: EditorCore) {
     canvasId,
     edgesRef,
     initialDocumentRef,
-    markDirty,
+    markViewportDirty,
     nodesRef,
     reactFlowRef,
     selectedIdsRef,
     setSelectedCount,
     setViewport,
-    viewportRef
+    viewportRef,
+    viewportVersionRef
   } = core;
 
   const recordViewport = useCallback(
-    (nextViewport: Viewport, silent = true) => {
+    (nextViewport: Viewport) => {
       const rounded: Viewport = {
         x: Math.round(nextViewport.x),
         y: Math.round(nextViewport.y),
@@ -29,9 +31,9 @@ export function useEditorViewport(core: EditorCore) {
       };
       viewportRef.current = rounded;
       setViewport(rounded);
-      markDirty(silent);
+      markViewportDirty();
     },
-    [markDirty]
+    [markViewportDirty]
   );
 
   const canvasRect = useCallback((): DOMRect | null => {
@@ -109,10 +111,10 @@ export function useEditorViewport(core: EditorCore) {
           zoom: Math.round(current.zoom * 1000) / 1000
         };
         setViewport(viewportRef.current);
-        markDirty(true);
+        markViewportDirty();
       }
     },
-    [canvasRect, markDirty]
+    [canvasRect, markViewportDirty]
   );
 
   const focusPrompt = useCallback(
@@ -158,7 +160,7 @@ export function useEditorViewport(core: EditorCore) {
           duration: 360,
           maxZoom: 1
         })
-        .then(() => recordViewport(rf.getViewport(), true));
+        .then(() => recordViewport(rf.getViewport()));
     },
     [applyState, recordViewport]
   );
@@ -167,7 +169,7 @@ export function useEditorViewport(core: EditorCore) {
     const rf = reactFlowRef.current;
     void rf
       .fitView({ padding: 0.24, duration: 300, maxZoom: 1 })
-      .then(() => recordViewport(rf.getViewport(), true));
+      .then(() => recordViewport(rf.getViewport()));
   }, [recordViewport]);
 
   const zoomBy = useCallback(
@@ -185,9 +187,9 @@ export function useEditorViewport(core: EditorCore) {
       void rf.setViewport(next, { duration: 120 });
       viewportRef.current = next;
       setViewport(next);
-      markDirty(true);
+      markViewportDirty();
     },
-    [canvasRect, markDirty]
+    [canvasRect, markViewportDirty]
   );
 
   const zoomTo = useCallback(
@@ -204,9 +206,9 @@ export function useEditorViewport(core: EditorCore) {
       void rf.setViewport(next, { duration: 140 });
       viewportRef.current = next;
       setViewport(next);
-      markDirty(true);
+      markViewportDirty();
     },
-    [canvasRect, markDirty]
+    [canvasRect, markViewportDirty]
   );
 
   const applyViewport = useCallback(
@@ -214,9 +216,9 @@ export function useEditorViewport(core: EditorCore) {
       void reactFlowRef.current.setViewport(next);
       viewportRef.current = next;
       setViewport(next);
-      markDirty(true);
+      markViewportDirty();
     },
-    [markDirty]
+    [markViewportDirty]
   );
 
   const updateSelection = useCallback((nextNodes: CanvasNode[], nextEdges = edgesRef.current) => {
@@ -244,36 +246,47 @@ export function useEditorViewport(core: EditorCore) {
 
   const onMoveEnd = useCallback(
     (nextViewport: Viewport) => {
-      recordViewport(nextViewport, true);
+      recordViewport(nextViewport);
     },
     [recordViewport]
   );
 
   useEffect(() => {
     const documentData = initialDocumentRef.current;
+    const versionAtStart = viewportVersionRef.current;
     let cancelled = false;
     const frame = window.requestAnimationFrame(() => {
       if (cancelled) return;
-      const rf = reactFlowRef.current;
-      if (documentData.viewport) {
-        void rf.setViewport(documentData.viewport);
-        viewportRef.current = documentData.viewport;
-        setViewport(documentData.viewport);
-        return;
-      }
-      if (!documentData.nodes.length) {
-        const emptyViewport = { x: 0, y: 0, zoom: 1 };
-        void rf.setViewport(emptyViewport);
-        viewportRef.current = emptyViewport;
-        setViewport(emptyViewport);
-        return;
-      }
-      void rf
-        .fitView({ padding: 0.26, duration: 0, maxZoom: 1 })
-        .then(() => {
-          if (cancelled) return;
-          recordViewport(rf.getViewport(), true);
-        });
+      void (async () => {
+        const rf = reactFlowRef.current;
+        let stored: Viewport | null = documentData.viewport;
+        try {
+          const record = await getViewport(canvasId);
+          if (record) stored = record;
+        } catch {
+          // Fall back to the viewport embedded in the document snapshot.
+        }
+        if (cancelled || viewportVersionRef.current !== versionAtStart) return;
+        if (stored) {
+          void rf.setViewport(stored);
+          viewportRef.current = stored;
+          setViewport(stored);
+          return;
+        }
+        if (!documentData.nodes.length) {
+          const emptyViewport = { x: 0, y: 0, zoom: 1 };
+          void rf.setViewport(emptyViewport);
+          viewportRef.current = emptyViewport;
+          setViewport(emptyViewport);
+          return;
+        }
+        void rf
+          .fitView({ padding: 0.26, duration: 0, maxZoom: 1 })
+          .then(() => {
+            if (cancelled) return;
+            recordViewport(rf.getViewport());
+          });
+      })();
     });
     return () => {
       cancelled = true;

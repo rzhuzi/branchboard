@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { mergeCanvasSnapshots } from "../../shared/merge";
 import type { WorkspaceSession } from "../../shared/workspace";
 import {
@@ -14,6 +14,7 @@ export function useEditorSave(core: EditorCore, workspace: WorkspaceSession) {
     canvasIdRef,
     changeVersionRef,
     dirtyRef,
+    flushViewport,
     historiesRef,
     revisionRef,
     saveLoopRef,
@@ -23,7 +24,8 @@ export function useEditorSave(core: EditorCore, workspace: WorkspaceSession) {
     setSaveState,
     setSaveStatus,
     setHistoryVersion,
-    snapshotNow
+    snapshotNow,
+    viewportDirtyRef
   } = core;
 
   const saveNow = useCallback(async (): Promise<boolean> => {
@@ -89,6 +91,9 @@ export function useEditorSave(core: EditorCore, workspace: WorkspaceSession) {
 
   saveNowRef.current = saveNow;
 
+  const flushViewportRef = useRef(flushViewport);
+  flushViewportRef.current = flushViewport;
+
   const retrySave = useCallback(() => {
     if (!dirtyRef.current) {
       setSaveStatus("saved");
@@ -107,10 +112,15 @@ export function useEditorSave(core: EditorCore, workspace: WorkspaceSession) {
       await saveNow();
     }
     if (saveLoopRef.current) await saveLoopRef.current;
-    return !dirtyRef.current && saveStateRef.current !== "error";
-  }, [saveNow]);
+    const contentSaved = !dirtyRef.current && saveStateRef.current !== "error";
+    const viewportSaved = await flushViewport();
+    return contentSaved && viewportSaved;
+  }, [flushViewport, saveNow]);
 
-  const isDirty = useCallback(() => dirtyRef.current, []);
+  const isDirty = useCallback(
+    () => dirtyRef.current || viewportDirtyRef.current,
+    [viewportDirtyRef]
+  );
 
   useEffect(() => {
     const unsubscribe = workspace.subscribe((change) => {
@@ -129,6 +139,7 @@ export function useEditorSave(core: EditorCore, workspace: WorkspaceSession) {
         const nextNodes = prepareNodes(documentData.nodes);
         const nextEdges = prepareEdges(documentData.edges, nextNodes);
         applyState(nextNodes, nextEdges);
+        workspace.acceptDocument(documentData);
         historiesRef.current.set(change.canvasId, { past: [], future: [] });
         setHistoryVersion((value) => value + 1);
         setSaveStatus("saved");
@@ -142,9 +153,11 @@ export function useEditorSave(core: EditorCore, workspace: WorkspaceSession) {
       if (document.visibilityState === "hidden" && dirtyRef.current) {
         void saveNowRef.current?.();
       }
+      if (viewportDirtyRef.current) void flushViewportRef.current?.();
     };
     const flushOnPageHide = () => {
       if (dirtyRef.current) void saveNowRef.current?.();
+      if (viewportDirtyRef.current) void flushViewportRef.current?.();
     };
     document.addEventListener("visibilitychange", flushOnHide);
     window.addEventListener("pagehide", flushOnPageHide);

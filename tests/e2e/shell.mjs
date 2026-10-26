@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
-import { mkdtemp, mkdir, writeFile, unlink } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, writeFile, unlink } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import os from "node:os";
 import path from "node:path";
 import puppeteer from "puppeteer-core";
 
 const ROOT = fileURLToPath(new URL("../..", import.meta.url));
+const PACKAGE_VERSION = JSON.parse(await readFile(path.join(ROOT, "package.json"), "utf8")).version;
 const EXTENSION_DIR = path.join(ROOT, "dist");
 const SHELL_FIXTURE = path.join(EXTENSION_DIR, "shell-fixture.html");
 const BASE_URL = process.env.BASE_URL || "http://localhost:4173";
@@ -70,7 +71,7 @@ try {
   const manifestVersion = await extensionPage.evaluate(
     () => chrome.runtime.getManifest().version
   );
-  assert.equal(manifestVersion, "2.0.0");
+  assert.equal(manifestVersion, PACKAGE_VERSION);
   const extensionCanvasRect = await extensionPage.$eval(".bb-canvas", (element) => {
     const rect = element.getBoundingClientRect();
     return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };

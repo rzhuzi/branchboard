@@ -38,13 +38,16 @@ export function useEditorNodes(
 ) {
   const {
     applyState,
+    canvasIdRef,
     dragStartRef,
     edgesRef,
+    historiesRef,
     markDirty,
     nodesRef,
     pushHistory,
     selectedIdsRef,
     setEdges,
+    setHistoryVersion,
     setNodes,
     setSelectedCount,
     undoRef
@@ -197,6 +200,11 @@ export function useEditorNodes(
     (nodeId: string, prompt: string) => {
       const node = nodesRef.current.find((item) => item.id === nodeId);
       if (!node || node.data.kind !== "prompt" || node.data.prompt === prompt) return;
+      const history = historiesRef.current.get(canvasIdRef.current);
+      if (history?.future.length) {
+        history.future = [];
+        setHistoryVersion((value) => value + 1);
+      }
       const nextNodes = nodesRef.current.map((item) =>
         item.id === nodeId && item.data.kind === "prompt"
           ? {
@@ -208,7 +216,7 @@ export function useEditorNodes(
       applyState(nextNodes, edgesRef.current);
       markDirty();
     },
-    [applyState, markDirty]
+    [applyState, markDirty, setHistoryVersion]
   );
 
   const branchPrompt = useCallback(
