@@ -7,7 +7,7 @@ OpenAI API，而是直接使用当前已登录的 ChatGPT 页面，把提示词�
 核心流程只有一条：**创建 → 编写 → 生成 → 查看 → 修改 → 再生成。**
 
 当前源码版本：**2.1.2**，默认分支为 `v2`。扩展名称为「Branchboard — 图像创作画布」，包含新版前端、图片栏、统一图标和更新的隐私说明。
-Chrome 网上应用店提交材料已准备，尚未声明商店上架成功。
+Chrome 网上应用店独立使用 **1.0**，版本号在 `webstore.config.json` 维护。商店提交材料已准备，尚未声明商店上架成功。
 
 GitHub 最新已发布安装包为 **2.1.0**，与当前源码有界面差异。体验本分支的 2.1.2 请从源码构建；后续安装包以 Releases 页面实际发布的版本为准。
 
@@ -87,6 +87,18 @@ npm run release:check
 ```
 
 然后在 `chrome://extensions` 中加载 `dist` 文件夹。
+
+### Chrome 网上应用店构建
+
+```powershell
+npm run build:webstore
+$storeVersion = (Get-Content -Encoding UTF8 .\webstore.config.json | ConvertFrom-Json).version
+Compress-Archive -Path .\dist-webstore\* -DestinationPath ".\branchboard-webstore-v$storeVersion.zip" -Force
+```
+
+`dist` 保留 GitHub 版本号，`dist-webstore` 使用独立的商店版本号；两者功能代码相同。
+上传时选择商店 ZIP。后续更新商店版本只需修改 `webstore.config.json`，无需修改 GitHub 版本。
+同一商店条目的后续上传必须递增版本号。
 
 ## 旧版数据迁移
 

@@ -13,9 +13,11 @@
     "test:performance": "node tests/e2e/performance.mjs",
     "icons": "node scripts/generate-icons.mjs",
     "build": "tsc -b && vite build && node scripts/build-ext.mjs",
+    "build:webstore": "npm run build && npm run release:check && node scripts/build-webstore.mjs && npm run release:check:webstore",
     "typecheck": "tsc -b",
     "preview": "vite preview",
-    "release:check": "node scripts/validate-release.mjs"
+    "release:check": "node scripts/validate-release.mjs",
+    "release:check:webstore": "node scripts/validate-release.mjs --webstore"
   },
   "dependencies": {
     "@xyflow/react": "^12.11.2",

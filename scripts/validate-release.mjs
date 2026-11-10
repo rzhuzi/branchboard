@@ -3,20 +3,25 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
+const webstore = process.argv.includes("--webstore");
+const buildDirectory = resolve(projectRoot, webstore ? "dist-webstore" : "dist");
 const packageJson = JSON.parse(
   await readFile(resolve(projectRoot, "package.json"), "utf8")
 );
 const manifest = JSON.parse(
-  await readFile(resolve(projectRoot, "dist", "manifest.json"), "utf8")
+  await readFile(resolve(buildDirectory, "manifest.json"), "utf8")
 );
 
 const lockfile = JSON.parse(await readFile(resolve(projectRoot, "package-lock.json"), "utf8"));
 if (lockfile.version !== packageJson.version || lockfile.packages?.[""]?.version !== packageJson.version) {
   throw new Error("package-lock.json version does not match package.json");
 }
-if (manifest.version !== packageJson.version) {
+const expectedVersion = webstore
+  ? JSON.parse(await readFile(resolve(projectRoot, "webstore.config.json"), "utf8")).version
+  : packageJson.version;
+if (manifest.version !== expectedVersion) {
   throw new Error(
-    `Version mismatch: package ${packageJson.version}, manifest ${manifest.version}`
+    `Version mismatch: expected ${expectedVersion}, manifest ${manifest.version}`
   );
 }
 if (manifest.manifest_version !== 3) {
@@ -46,14 +51,14 @@ const requiredFiles = [
 ];
 
 for (const relativePath of requiredFiles) {
-  const filePath = resolve(projectRoot, "dist", relativePath);
+  const filePath = resolve(buildDirectory, relativePath);
   await access(filePath);
   if ((await stat(filePath)).size === 0) {
     throw new Error(`Release file is empty: ${relativePath}`);
   }
 }
 
-const canvasHtml = await readFile(resolve(projectRoot, "dist", "canvas.html"), "utf8");
+const canvasHtml = await readFile(resolve(buildDirectory, "canvas.html"), "utf8");
 if (!/assets\/[^"']+\.js/.test(canvasHtml)) {
   throw new Error("canvas.html is missing its bundled script");
 }
@@ -64,5 +69,5 @@ if (!canvasAssets.includes("canvas.html") || !canvasAssets.includes("assets/*"))
 }
 
 console.log(
-  `Branchboard ${manifest.version} release validated (${requiredFiles.length} required files)`
+  `Branchboard ${webstore ? "Web Store" : "GitHub"} ${manifest.version} release validated (${requiredFiles.length} required files)`
 );
