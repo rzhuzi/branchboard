@@ -22,7 +22,7 @@ export function ZoomControls() {
       ) : null}
       <div className="bb-zoom-cluster">
         <IconButton label="缩小" size="sm" onClick={() => zoomBy(1 / 1.2)}>
-          <MinusIcon size={14} />
+          <MinusIcon size={15} />
         </IconButton>
         <button
           type="button"
@@ -33,10 +33,11 @@ export function ZoomControls() {
           {Math.round(viewport.zoom * 100)}%
         </button>
         <IconButton label="放大" size="sm" onClick={() => zoomBy(1.2)}>
-          <PlusIcon size={14} />
+          <PlusIcon size={15} />
         </IconButton>
+        <span className="bb-zoom-divider" aria-hidden="true" />
         <IconButton label="查看全部内容" size="sm" onClick={fitAll}>
-          <FitIcon size={14} />
+          <FitIcon size={15} />
         </IconButton>
       </div>
     </div>

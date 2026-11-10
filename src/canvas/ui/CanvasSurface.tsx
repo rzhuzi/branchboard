@@ -1,4 +1,5 @@
 import { useEditorActions, useEditorState } from "../state/EditorContext";
+import { useWorkspace } from "../state/WorkspaceProvider";
 import { Button } from "./controls";
 import { CanvasView } from "./CanvasView";
 import { TopBar } from "./TopBar";
@@ -6,8 +7,9 @@ import { TopBar } from "./TopBar";
 export function CanvasSurface() {
   const { saveState, saveError } = useEditorState();
   const { retrySave } = useEditorActions();
+  const { embedded } = useWorkspace();
   return (
-    <main className="bb-app">
+    <main className={`bb-app ${embedded ? "embedded" : ""}`.trim()}>
       <TopBar />
       {saveState === "error" ? (
         <div className="bb-save-banner" role="alert">

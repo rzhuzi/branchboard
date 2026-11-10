@@ -2,6 +2,30 @@ import type { ReactNode, SVGProps } from "react";
 
 type IconProps = SVGProps<SVGSVGElement> & { size?: number };
 
+/** 原型图标体系：24 viewBox，stroke-width 1.65 */
+function IconBase24({
+  size = 18,
+  children,
+  ...props
+}: IconProps & { children: ReactNode }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.65"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      {children}
+    </svg>
+  );
+}
+
 function IconBase({
   size = 16,
   children,
@@ -219,5 +243,63 @@ export function FitIcon(props: IconProps) {
       <path d="M7 4H4v3M13 16h3v-3M16 7V4h-3M4 13v3h3" />
       <rect x="7" y="7" width="6" height="6" rx="1" />
     </IconBase>
+  );
+}
+
+export function CursorIcon(props: IconProps) {
+  return (
+    <IconBase24 {...props}>
+      <path d="m5 3 14 10-7 1-3 7z" />
+    </IconBase24>
+  );
+}
+
+export function HandIcon(props: IconProps) {
+  return (
+    <IconBase24 {...props}>
+      <path d="M8 12V6a2 2 0 0 1 4 0v6-8a2 2 0 0 1 4 0v8-5a2 2 0 0 1 4 0v9c0 4-3 6-6 6h-1c-3 0-5-2-7-5l-3-4a2 2 0 0 1 3-3l2 2" />
+    </IconBase24>
+  );
+}
+
+export function TextIcon(props: IconProps) {
+  return (
+    <IconBase24 {...props}>
+      <path d="M4 5h16M12 5v15M8 20h8" />
+    </IconBase24>
+  );
+}
+
+export function ImagePlusIcon(props: IconProps) {
+  return (
+    <IconBase24 {...props}>
+      <path d="M13 3H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-5M16 5h6M19 2v6M3 16l6-5 4 4 4-3 4 4" />
+      <circle cx="8" cy="7" r="1" />
+    </IconBase24>
+  );
+}
+
+export function MouseIcon(props: IconProps) {
+  return (
+    <IconBase24 {...props}>
+      <rect x="6" y="2" width="12" height="20" rx="6" />
+      <path d="M12 6v4" />
+    </IconBase24>
+  );
+}
+
+export function GenerateIcon(props: IconProps) {
+  return (
+    <IconBase24 {...props}>
+      <path d="m13 3-9 11h7l-1 7 10-12h-7z" />
+    </IconBase24>
+  );
+}
+
+export function ExpandIcon(props: IconProps) {
+  return (
+    <IconBase24 {...props}>
+      <path d="M14 3h7v7m0-7-7 7M10 21H3v-7m0 7 7-7" />
+    </IconBase24>
   );
 }

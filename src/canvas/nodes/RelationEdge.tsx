@@ -14,8 +14,8 @@ const RELATION_LABEL = {
 
 const RELATION_DASH = {
   generated: undefined,
-  reference: "7 5",
-  branch: "2 4"
+  reference: "5 5",
+  branch: "2 5"
 } as const;
 
 export function RelationEdge({
@@ -46,11 +46,11 @@ export function RelationEdge({
         markerEnd={`url(#bb-arrow-${relation})`}
         interactionWidth={16}
         style={{
-          stroke: `var(--bb-edge-${relation})`,
-          strokeWidth: selected ? 2 : 1.5,
+          stroke: selected ? "var(--bb-accent)" : `var(--bb-edge-${relation})`,
+          strokeWidth: selected ? 1.7 : 1.4,
           strokeDasharray: RELATION_DASH[relation],
           strokeLinecap: "round",
-          opacity: selected ? 1 : 0.72
+          opacity: 1
         }}
       />
       {selected ? (

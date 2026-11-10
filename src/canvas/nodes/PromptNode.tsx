@@ -20,7 +20,16 @@ import type {
 import { useEditorActions } from "../state/EditorContext";
 import { useExecution } from "../state/ExecutionProvider";
 import { IconButton, Spinner } from "../ui/controls";
-import { BranchIcon, CloseIcon, CopyIcon, GripIcon } from "../ui/icons";
+import {
+  BranchIcon,
+  CloseIcon,
+  CopyIcon,
+  GenerateIcon,
+  MoreIcon,
+  TextIcon,
+  TrashIcon
+} from "../ui/icons";
+import { Menu, type MenuEntry } from "../ui/Menu";
 
 function useElapsed(startedAt: number, active: boolean): number {
   const [now, setNow] = useState(Date.now());
@@ -50,6 +59,7 @@ export const PromptNode = memo(function PromptNode({
   const { getEdges, getNodes } = useReactFlow<CanvasNode, CanvasEdge>();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
+  const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
   const elapsed = useElapsed(execution?.startedAt ?? Date.now(), execution?.tone === "working");
 
   const generatedCount = useStore((state) => {
@@ -69,7 +79,7 @@ export const PromptNode = memo(function PromptNode({
     const textarea = textareaRef.current;
     if (!textarea) return;
     textarea.style.height = "0px";
-    const next = Math.min(320, Math.max(96, textarea.scrollHeight));
+    const next = Math.min(320, Math.max(135, textarea.scrollHeight));
     textarea.style.height = `${next}px`;
   }, [data.prompt]);
 
@@ -110,6 +120,35 @@ export const PromptNode = memo(function PromptNode({
     setCopyState(copied ? "copied" : "error");
   };
 
+  const menuItems: MenuEntry[] = [
+    {
+      label: "生成",
+      icon: <GenerateIcon size={14} />,
+      shortcut: "Ctrl+Enter",
+      disabled: !data.prompt.trim(),
+      onSelect: () => void actions.generatePrompt(id)
+    },
+    {
+      label: "复制提示词",
+      icon: <CopyIcon size={14} />,
+      shortcut: "Ctrl+C",
+      disabled: !data.prompt.trim(),
+      onSelect: () => void handleCopy()
+    },
+    {
+      label: "创建分支",
+      icon: <BranchIcon size={14} />,
+      onSelect: () => actions.branchPrompt(id)
+    },
+    "separator",
+    {
+      label: "删除节点",
+      icon: <TrashIcon size={14} />,
+      danger: true,
+      onSelect: () => actions.deleteNode(id)
+    }
+  ];
+
   return (
     <article
       className={`bb-node bb-prompt-node ${selected ? "is-selected" : ""} ${
@@ -118,10 +157,11 @@ export const PromptNode = memo(function PromptNode({
     >
       <Handle type="target" position={Position.Left} className="bb-handle" />
       <header className="bb-prompt-head" title="拖动节点">
-        <span className="bb-grip" aria-hidden="true">
-          <GripIcon size={14} />
+        <span className="bb-prompt-label">
+          <TextIcon size={15} />
+          提示词
         </span>
-        <div className="bb-node-counts">
+        <span className="bb-node-counts">
           {generatedCount > 0 ? (
             <button
               type="button"
@@ -142,7 +182,17 @@ export const PromptNode = memo(function PromptNode({
               {referenceCount} 参考
             </button>
           ) : null}
-        </div>
+          <IconButton
+            label="更多提示词操作"
+            className="nodrag"
+            onClick={(event) => {
+              const rect = event.currentTarget.getBoundingClientRect();
+              setMenu({ x: rect.left, y: rect.bottom + 4 });
+            }}
+          >
+            <MoreIcon size={14} />
+          </IconButton>
+        </span>
       </header>
 
       <textarea
@@ -195,43 +245,56 @@ export const PromptNode = memo(function PromptNode({
       ) : null}
 
       <footer className="bb-node-footer">
-        <span className={`bb-node-feedback ${copyState}`}>
-          {copyState === "copied" ? "已复制" : copyState === "error" ? "复制失败" : ""}
-        </span>
-        <div className="bb-node-actions">
+        <div className="bb-node-footer-tools">
           <IconButton
             label="复制提示词"
-            size="sm"
             className="nodrag"
             disabled={!data.prompt.trim()}
             onClick={() => void handleCopy()}
           >
-            <CopyIcon size={14} />
+            <CopyIcon size={15} />
           </IconButton>
           <IconButton
             label="创建分支"
-            size="sm"
             className="nodrag"
             onClick={() => actions.branchPrompt(id)}
           >
-            <BranchIcon size={14} />
+            <BranchIcon size={15} />
           </IconButton>
-          <button
-            type="button"
-            className={`bb-generate-button nodrag ${busy ? "cancel" : ""} ${
-              failed ? "retry" : ""
-            }`}
-            disabled={!data.prompt.trim() && !busy}
-            onClick={handleGenerate}
+          <span
+            className={`bb-node-feedback ${copyState}`}
+            aria-live="polite"
           >
-            {execution?.tone === "working" || execution?.tone === "queued" ? (
-              <Spinner size={11} />
-            ) : null}
-            {generateLabel}
-          </button>
+            {copyState === "copied" ? "已复制" : copyState === "error" ? "复制失败" : ""}
+          </span>
         </div>
+        <button
+          type="button"
+          className={`bb-generate-button nodrag ${busy ? "cancel" : ""} ${
+            failed ? "retry" : ""
+          }`}
+          disabled={!data.prompt.trim() && !busy}
+          onClick={handleGenerate}
+        >
+          {busy ? (
+            <Spinner size={11} />
+          ) : (
+            <GenerateIcon size={14} />
+          )}
+          {generateLabel}
+        </button>
       </footer>
       <Handle type="source" position={Position.Right} className="bb-handle" />
+
+      {menu ? (
+        <Menu
+          x={menu.x}
+          y={menu.y}
+          header="提示词"
+          items={menuItems}
+          onClose={() => setMenu(null)}
+        />
+      ) : null}
     </article>
   );
 });

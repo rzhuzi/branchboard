@@ -444,7 +444,15 @@ try {
 
   log("delete a prompt and undo from the toast");
   const promptsBeforeDelete = await promptCount();
-  await page.click(".bb-prompt-node .bb-prompt-head");
+  // 轻提示位于顶部居中，先清掉避免遮挡节点点击
+  await page.evaluate(() => {
+    document.querySelectorAll(".bb-toast-close").forEach((button) => button.click());
+  });
+  await page.waitForFunction(() => !document.querySelector(".bb-toast"), {
+    timeout: 3000
+  });
+  // 节点可能停在画布顶部、头部被顶栏遮挡，改点必然可见的节点底部以选中节点
+  await page.click(".bb-prompt-node .bb-node-footer");
   await page.keyboard.press("Delete");
   await page.waitForFunction(
     (expected) => document.querySelectorAll(".bb-prompt-node").length === expected,
@@ -492,10 +500,11 @@ try {
   assert.equal(transformAfterUndo, transformBeforeDrag);
 
   log("multi-select with Control and Shift marquee");
-  const promptHeads = await page.$$(".bb-prompt-head");
-  await promptHeads[0].click();
+  // 头部可能被顶栏遮挡，点击节点底部同样能选中节点
+  const promptFooters = await page.$$(".bb-node-footer");
+  await promptFooters[0].click();
   await page.keyboard.down("Control");
-  if (promptHeads[1]) await promptHeads[1].click();
+  if (promptFooters[1]) await promptFooters[1].click();
   await page.keyboard.up("Control");
   await wait(200);
   const controlSelection = await page.$$eval(".bb-selection-pill", (elements) =>
@@ -516,8 +525,10 @@ try {
   const minY = Math.min(...promptRects.map((item) => item.y));
   const maxX = Math.max(...promptRects.map((item) => item.x + item.width));
   const maxY = Math.max(...promptRects.map((item) => item.y + item.height));
+  const marqueeStartX = Math.max(minX - 24, rect.x + 8);
+  const marqueeStartY = Math.max(minY - 24, rect.y + 8);
   await page.keyboard.down("Shift");
-  await page.mouse.move(minX - 24, minY - 24);
+  await page.mouse.move(marqueeStartX, marqueeStartY);
   await page.mouse.down();
   await page.mouse.move(maxX + 24, maxY + 24, { steps: 12 });
   await page.mouse.up();
@@ -541,6 +552,11 @@ try {
   log("delete a selected relationship and undo");
   const edgesBeforeDelete = await edgeCount();
   assert.ok(edgesBeforeDelete >= 1);
+  // 全选节点，React Flow 会自动选中相连的所有边
+  await page.keyboard.down("Control");
+  await page.keyboard.press("KeyA");
+  await page.keyboard.up("Control");
+  await wait(200);
   await page.keyboard.press("Delete");
   await page.waitForFunction(
     (expected) => document.querySelectorAll(".react-flow__edge").length === expected,

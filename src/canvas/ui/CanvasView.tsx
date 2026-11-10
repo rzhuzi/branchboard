@@ -31,10 +31,22 @@ import { RelationEdge } from "../nodes/RelationEdge";
 import { useEditorActions, useEditorState } from "../state/EditorContext";
 import { useToast } from "../state/ToastProvider";
 import { useWorkspace } from "../state/WorkspaceProvider";
-import { Button } from "../ui/controls";
-import { PlusIcon, TrashIcon } from "../ui/icons";
+import { IconButton } from "../ui/controls";
+import {
+  CursorIcon,
+  HandIcon,
+  ImagePlusIcon,
+  MouseIcon,
+  PlusIcon,
+  RedoIcon,
+  TextIcon,
+  TrashIcon,
+  UndoIcon
+} from "../ui/icons";
 import { Menu, type MenuEntry } from "../ui/Menu";
 import { ZoomControls } from "../ui/ZoomControls";
+
+type Tool = "select" | "hand";
 
 const nodeTypes: NodeTypes = {
   prompt: PromptNode,
@@ -94,14 +106,16 @@ function promptLabel(node: CanvasNode | undefined): string {
 }
 
 export function CanvasView() {
-  const { nodes, edges, selectedCount } = useEditorState();
+  const { nodes, edges, selectedCount, canUndo, canRedo } = useEditorState();
   const actions = useEditorActions();
-  const { activeCanvasId, embedded } = useWorkspace();
+  const { activeCanvasId, busy, embedded } = useWorkspace();
   const { pushToast } = useToast();
   const { screenToFlowPosition, getViewport } = useReactFlow<CanvasNode, CanvasEdge>();
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
   const dragDepthRef = useRef(0);
+  const [tool, setTool] = useState<Tool>("select");
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const [dropTargetPromptId, setDropTargetPromptId] = useState("");
@@ -259,6 +273,16 @@ export function CanvasView() {
       if (!modifier && !event.altKey && key === "n") {
         event.preventDefault();
         actions.addPromptAtCenter();
+        return;
+      }
+      if (!modifier && !event.altKey && !event.shiftKey && key === "v") {
+        event.preventDefault();
+        setTool("select");
+        return;
+      }
+      if (!modifier && !event.altKey && !event.shiftKey && key === "h") {
+        event.preventDefault();
+        setTool("hand");
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -552,7 +576,7 @@ export function CanvasView() {
   return (
     <div
       ref={wrapperRef}
-      className={`bb-canvas ${dragActive ? "is-dragging-file" : ""}`}
+      className={`bb-canvas tool-${tool} ${dragActive ? "is-dragging-file" : ""}`}
       onDoubleClick={handleDoubleClick}
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
@@ -620,6 +644,7 @@ export function CanvasView() {
         zoomOnScroll={false}
         zoomOnPinch={false}
         zoomOnDoubleClick={false}
+        nodesDraggable={tool !== "hand"}
         selectionKeyCode="Shift"
         multiSelectionKeyCode={["Meta", "Control"]}
         panActivationKeyCode="Space"
@@ -653,16 +678,87 @@ export function CanvasView() {
 
       {!nodes.length ? (
         <div className="bb-empty-state">
-          <strong>双击空白处，写下第一句提示词</strong>
+          <button
+            type="button"
+            className="bb-empty-add"
+            aria-label="新建提示词"
+            onClick={() => actions.addPromptAtCenter()}
+          >
+            <PlusIcon size={22} />
+          </button>
+          <strong>双击画布，写下一个想法</strong>
           <p>也可以把图片拖进来，或按 Ctrl+V 粘贴图片。</p>
-          <Button variant="primary" onClick={() => actions.addPromptAtCenter()}>
-            <PlusIcon size={14} />
-            新建提示词
-          </Button>
         </div>
       ) : null}
 
+      <div className="bb-tool-rail" role="toolbar" aria-label="画布工具">
+        <IconButton
+          label="选择 (V)"
+          active={tool === "select"}
+          onClick={() => setTool("select")}
+        >
+          <CursorIcon size={17} />
+        </IconButton>
+        <IconButton
+          label="平移 (H)"
+          active={tool === "hand"}
+          onClick={() => setTool("hand")}
+        >
+          <HandIcon size={17} />
+        </IconButton>
+        <span className="bb-rail-line" aria-hidden="true" />
+        <IconButton
+          label="新建提示词 (N)"
+          disabled={busy}
+          onClick={() => actions.addPromptAtCenter()}
+        >
+          <TextIcon size={17} />
+        </IconButton>
+        <IconButton
+          label="导入图片"
+          disabled={busy}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <ImagePlusIcon size={17} />
+        </IconButton>
+      </div>
+
+      <div className="bb-history-buttons">
+        <IconButton label="撤销 (Ctrl+Z)" disabled={!canUndo} onClick={actions.undo}>
+          <UndoIcon size={16} />
+        </IconButton>
+        <IconButton
+          label="重做 (Shift+Ctrl+Z)"
+          disabled={!canRedo}
+          onClick={actions.redo}
+        >
+          <RedoIcon size={16} />
+        </IconButton>
+      </div>
+
+      <div className="bb-canvas-hint" aria-hidden="true">
+        <MouseIcon size={13} />
+        双击新建 · 滚轮平移 · Ctrl + 滚轮缩放
+      </div>
+
       <ZoomControls />
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+        onChange={(event) => {
+          const files = Array.from(event.target.files ?? []).filter((file) =>
+            file.type.startsWith("image/")
+          );
+          if (files.length) {
+            void actions.addImagesFromFiles(files, centerPoint());
+          }
+          event.target.value = "";
+        }}
+      />
 
       {dragActive ? (
         <div className="bb-drop-hint">

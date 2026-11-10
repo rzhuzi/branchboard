@@ -1,73 +1,75 @@
 :root,
 :root[data-theme="dark"] {
-  --bb-canvas-bg: #101315;
-  --bb-surface: #171b1f;
-  --bb-surface-raised: #1d2227;
-  --bb-surface-hover: #242a30;
-  --bb-surface-active: #2b3239;
-  --bb-border: #2a3036;
-  --bb-border-strong: #3a424a;
-  --bb-text: #e8eaed;
-  --bb-text-muted: #8d969f;
-  --bb-text-faint: #646d76;
-  --bb-accent: #df7c46;
-  --bb-accent-hover: #eb8b56;
-  --bb-accent-contrast: #ffffff;
-  --bb-accent-soft: rgba(223, 124, 70, 0.13);
-  --bb-accent-border: rgba(223, 124, 70, 0.35);
-  --bb-focus: rgba(223, 124, 70, 0.42);
-  --bb-success: #69b18c;
-  --bb-success-soft: rgba(105, 177, 140, 0.12);
-  --bb-warning: #d3a05c;
-  --bb-warning-soft: rgba(211, 160, 92, 0.12);
-  --bb-danger: #d87575;
-  --bb-danger-soft: rgba(216, 117, 117, 0.12);
-  --bb-edge-generated: #8b98a4;
-  --bb-edge-reference: #c4925d;
-  --bb-edge-branch: #778697;
-  --bb-canvas-dot: rgba(140, 155, 168, 0.16);
-  --bb-minimap-image: #56626e;
-  --bb-minimap-mask: rgba(16, 19, 21, 0.82);
-  --bb-shadow: 0 14px 36px rgba(0, 0, 0, 0.36);
-  --bb-shadow-soft: 0 6px 18px rgba(0, 0, 0, 0.22);
-  --bb-overlay: rgba(8, 10, 12, 0.78);
-  --bb-hover-soft: rgba(255, 255, 255, 0.045);
+  --bb-canvas-bg: #222620;
+  --bb-surface: #2c3129;
+  --bb-surface-raised: #2c3129;
+  --bb-surface-hover: #394433;
+  --bb-surface-active: #414d3a;
+  --bb-border: #3d4437;
+  --bb-border-strong: #4a5143;
+  --bb-text: #e3e7de;
+  --bb-text-muted: #929b8a;
+  --bb-text-faint: #6d7564;
+  --bb-accent: #aac29b;
+  --bb-accent-hover: #b7cfab;
+  --bb-accent-contrast: #222620;
+  --bb-accent-soft: rgba(170, 194, 155, 0.14);
+  --bb-accent-border: rgba(170, 194, 155, 0.4);
+  --bb-focus: rgba(170, 194, 155, 0.45);
+  --bb-success: #8fae86;
+  --bb-success-soft: rgba(143, 174, 134, 0.14);
+  --bb-warning: #c2a76a;
+  --bb-warning-soft: rgba(194, 167, 106, 0.14);
+  --bb-danger: #c97f7f;
+  --bb-danger-soft: rgba(201, 127, 127, 0.14);
+  --bb-edge-generated: #6d7b61;
+  --bb-edge-reference: #6d7b61;
+  --bb-edge-branch: #6d7b61;
+  --bb-canvas-dot: #4a5143;
+  --bb-minimap-image: #6d7b61;
+  --bb-minimap-mask: rgba(34, 38, 32, 0.85);
+  --bb-shadow: 0 6px 24px rgba(0, 0, 0, 0.16);
+  --bb-shadow-soft: 0 3px 12px rgba(0, 0, 0, 0.12);
+  --bb-overlay: rgba(18, 22, 17, 0.6);
+  --bb-hover-soft: rgba(255, 255, 255, 0.05);
+  --bb-toast-accent: #cfe3c3;
   color-scheme: dark;
 }
 
 :root[data-theme="light"] {
-  --bb-canvas-bg: #f2f1ee;
-  --bb-surface: #fbfaf8;
+  --bb-canvas-bg: #f5f5f2;
+  --bb-surface: #ffffff;
   --bb-surface-raised: #ffffff;
-  --bb-surface-hover: #f0ece7;
-  --bb-surface-active: #e8e3dc;
-  --bb-border: #ddd9d2;
-  --bb-border-strong: #c7c1b8;
-  --bb-text: #252b31;
-  --bb-text-muted: #6d757d;
-  --bb-text-faint: #979ea5;
-  --bb-accent: #c65f2f;
-  --bb-accent-hover: #b55527;
+  --bb-surface-hover: #edf2eb;
+  --bb-surface-active: #e2e9df;
+  --bb-border: #e6e7e1;
+  --bb-border-strong: #d6d9d0;
+  --bb-text: #292b29;
+  --bb-text-muted: #8b8e88;
+  --bb-text-faint: #a1a59b;
+  --bb-accent: #627d65;
+  --bb-accent-hover: #556c58;
   --bb-accent-contrast: #ffffff;
-  --bb-accent-soft: rgba(198, 95, 47, 0.1);
-  --bb-accent-border: rgba(198, 95, 47, 0.3);
-  --bb-focus: rgba(198, 95, 47, 0.35);
-  --bb-success: #42805e;
-  --bb-success-soft: rgba(66, 128, 94, 0.1);
-  --bb-warning: #996929;
-  --bb-warning-soft: rgba(153, 105, 41, 0.1);
+  --bb-accent-soft: rgba(98, 125, 101, 0.13);
+  --bb-accent-border: rgba(98, 125, 101, 0.35);
+  --bb-focus: rgba(98, 125, 101, 0.42);
+  --bb-success: #7c9874;
+  --bb-success-soft: rgba(124, 152, 116, 0.13);
+  --bb-warning: #a08a4f;
+  --bb-warning-soft: rgba(160, 138, 79, 0.13);
   --bb-danger: #b25353;
-  --bb-danger-soft: rgba(178, 83, 83, 0.1);
-  --bb-edge-generated: #8a939b;
-  --bb-edge-reference: #b07a45;
-  --bb-edge-branch: #7b8794;
-  --bb-canvas-dot: rgba(70, 80, 90, 0.18);
-  --bb-minimap-image: #b4ada3;
-  --bb-minimap-mask: rgba(242, 241, 238, 0.84);
-  --bb-shadow: 0 14px 36px rgba(60, 52, 44, 0.18);
-  --bb-shadow-soft: 0 6px 18px rgba(60, 52, 44, 0.12);
-  --bb-overlay: rgba(240, 238, 234, 0.92);
-  --bb-hover-soft: rgba(0, 0, 0, 0.035);
+  --bb-danger-soft: rgba(178, 83, 83, 0.11);
+  --bb-edge-generated: #b6bdb2;
+  --bb-edge-reference: #b6bdb2;
+  --bb-edge-branch: #b6bdb2;
+  --bb-canvas-dot: #d6d9d0;
+  --bb-minimap-image: #b6bdb2;
+  --bb-minimap-mask: rgba(245, 245, 242, 0.84);
+  --bb-shadow: 0 6px 24px rgba(35, 43, 32, 0.1);
+  --bb-shadow-soft: 0 4px 14px rgba(35, 50, 28, 0.07);
+  --bb-overlay: rgba(34, 42, 33, 0.47);
+  --bb-hover-soft: rgba(98, 125, 101, 0.08);
+  --bb-toast-accent: #c3d9b8;
   color-scheme: light;
 }
 
@@ -88,9 +90,10 @@ body {
   overscroll-behavior: none;
   color: var(--bb-text);
   background: var(--bb-canvas-bg);
-  font-family: "Segoe UI Variable Text", "PingFang SC", "Microsoft YaHei UI",
-    "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Microsoft YaHei", "PingFang SC", sans-serif;
   font-size: 13px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -120,7 +123,7 @@ button:disabled {
 
 *:focus-visible {
   outline: 2px solid var(--bb-focus);
-  outline-offset: 1px;
+  outline-offset: 3px;
 }
 
 .bb-spinner {
@@ -157,24 +160,26 @@ button:disabled {
 
 .bb-button {
   display: inline-flex;
-  height: 28px;
+  height: 30px;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 0 10px;
+  padding: 0 12px;
   border: 1px solid transparent;
-  border-radius: 5px;
+  border-radius: 7px;
   font-size: 12px;
   white-space: nowrap;
 }
 
 .bb-button.primary {
-  color: var(--bb-accent-contrast);
-  background: var(--bb-accent);
+  color: var(--bb-surface);
+  background: var(--bb-text);
+  font-weight: 500;
 }
 
 .bb-button.primary:hover {
-  background: var(--bb-accent-hover);
+  color: #fff;
+  background: var(--bb-accent);
 }
 
 .bb-button.secondary {
@@ -203,7 +208,7 @@ button:disabled {
 }
 
 .bb-button:disabled {
-  opacity: 0.45;
+  opacity: 0.35;
 }
 
 .bb-icon-button {
@@ -211,19 +216,19 @@ button:disabled {
   flex: none;
   place-items: center;
   border: 1px solid transparent;
-  border-radius: 5px;
+  border-radius: 7px;
   color: var(--bb-text-muted);
   background: transparent;
 }
 
 .bb-icon-button.md {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
 }
 
 .bb-icon-button.sm {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
 }
 
 .bb-icon-button:hover {
@@ -232,8 +237,8 @@ button:disabled {
 }
 
 .bb-icon-button.active {
-  color: var(--bb-text);
-  background: var(--bb-surface-active);
+  color: var(--bb-accent);
+  background: var(--bb-accent-soft);
 }
 
 .bb-icon-button.danger:hover {
@@ -244,7 +249,7 @@ button:disabled {
 .bb-icon-button:disabled {
   color: var(--bb-text-faint);
   background: transparent;
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
 ::-webkit-scrollbar {

@@ -234,7 +234,10 @@ export function useEditorViewport(core: EditorCore) {
   }, []);
 
   const selectAll = useCallback(() => {
-    updateSelection(nodesRef.current.map((node) => ({ ...node, selected: true })));
+    updateSelection(
+      nodesRef.current.map((node) => ({ ...node, selected: true })),
+      edgesRef.current.map((edge) => ({ ...edge, selected: true }))
+    );
   }, [updateSelection]);
 
   const clearSelection = useCallback(() => {

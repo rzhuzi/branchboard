@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { spawn } from "node:child_process";
+import { existsSync, readdirSync } from "node:fs";
 import { mkdtemp, mkdir, readFile, writeFile, unlink } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import os from "node:os";
@@ -11,8 +12,21 @@ const PACKAGE_VERSION = JSON.parse(await readFile(path.join(ROOT, "package.json"
 const EXTENSION_DIR = path.join(ROOT, "dist");
 const SHELL_FIXTURE = path.join(EXTENSION_DIR, "shell-fixture.html");
 const BASE_URL = process.env.BASE_URL || "http://localhost:4173";
+// 品牌版 Chrome/Edge 已忽略 --load-extension，优先使用 Playwright 的无品牌 Chromium
+const playwrightRoot = path.join(os.homedir(), "AppData", "Local", "ms-playwright");
+const playwrightChromiuns = existsSync(playwrightRoot)
+  ? readdirSync(playwrightRoot)
+      .filter((name) => /^chromium-\d+$/.test(name))
+      .sort()
+      .flatMap((name) => [
+        path.join(playwrightRoot, name, "chrome-win64", "chrome.exe"),
+        path.join(playwrightRoot, name, "chrome-win", "chrome.exe")
+      ])
+      .reverse()
+  : [];
 const browserCandidates = [
   process.env.BROWSER_PATH,
+  ...playwrightChromiuns,
   "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
   "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe",
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -27,19 +41,69 @@ const ARTIFACT_DIR =
 await mkdir(ARTIFACT_DIR, { recursive: true });
 const userDataDir = await mkdtemp(path.join(os.tmpdir(), "branchboard-ext-profile-"));
 
-const browser = await puppeteer.launch({
+const launchArgs = [
+  "--no-sandbox",
+  "--disable-dev-shm-usage",
+  `--disable-extensions-except=${EXTENSION_DIR}`,
+  `--load-extension=${EXTENSION_DIR}`,
+  `--user-data-dir=${userDataDir}`
+];
+const launchOptions = {
   executablePath: BROWSER_PATH,
   headless: process.env.HEADLESS !== "0",
   userDataDir,
   defaultViewport: { width: 1280, height: 900 },
-  ignoreDefaultArgs: ["--disable-extensions"],
-  args: [
-    "--no-sandbox",
-    "--disable-dev-shm-usage",
-    `--disable-extensions-except=${EXTENSION_DIR}`,
-    `--load-extension=${EXTENSION_DIR}`
-  ]
-});
+  ignoreDefaultArgs: ["--disable-extensions"]
+};
+
+async function launchExtensionBrowser() {
+  const isEdge = /msedge/i.test(BROWSER_PATH);
+  if (!isEdge) {
+    try {
+      return await puppeteer.launch({ ...launchOptions, args: launchArgs });
+    } catch {
+      /* 启动失败时回退到调试端口方式 */
+    }
+  }
+  // 新版 Edge 的入口进程启动后会立即转交退出，puppeteer 的管道连接随之失败，
+  // 直接改用调试端口连接真实浏览器进程，并使用全新的临时 profile。
+  const port = 9200 + Math.floor(Math.random() * 800);
+  const fallbackProfile = await mkdtemp(path.join(os.tmpdir(), "branchboard-ext-profile-"));
+  const child = spawn(
+    BROWSER_PATH,
+    [
+      "--no-sandbox",
+      "--disable-dev-shm-usage",
+      `--disable-extensions-except=${EXTENSION_DIR}`,
+      `--load-extension=${EXTENSION_DIR}`,
+      `--user-data-dir=${fallbackProfile}`,
+      ...(process.env.HEADLESS === "0" ? [] : ["--headless=new"]),
+      `--remote-debugging-port=${port}`,
+      "--no-first-run",
+      "about:blank"
+    ],
+    { stdio: "ignore" }
+  );
+  child.unref();
+  for (let attempt = 0; attempt < 24; attempt++) {
+    await wait(250);
+    try {
+      const browser = await puppeteer.connect({
+        browserURL: `http://127.0.0.1:${port}`,
+        defaultViewport: { width: 1280, height: 900 }
+      });
+      connectedViaPort = true;
+      return browser;
+    } catch {
+      /* 浏览器还在启动，继续等待 */
+    }
+  }
+  throw new Error("无法启动浏览器（管道与调试端口两种方式均失败）");
+}
+
+let connectedViaPort = false;
+
+const browser = await launchExtensionBrowser();
 
 function log(message) {
   console.log(`• ${message}`);
@@ -51,11 +115,27 @@ async function wait(ms) {
 
 try {
   log("load extension service worker");
-  const worker = await browser.waitForTarget(
-    (target) =>
-      target.type() === "service_worker" && target.url().includes("background.js"),
-    { timeout: 20000 }
-  );
+  const EXTENSION_NAME = JSON.parse(
+    await readFile(path.join(EXTENSION_DIR, "manifest.json"), "utf8")
+  ).name;
+  let worker = null;
+  for (let attempt = 0; attempt < 40 && !worker; attempt++) {
+    for (const target of browser.targets()) {
+      if (target.type() !== "service_worker" || !target.url().includes("background.js")) {
+        continue;
+      }
+      const name = await target
+        .worker()
+        .then((w) => w.evaluate(() => chrome.runtime.getManifest().name))
+        .catch(() => null);
+      if (name === EXTENSION_NAME) {
+        worker = target;
+        break;
+      }
+    }
+    if (!worker) await wait(500);
+  }
+  assert.ok(worker, "Branchboard 的 service worker 未加载");
   const extensionId = new URL(worker.url()).host;
   assert.ok(extensionId, "extension id was not available");
   log(`extension loaded: ${extensionId}`);
@@ -247,7 +327,7 @@ try {
 
   log("minimize preserves the live iframe state");
   await frame.evaluate(() => {
-    document.querySelector(".bb-empty-state .bb-button")?.click();
+    document.querySelector(".bb-empty-state .bb-empty-add")?.click();
   });
   await frame.waitForSelector(".bb-prompt-node textarea", { timeout: 5000 });
   const promptValue = "最小化后仍然存在的提示词";
@@ -366,6 +446,21 @@ try {
 
   console.log(`\nAll extension shell checks passed. Screenshots: ${ARTIFACT_DIR}`);
 } finally {
-  await browser.close();
+  if (connectedViaPort) {
+    // connect 模式下 close 只断开连接，需要通过 CDP 让浏览器进程退出
+    try {
+      const session = await browser.target().createCDPSession();
+      await session.send("Browser.close");
+    } catch {
+      /* 进程可能已退出 */
+    }
+    try {
+      await browser.close();
+    } catch {
+      /* 连接已断开 */
+    }
+  } else {
+    await browser.close();
+  }
   await unlink(SHELL_FIXTURE).catch(() => {});
 }
