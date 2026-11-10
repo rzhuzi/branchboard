@@ -6,8 +6,9 @@ OpenAI API，而是直接使用当前已登录的 ChatGPT 页面，把提示词�
 
 核心流程只有一条：**创建 → 编写 → 生成 → 查看 → 修改 → 再生成。**
 
-当前版本：**2.0.1**。默认分支为 `v2`，包含 V2 重构及生图回收、任务状态、
-保存与同步修复。旧版源码保留在 `archive-main-2026-10-26` 归档标签中。
+当前版本：**2.1.0**。默认分支为 `v2`，包含 V2 重构、生图回收、任务状态、
+保存与同步修复，以及 2.1.0 的全新界面设计。旧版源码保留在
+`archive-main-2026-10-26` 归档标签中。
 
 ## V2 交互规则
 
@@ -126,9 +127,10 @@ npm run test:performance  # 64 节点 / 16 张图片压力冒烟
 npm run test:extension    # 真实扩展加载 + 后台回收 + 浮窗
 ```
 
-`test:extension` 需要支持命令行加载未打包扩展的 Chromium 浏览器。本机验证使用
-Microsoft Edge；Google Chrome 稳定版会忽略 `--load-extension`。手动在
-`chrome://extensions` 加载扩展不受此限制。
+`test:extension` 需要支持命令行加载未打包扩展的 Chromium 浏览器。新版品牌
+Chrome 与 Edge 均已忽略 `--load-extension`，因此测试默认使用 Playwright
+下载的无品牌 Chromium；也可通过 `BROWSER_PATH` 环境变量指定其他浏览器。
+手动在 `chrome://extensions` 加载扩展不受此限制。
 
 浏览器测试使用 `puppeteer-core`，不会下载额外浏览器。
 
@@ -168,7 +170,7 @@ DOM 和账号会话，无法在无登录自动化环境中可靠验证。发布�
 | 撤销 / 重做 | `Ctrl/⌘ + Z` / `Shift + Ctrl/⌘ + Z` |
 | 复制选中节点 | `Ctrl/⌘ + D` |
 | 删除选中节点或连线 | `Delete` / `Backspace` |
-| 全选节点 | `Ctrl/⌘ + A` |
+| 全选节点与连线 | `Ctrl/⌘ + A` |
 | 新建提示词 | `N` 或双击空白 |
 | 选择 / 平移工具 | `V` / `H` |
 | 缩放 | `Ctrl/⌘ + +` / `Ctrl/⌘ + -` / `Ctrl/⌘ + 0` |
