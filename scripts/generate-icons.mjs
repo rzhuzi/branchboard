@@ -50,42 +50,57 @@ function distanceToSegment(px, py, ax, ay, bx, by) {
 
 function makeIcon(size) {
   const pixels = Buffer.alloc(size * size * 4);
-  const radius = size * 0.23;
-  const nodeRadius = Math.max(1.1, size * 0.095);
-  const lineWidth = Math.max(1, size * 0.055);
-  const nodes = [
-    [size * 0.29, size * 0.32],
-    [size * 0.7, size * 0.26],
-    [size * 0.63, size * 0.7]
+  const padding = size === 128 ? 16 : 0;
+  const tileSize = size - padding * 2;
+  const samples = 4;
+  const sampleCount = samples * samples;
+  // Match the B mark in Brand.tsx and the floating launcher, centered on a 32px tile.
+  const transform = ([x, y]) => [
+    ((x - 12.5) * 1.1 + 16) * tileSize / 32,
+    ((y - 10.5) * 1.1 + 16) * tileSize / 32
   ];
+  const arc = (cx, cy, radius) => Array.from({ length: 25 }, (_, index) => {
+    const angle = Math.PI / 2 - Math.PI * index / 24;
+    return [cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius];
+  });
+  const strokes = [
+    [[5, 5], [5, 19], [10, 19], ...arc(10, 14, 5).slice(1), [5, 9]],
+    [[10, 9], [13, 9], ...arc(13, 5, 4).slice(1), [9, 1]]
+  ].map((stroke) => stroke.map(transform));
+  const segments = strokes.flatMap((stroke) => stroke.slice(1).map((point, index) => [
+    ...stroke[index], ...point
+  ]));
+  const [dotX, dotY] = transform([18, 18]);
+  const dotRadius = 2.1 * 1.1 * tileSize / 32;
+  const lineRadius = Math.max(0.58, 0.9 * 1.1 * tileSize / 32);
+  const radius = tileSize * 0.235;
+  const inset = Math.max(0.45, tileSize * 0.012);
 
   for (let y = 0; y < size; y += 1) {
     for (let x = 0; x < size; x += 1) {
       const offset = (y * size + x) * 4;
-      if (!inRoundedRectangle(x, y, size, radius)) continue;
-
-      const light = Math.max(0, 1 - Math.hypot(x, y) / (size * 1.15));
-      pixels[offset] = Math.round(22 + light * 16);
-      pixels[offset + 1] = Math.round(26 + light * 18);
-      pixels[offset + 2] = Math.round(30 + light * 20);
-      pixels[offset + 3] = 255;
-
-      const onLink =
-        distanceToSegment(x, y, ...nodes[0], ...nodes[1]) <= lineWidth ||
-        distanceToSegment(x, y, ...nodes[0], ...nodes[2]) <= lineWidth;
-      const onNode = nodes.some(
-        ([nodeX, nodeY]) => Math.hypot(x - nodeX, y - nodeY) <= nodeRadius
-      );
-      if (onLink) {
-        pixels[offset] = 223;
-        pixels[offset + 1] = 124;
-        pixels[offset + 2] = 70;
+      let alpha = 0;
+      const color = [0, 0, 0];
+      for (let sy = 0; sy < samples; sy += 1) {
+        for (let sx = 0; sx < samples; sx += 1) {
+          const px = x + (sx + 0.5) / samples - padding;
+          const py = y + (sy + 0.5) / samples - padding;
+          if (px < 0 || py < 0 || px >= tileSize || py >= tileSize) continue;
+          if (!inRoundedRectangle(px, py, tileSize + 1, radius)) continue;
+          const inner = inRoundedRectangle(px - inset, py - inset, tileSize + 1 - inset * 2, radius - inset);
+          const light = Math.max(0, 1 - (px + py) / (tileSize * 2));
+          let rgb = inner ? [25 + light * 17, 34 + light * 19, 29 + light * 17] : [104, 126, 112];
+          if (segments.some((segment) => distanceToSegment(px, py, ...segment) <= lineRadius)) {
+            rgb = [244, 248, 242];
+          }
+          if (Math.hypot(px - dotX, py - dotY) <= dotRadius) rgb = [188, 218, 177];
+          alpha += 1;
+          for (let channel = 0; channel < 3; channel += 1) color[channel] += rgb[channel];
+        }
       }
-      if (onNode) {
-        pixels[offset] = 233;
-        pixels[offset + 1] = 235;
-        pixels[offset + 2] = 237;
-      }
+      if (!alpha) continue;
+      for (let channel = 0; channel < 3; channel += 1) pixels[offset + channel] = Math.round(color[channel] / alpha);
+      pixels[offset + 3] = Math.round(alpha * 255 / sampleCount);
     }
   }
 

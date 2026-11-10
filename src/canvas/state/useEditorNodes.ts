@@ -130,13 +130,7 @@ export function useEditorNodes(
       const created: CanvasNode[] = [];
       const createdEdges: CanvasEdge[] = [];
       images.forEach((image, index) => {
-        const size = {
-          width: 320,
-          height: Math.min(
-            440,
-            Math.max(100, Math.round((320 * (image.height || 1024)) / Math.max(1, image.width || 1024)))
-          )
-        };
+        const size = estimateNodeSize({ type: "image", data: { ...image, kind: "image" } });
         const relation: RelationKind | null = parent ? "reference" : null;
         const position =
           parent && relation

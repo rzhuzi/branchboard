@@ -4,43 +4,38 @@
   font-size: 13px;
 }
 
-/* ---------- 提示词节点 ---------- */
-
 .bb-prompt-node {
   display: flex;
-  width: 260px;
+  width: 300px;
   flex-direction: column;
-  border: 1px solid var(--bb-border);
-  border-radius: 12px;
+  border: 1px solid var(--bb-border-strong);
+  border-radius: 11px;
   background: var(--bb-surface);
-  box-shadow: 0 4px 14px rgba(35, 50, 28, 0.04);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 3px 12px rgba(20, 24, 20, 0.035);
+  transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
-.bb-prompt-node:hover {
-  border-color: var(--bb-border-strong);
-}
-
+.bb-prompt-node:hover,
 .bb-prompt-node:focus-within {
-  border-color: var(--bb-border-strong);
+  border-color: var(--bb-text-faint);
 }
 
-.bb-prompt-node.is-selected {
+.bb-prompt-node.is-selected,
+.bb-prompt-node:focus-within {
   border-color: var(--bb-accent);
-  box-shadow: 0 0 0 2px var(--bb-accent-soft), var(--bb-shadow);
+  box-shadow: 0 0 0 2px var(--bb-accent-soft), 0 4px 16px rgba(20, 24, 20, 0.06);
 }
 
 .bb-prompt-head {
   display: flex;
-  height: 46px;
+  height: 37px;
   flex: none;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
-  padding: 0 10px 0 16px;
-  cursor: grab;
+  gap: 8px;
+  padding: 5px 9px 0 16px;
   color: var(--bb-text-muted);
-  font-size: 11px;
+  cursor: grab;
   user-select: none;
 }
 
@@ -49,44 +44,48 @@
 }
 
 .bb-prompt-label {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 7px;
-  min-width: 0;
+  opacity: 0.8;
 }
 
 .bb-node-counts {
   display: flex;
+  min-width: 0;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
 }
 
 .bb-node-count {
-  height: 20px;
-  padding: 0 5px;
-  border-radius: 4px;
-  color: var(--bb-text-faint);
-  font-size: 9.5px;
+  display: inline-flex;
+  height: 23px;
+  align-items: center;
+  padding: 0 7px;
+  border-radius: 5px;
+  color: var(--bb-text-muted);
+  background: var(--bb-surface-hover);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .bb-node-count:hover {
-  color: var(--bb-text-muted);
-  background: var(--bb-surface-hover);
+  color: var(--bb-accent);
+  background: var(--bb-accent-soft);
 }
 
 .bb-prompt-head .bb-icon-button {
-  width: 26px;
-  height: 26px;
+  width: 27px;
+  height: 27px;
   flex: none;
 }
 
 .bb-prompt-input {
   display: block;
   width: 100%;
-  min-height: 135px;
+  min-height: 112px;
   max-height: 320px;
-  padding: 0 19px 14px;
+  padding: 9px 17px 13px;
   overflow-y: auto;
   border: 0;
   outline: 0;
@@ -95,7 +94,8 @@
   background: transparent;
   font-family: inherit;
   font-size: 14px;
-  line-height: 1.9;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
   user-select: text;
   scrollbar-width: thin;
 }
@@ -107,12 +107,18 @@
 .bb-node-status {
   display: flex;
   align-items: flex-start;
-  gap: 6px;
-  padding: 6px 16px;
-  border-top: 1px solid var(--bb-border);
+  gap: 7px;
+  margin: 0 12px 8px;
+  padding: 8px 9px;
+  border-radius: 6px;
   color: var(--bb-text-muted);
-  font-size: 10px;
-  line-height: 1.35;
+  background: var(--bb-surface-hover);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.bb-node-status .bb-spinner {
+  margin-top: 2px;
 }
 
 .bb-node-status.working,
@@ -131,81 +137,80 @@
   background: var(--bb-danger-soft);
 }
 
-.bb-node-status.cancelled {
-  color: var(--bb-text-faint);
-}
-
 .bb-status-mark {
   display: grid;
   width: 12px;
-  height: 14px;
+  height: 16px;
   flex: none;
   place-items: center;
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 650;
 }
 
 .bb-status-text {
-  flex: 1;
-  min-width: 0;
   display: -webkit-box;
+  min-width: 0;
+  flex: 1;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  word-break: break-word;
+  -webkit-line-clamp: 3;
+  overflow-wrap: anywhere;
 }
 
 .bb-status-time {
   flex: none;
+  padding-top: 1px;
   color: inherit;
-  font-size: 9.5px;
+  font-size: 10px;
   font-variant-numeric: tabular-nums;
-  opacity: 0.75;
+  opacity: 0.8;
 }
 
 .bb-status-close {
   display: grid;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   flex: none;
   place-items: center;
-  margin-top: -1px;
   border-radius: 4px;
   color: inherit;
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
 .bb-status-close:hover {
-  opacity: 1;
   background: var(--bb-hover-soft);
+  opacity: 1;
 }
 
 .bb-node-footer {
   display: flex;
+  min-height: 54px;
   flex: none;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
-  margin: 0 14px;
-  padding: 10px 0 12px;
+  gap: 8px;
+  margin: 0 12px;
+  padding: 9px 0 10px;
   border-top: 1px solid var(--bb-border);
 }
 
 .bb-node-footer-tools {
   display: flex;
+  min-width: 0;
   align-items: center;
   gap: 2px;
 }
 
 .bb-node-footer-tools .bb-icon-button {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
 }
 
 .bb-node-feedback {
   overflow: hidden;
-  color: var(--bb-text-faint);
-  font-size: 9.5px;
+  color: var(--bb-text-muted);
+  font-size: 10px;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -219,20 +224,23 @@
 
 .bb-generate-button {
   display: inline-flex;
-  height: 30px;
+  height: 32px;
+  flex: none;
   align-items: center;
-  gap: 5px;
-  padding: 0 13px;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 15px;
   border-radius: 7px;
   color: var(--bb-surface);
   background: var(--bb-text);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 550;
   white-space: nowrap;
+  transition: background 140ms ease;
 }
 
 .bb-generate-button:hover:not(:disabled) {
-  color: #fff;
+  color: var(--bb-accent-contrast);
   background: var(--bb-accent);
 }
 
@@ -245,8 +253,10 @@
   background: var(--bb-danger-soft);
 }
 
-.bb-generate-button.cancel:hover {
-  background: var(--bb-surface-hover);
+.bb-generate-button.cancel:hover:not(:disabled) {
+  color: var(--bb-danger);
+  background: var(--bb-danger-soft);
+  box-shadow: inset 0 0 0 1px var(--bb-danger);
 }
 
 .bb-generate-button.retry {
@@ -258,27 +268,19 @@
   color: currentColor;
 }
 
-/* ---------- 图片节点 ---------- */
-
 .bb-image-node {
   width: 320px;
 }
 
-.bb-image-node.is-selected .bb-image-card {
-  border-color: var(--bb-accent);
-  box-shadow: 0 0 0 2px var(--bb-accent-soft), var(--bb-shadow);
-}
-
 .bb-image-card {
   position: relative;
-  padding: 5px;
   overflow: hidden;
-  border: 1px solid var(--bb-border);
-  border-radius: 12px;
+  border: 1px solid var(--bb-border-strong);
+  border-radius: 10px;
   background: var(--bb-surface);
-  box-shadow: 0 4px 14px rgba(35, 50, 28, 0.04);
+  box-shadow: 0 3px 12px rgba(20, 24, 20, 0.035);
   cursor: grab;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
 .bb-image-card:active {
@@ -286,13 +288,18 @@
 }
 
 .bb-image-card:hover {
-  border-color: var(--bb-border-strong);
+  border-color: var(--bb-text-faint);
+}
+
+.bb-image-node.is-selected .bb-image-card,
+.bb-image-node:focus-within .bb-image-card {
+  border-color: var(--bb-accent);
+  box-shadow: 0 0 0 2px var(--bb-accent-soft), 0 4px 16px rgba(20, 24, 20, 0.06);
 }
 
 .bb-image-frame {
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
   background: var(--bb-surface-hover);
 }
 
@@ -309,34 +316,30 @@
 
 .bb-image-placeholder {
   display: flex;
-  min-height: 180px;
+  min-height: 200px;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 6px;
-  color: var(--bb-text-faint);
-  font-size: 10.5px;
+  gap: 10px;
+  color: var(--bb-text-muted);
+  font-size: 11px;
 }
 
 .bb-image-placeholder.error {
   color: var(--bb-danger);
 }
 
-.bb-image-loading {
-  color: var(--bb-text-faint);
-}
-
 .bb-image-feedback {
   position: absolute;
-  top: 8px;
-  left: 50%;
-  padding: 3px 7px;
-  transform: translateX(-50%);
+  top: 10px;
+  left: 10px;
+  padding: 4px 8px;
   border: 1px solid var(--bb-border);
   border-radius: 5px;
   color: var(--bb-text);
   background: var(--bb-surface);
-  font-size: 10px;
+  box-shadow: var(--bb-shadow-soft);
+  font-size: 11px;
   pointer-events: none;
 }
 
@@ -350,55 +353,67 @@
 
 .bb-image-badge {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  padding: 2px 6px;
+  top: 10px;
+  left: 10px;
+  padding: 3px 7px;
   border: 1px solid var(--bb-border);
   border-radius: 5px;
   color: var(--bb-text-muted);
   background: var(--bb-surface);
-  font-size: 9px;
+  font-size: 10px;
   pointer-events: none;
 }
 
 .bb-image-menu-button {
   position: absolute;
-  top: 13px;
-  right: 13px;
+  top: 10px;
+  right: 10px;
   display: grid;
-  width: 27px;
-  height: 27px;
+  width: 28px;
+  height: 28px;
   place-items: center;
+  border: 1px solid rgba(30, 35, 30, 0.06);
   border-radius: 6px;
-  color: #555c51;
-  background: rgba(255, 255, 255, 0.79);
-  backdrop-filter: blur(8px);
+  color: #555953;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 6px rgba(20, 24, 20, 0.04);
+  backdrop-filter: blur(10px);
 }
 
 .bb-image-menu-button:hover {
+  color: #242823;
   background: #fff;
 }
 
 :root[data-theme="dark"] .bb-image-menu-button {
-  color: #e5e9e1;
-  background: rgba(37, 44, 34, 0.66);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #e7e9e5;
+  background: rgba(38, 41, 37, 0.88);
 }
 
 :root[data-theme="dark"] .bb-image-menu-button:hover {
-  background: #394433;
+  background: #353934;
 }
 
 .bb-image-label {
   display: flex;
+  height: 40px;
   align-items: center;
   gap: 7px;
-  padding: 11px 4px 8px;
+  padding: 0 11px;
+  overflow: hidden;
   color: var(--bb-text-muted);
   font-size: 11px;
-  overflow: hidden;
+  transition: opacity 120ms ease;
+}
+
+.bb-image-label > svg {
+  flex: none;
+  opacity: 0.75;
 }
 
 .bb-image-label-name {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -409,54 +424,76 @@
   margin-left: auto;
   color: var(--bb-text-faint);
   font-size: 10px;
-  letter-spacing: 0.3px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-/* 选中时下方的操作工具条 */
+/* The toolbar shares the caption row; opening it never changes the node bounds. */
 .bb-image-actions {
   position: absolute;
-  left: 50%;
-  bottom: -43px;
-  display: none;
-  align-items: center;
-  gap: 2px;
-  padding: 4px;
-  border: 1px solid var(--bb-border);
-  border-radius: 9px;
-  background: var(--bb-surface);
-  box-shadow: var(--bb-shadow);
-  white-space: nowrap;
   z-index: 3;
-  transform: translateX(-50%);
+  right: 7px;
+  bottom: 5px;
+  left: 7px;
+  display: flex;
+  height: 30px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px;
+  border-radius: 6px;
+  background: var(--bb-surface);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
 }
 
-.bb-image-node.is-selected .bb-image-actions {
-  display: flex;
+.bb-image-node:hover .bb-image-actions,
+.bb-image-node.is-selected .bb-image-actions,
+.bb-image-node:focus-within .bb-image-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bb-image-node:hover .bb-image-label,
+.bb-image-node.is-selected .bb-image-label,
+.bb-image-node:focus-within .bb-image-label {
+  opacity: 0;
 }
 
 .bb-image-actions > button {
   display: inline-flex;
-  height: 29px;
+  height: 30px;
+  flex: none;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  gap: 5px;
   padding: 0 9px;
-  border-radius: 5px;
-  color: var(--bb-text);
+  border-radius: 6px;
+  color: var(--bb-text-muted);
   font-size: 11px;
 }
 
 .bb-image-actions > button:hover {
-  background: var(--bb-accent-soft);
+  color: var(--bb-text);
+  background: var(--bb-surface-hover);
 }
 
 .bb-image-actions > button.primary {
+  margin-right: auto;
   color: var(--bb-accent);
+  background: var(--bb-accent-soft);
   font-weight: 550;
+}
+
+.bb-image-actions > button.primary:hover {
+  color: var(--bb-accent-contrast);
+  background: var(--bb-accent);
 }
 
 .bb-image-actions .bb-actions-divider {
   width: 1px;
-  height: 16px;
+  height: 15px;
+  flex: none;
   margin: 0 3px;
   background: var(--bb-border);
 }
@@ -464,9 +501,27 @@
 .bb-image-actions .bb-icon-button {
   width: 29px;
   height: 29px;
+  padding: 0;
   border-radius: 5px;
 }
 
 .react-flow__node.selected {
   outline: none;
+}
+
+@media (hover: none) {
+  .bb-image-node.is-selected .bb-image-actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bb-prompt-node,
+  .bb-image-card,
+  .bb-generate-button,
+  .bb-image-actions,
+  .bb-image-label {
+    transition: none;
+  }
 }

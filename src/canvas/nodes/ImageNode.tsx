@@ -1,11 +1,12 @@
 import { memo, useEffect, useState } from "react";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import type { CanvasNode, ImageNodeData } from "../../shared/types";
+import { IMAGE_WIDTH } from "../../shared/placement";
 import { AnnotationEditor } from "../overlays/AnnotationEditor";
 import { ImagePreview } from "../overlays/ImagePreview";
 import { useAsset } from "../state/AssetProvider";
 import { useEditorActions } from "../state/EditorContext";
-import { IconButton } from "../ui/controls";
+import { IconButton, Spinner } from "../ui/controls";
 import {
   BranchIcon,
   CopyIcon,
@@ -97,7 +98,8 @@ export const ImageNode = memo(function ImageNode({
   return (
     <article
       className={`bb-node bb-image-node ${selected ? "is-selected" : ""}`.trim()}
-      style={{ width: 320 }}
+      aria-label={data.name || "图片节点"}
+      style={{ width: IMAGE_WIDTH }}
       onContextMenu={(event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -114,10 +116,21 @@ export const ImageNode = memo(function ImageNode({
       >
         <div className="bb-image-frame">
           {asset ? (
-            <img src={asset.url} alt={data.name || "图片"} draggable={false} />
+            <img
+              src={asset.url}
+              alt={data.name || "图片"}
+              width={data.width || undefined}
+              height={data.height || undefined}
+              draggable={false}
+            />
           ) : (
             <div className={`bb-image-placeholder ${error ? "error" : ""}`}>
-              {loading ? <span className="bb-image-loading">正在加载图片</span> : null}
+              {loading ? (
+                <>
+                  <Spinner size={18} />
+                  <span className="bb-image-loading">正在加载图片</span>
+                </>
+              ) : null}
               {error ? (
                 <>
                   <ImageIcon size={18} />
@@ -154,7 +167,9 @@ export const ImageNode = memo(function ImageNode({
 
         <div className="bb-image-label">
           <ImageIcon size={13} />
-          <span className="bb-image-label-name">{data.name || "图片"}</span>
+          <span className="bb-image-label-name" title={data.name || "图片"}>
+            {data.name || "图片"}
+          </span>
           {data.width && data.height ? (
             <span className="bb-image-size">
               {data.width} × {data.height}
@@ -165,7 +180,7 @@ export const ImageNode = memo(function ImageNode({
       <Handle type="source" position={Position.Right} className="bb-handle" />
 
       {asset ? (
-        <div className="bb-image-actions nodrag">
+        <div className="bb-image-actions nodrag" role="toolbar" aria-label="图片快捷操作">
           <button
             type="button"
             className="primary"
@@ -186,6 +201,12 @@ export const ImageNode = memo(function ImageNode({
             onClick={() => actions.downloadImage(id)}
           >
             <DownloadIcon size={14} />
+          </IconButton>
+          <IconButton label="复制图片" onClick={() => void handleCopy()}>
+            <CopyIcon size={14} />
+          </IconButton>
+          <IconButton label="标注图片" onClick={() => setAnnotating(true)}>
+            <PenIcon size={14} />
           </IconButton>
         </div>
       ) : null}

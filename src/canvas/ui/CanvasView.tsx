@@ -32,11 +32,11 @@ import { useEditorActions, useEditorState } from "../state/EditorContext";
 import { useToast } from "../state/ToastProvider";
 import { useWorkspace } from "../state/WorkspaceProvider";
 import { IconButton } from "../ui/controls";
+import { AssetShelf } from "./AssetShelf";
 import {
   CursorIcon,
   HandIcon,
   ImagePlusIcon,
-  MouseIcon,
   PlusIcon,
   RedoIcon,
   TextIcon,
@@ -105,8 +105,13 @@ function promptLabel(node: CanvasNode | undefined): string {
   return first.slice(0, 24) || "未命名提示词";
 }
 
-export function CanvasView() {
-  const { nodes, edges, selectedCount, canUndo, canRedo } = useEditorState();
+export function CanvasView({ assetsOpen, onCloseAssets }: {
+  assetsOpen: boolean;
+  onCloseAssets: () => void;
+}) {
+  const { nodes, edges, viewport, selectedCount, canUndo, canRedo } = useEditorState();
+  const promptIds = nodes.filter((node) => node.data.kind === "prompt").map((node) => node.id);
+  const imageIds = nodes.filter((node) => node.data.kind === "image").map((node) => node.id);
   const actions = useEditorActions();
   const { activeCanvasId, busy, embedded } = useWorkspace();
   const { pushToast } = useToast();
@@ -168,7 +173,7 @@ export function CanvasView() {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
     const handleWheel = (event: WheelEvent) => {
-      if (event.target instanceof Element && event.target.closest(".react-flow__minimap, .bb-zoom-controls")) {
+      if (event.target instanceof Element && event.target.closest(".react-flow__minimap, .bb-zoom-controls, .bb-asset-shelf")) {
         return;
       }
       const textarea = event.target instanceof Element
@@ -445,10 +450,10 @@ export function CanvasView() {
   const handleDoubleClick = useCallback(
     (event: ReactMouseEvent<HTMLDivElement>) => {
       const target = event.target;
-      if (target instanceof HTMLElement) {
+      if (target instanceof Element) {
         if (
           target.closest(
-            ".react-flow__node, .react-flow__edge, .react-flow__minimap, .bb-zoom-controls, .bb-empty-state, .bb-drop-hint, .bb-edge-label"
+            ".react-flow__node, .react-flow__edge, .react-flow__minimap, .bb-zoom-controls, .bb-empty-state, .bb-drop-hint, .bb-edge-label, .bb-tool-rail, .bb-history-buttons, .bb-asset-shelf, .bb-canvas-summary, button, input, textarea"
           )
         ) {
           return;
@@ -576,7 +581,7 @@ export function CanvasView() {
   return (
     <div
       ref={wrapperRef}
-      className={`bb-canvas tool-${tool} ${dragActive ? "is-dragging-file" : ""}`}
+      className={`bb-canvas tool-${tool} ${assetsOpen ? "has-assets" : ""} ${dragActive ? "is-dragging-file" : ""}`}
       onDoubleClick={handleDoubleClick}
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
@@ -660,11 +665,11 @@ export function CanvasView() {
       >
         <Background
           variant={BackgroundVariant.Dots}
-          gap={22}
+          gap={Math.max(24, 14 / viewport.zoom)}
           size={0.8}
           color="var(--bb-canvas-dot)"
         />
-        {nodes.length ? (
+        {nodes.length > 8 ? (
           <MiniMap
             className="bb-minimap"
             nodeColor={minimapNodeColor}
@@ -686,10 +691,12 @@ export function CanvasView() {
           >
             <PlusIcon size={22} />
           </button>
-          <strong>双击画布，写下一个想法</strong>
-          <p>也可以把图片拖进来，或按 Ctrl+V 粘贴图片。</p>
+          <strong>双击画布，新建提示词</strong>
+          <p>或拖入参考图片</p>
         </div>
       ) : null}
+
+      {assetsOpen ? <AssetShelf onClose={onCloseAssets} onImport={() => fileInputRef.current?.click()} /> : null}
 
       <div className="bb-tool-rail" role="toolbar" aria-label="画布工具">
         <IconButton
@@ -707,13 +714,16 @@ export function CanvasView() {
           <HandIcon size={17} />
         </IconButton>
         <span className="bb-rail-line" aria-hidden="true" />
-        <IconButton
-          label="新建提示词 (N)"
+        <button
+          type="button"
+          className="bb-tool-create"
+          aria-label="新建提示词 (N)"
+          title="新建提示词 (N)"
           disabled={busy}
           onClick={() => actions.addPromptAtCenter()}
         >
-          <TextIcon size={17} />
-        </IconButton>
+          <TextIcon size={17} /><span>提示词</span>
+        </button>
         <IconButton
           label="导入图片"
           disabled={busy}
@@ -736,10 +746,17 @@ export function CanvasView() {
         </IconButton>
       </div>
 
-      <div className="bb-canvas-hint" aria-hidden="true">
-        <MouseIcon size={13} />
-        双击新建 · 滚轮平移 · Ctrl + 滚轮缩放
-      </div>
+      {nodes.length ? (
+        <div className="bb-canvas-summary">
+          <button type="button" disabled={!promptIds.length} onClick={() => actions.locateNodes(promptIds)}>
+            {promptIds.length} 提示词
+          </button>
+          <span aria-hidden="true">·</span>
+          <button type="button" disabled={!imageIds.length} onClick={() => actions.locateNodes(imageIds)}>
+            {imageIds.length} 图片
+          </button>
+        </div>
+      ) : null}
 
       <ZoomControls />
 

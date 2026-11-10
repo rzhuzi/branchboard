@@ -1,7 +1,7 @@
 import {
   BaseEdge,
   EdgeLabelRenderer,
-  getSmoothStepPath,
+  getBezierPath,
   type EdgeProps
 } from "@xyflow/react";
 import type { CanvasEdge } from "../../shared/types";
@@ -29,14 +29,14 @@ export function RelationEdge({
   targetPosition
 }: EdgeProps<CanvasEdge>) {
   const relation = data?.relation ?? "generated";
-  const [path, labelX, labelY] = getSmoothStepPath({
+  const [path, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
     targetX,
     targetY,
     sourcePosition,
     targetPosition,
-    borderRadius: 10
+    curvature: 0.28
   });
 
   return (
@@ -47,7 +47,7 @@ export function RelationEdge({
         interactionWidth={16}
         style={{
           stroke: selected ? "var(--bb-accent)" : `var(--bb-edge-${relation})`,
-          strokeWidth: selected ? 1.7 : 1.4,
+          strokeWidth: selected ? 1.8 : 1.35,
           strokeDasharray: RELATION_DASH[relation],
           strokeLinecap: "round",
           opacity: 1

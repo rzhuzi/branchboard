@@ -17,6 +17,7 @@ import type {
   CanvasNode,
   PromptNodeData
 } from "../../shared/types";
+import { PROMPT_WIDTH } from "../../shared/placement";
 import { useEditorActions } from "../state/EditorContext";
 import { useExecution } from "../state/ExecutionProvider";
 import { IconButton, Spinner } from "../ui/controls";
@@ -79,7 +80,7 @@ export const PromptNode = memo(function PromptNode({
     const textarea = textareaRef.current;
     if (!textarea) return;
     textarea.style.height = "0px";
-    const next = Math.min(320, Math.max(135, textarea.scrollHeight));
+    const next = Math.min(320, Math.max(112, textarea.scrollHeight));
     textarea.style.height = `${next}px`;
   }, [data.prompt]);
 
@@ -122,11 +123,11 @@ export const PromptNode = memo(function PromptNode({
 
   const menuItems: MenuEntry[] = [
     {
-      label: "生成",
+      label: busy ? "取消生成" : failed ? "重试生成" : "生成",
       icon: <GenerateIcon size={14} />,
       shortcut: "Ctrl+Enter",
-      disabled: !data.prompt.trim(),
-      onSelect: () => void actions.generatePrompt(id)
+      disabled: !data.prompt.trim() && !busy,
+      onSelect: handleGenerate
     },
     {
       label: "复制提示词",
@@ -151,15 +152,16 @@ export const PromptNode = memo(function PromptNode({
 
   return (
     <article
+      aria-label="提示词节点"
+      style={{ width: PROMPT_WIDTH }}
       className={`bb-node bb-prompt-node ${selected ? "is-selected" : ""} ${
         execution?.tone === "working" ? "is-running" : ""
       } ${execution?.tone === "error" ? "has-error" : ""}`.trim()}
     >
       <Handle type="target" position={Position.Left} className="bb-handle" />
       <header className="bb-prompt-head" title="拖动节点">
-        <span className="bb-prompt-label">
+        <span className="bb-prompt-label" aria-hidden="true">
           <TextIcon size={15} />
-          提示词
         </span>
         <span className="bb-node-counts">
           {generatedCount > 0 ? (
@@ -167,6 +169,7 @@ export const PromptNode = memo(function PromptNode({
               type="button"
               className="bb-node-count nodrag"
               title="定位生成结果"
+              aria-label={`定位 ${generatedCount} 个生成结果`}
               onClick={() => locateRelated("generated")}
             >
               {generatedCount} 结果
@@ -177,6 +180,7 @@ export const PromptNode = memo(function PromptNode({
               type="button"
               className="bb-node-count nodrag"
               title="定位参考图"
+              aria-label={`定位 ${referenceCount} 张参考图`}
               onClick={() => locateRelated("reference")}
             >
               {referenceCount} 参考
@@ -207,7 +211,7 @@ export const PromptNode = memo(function PromptNode({
           if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
             event.preventDefault();
             event.stopPropagation();
-            void actions.generatePrompt(id);
+            if (!busy) void actions.generatePrompt(id);
           } else if (event.key === "Escape") {
             event.preventDefault();
             event.currentTarget.blur();
@@ -216,7 +220,7 @@ export const PromptNode = memo(function PromptNode({
       />
 
       {execution ? (
-        <div className={`bb-node-status ${execution.tone}`}>
+        <div className={`bb-node-status ${execution.tone}`} role="status" aria-live="polite">
           {execution.tone === "working" || execution.tone === "queued" ? (
             <Spinner size={12} />
           ) : execution.tone === "done" ? (
@@ -274,6 +278,7 @@ export const PromptNode = memo(function PromptNode({
             failed ? "retry" : ""
           }`}
           disabled={!data.prompt.trim() && !busy}
+          title={busy ? "取消当前生成任务" : "生成 · Ctrl / ⌘ + Enter"}
           onClick={handleGenerate}
         >
           {busy ? (

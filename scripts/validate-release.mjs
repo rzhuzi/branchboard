@@ -10,6 +10,10 @@ const manifest = JSON.parse(
   await readFile(resolve(projectRoot, "dist", "manifest.json"), "utf8")
 );
 
+const lockfile = JSON.parse(await readFile(resolve(projectRoot, "package-lock.json"), "utf8"));
+if (lockfile.version !== packageJson.version || lockfile.packages?.[""]?.version !== packageJson.version) {
+  throw new Error("package-lock.json version does not match package.json");
+}
 if (manifest.version !== packageJson.version) {
   throw new Error(
     `Version mismatch: package ${packageJson.version}, manifest ${manifest.version}`

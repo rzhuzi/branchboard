@@ -1,74 +1,74 @@
 :root,
 :root[data-theme="dark"] {
-  --bb-canvas-bg: #222620;
-  --bb-surface: #2c3129;
-  --bb-surface-raised: #2c3129;
-  --bb-surface-hover: #394433;
-  --bb-surface-active: #414d3a;
-  --bb-border: #3d4437;
-  --bb-border-strong: #4a5143;
-  --bb-text: #e3e7de;
-  --bb-text-muted: #929b8a;
-  --bb-text-faint: #6d7564;
-  --bb-accent: #aac29b;
-  --bb-accent-hover: #b7cfab;
-  --bb-accent-contrast: #222620;
-  --bb-accent-soft: rgba(170, 194, 155, 0.14);
-  --bb-accent-border: rgba(170, 194, 155, 0.4);
-  --bb-focus: rgba(170, 194, 155, 0.45);
+  --bb-canvas-bg: #1e2023;
+  --bb-surface: #282b2f;
+  --bb-surface-raised: #2e3136;
+  --bb-surface-hover: #35383d;
+  --bb-surface-active: #3e4248;
+  --bb-border: #3b3f44;
+  --bb-border-strong: #50555d;
+  --bb-text: #edeef0;
+  --bb-text-muted: #a4a8af;
+  --bb-text-faint: #79818b;
+  --bb-accent: #99bba4;
+  --bb-accent-hover: #b3cdbb;
+  --bb-accent-contrast: #16241c;
+  --bb-accent-soft: rgba(153, 187, 164, 0.12);
+  --bb-accent-border: rgba(153, 187, 164, 0.45);
+  --bb-focus: rgba(153, 187, 164, 0.65);
   --bb-success: #8fae86;
   --bb-success-soft: rgba(143, 174, 134, 0.14);
   --bb-warning: #c2a76a;
   --bb-warning-soft: rgba(194, 167, 106, 0.14);
   --bb-danger: #c97f7f;
   --bb-danger-soft: rgba(201, 127, 127, 0.14);
-  --bb-edge-generated: #6d7b61;
-  --bb-edge-reference: #6d7b61;
-  --bb-edge-branch: #6d7b61;
-  --bb-canvas-dot: #4a5143;
-  --bb-minimap-image: #6d7b61;
-  --bb-minimap-mask: rgba(34, 38, 32, 0.85);
-  --bb-shadow: 0 6px 24px rgba(0, 0, 0, 0.16);
-  --bb-shadow-soft: 0 3px 12px rgba(0, 0, 0, 0.12);
-  --bb-overlay: rgba(18, 22, 17, 0.6);
+  --bb-edge-generated: #7b8380;
+  --bb-edge-reference: #748579;
+  --bb-edge-branch: #6d7680;
+  --bb-canvas-dot: #3d4145;
+  --bb-minimap-image: #747e78;
+  --bb-minimap-mask: rgba(30, 32, 35, 0.82);
+  --bb-shadow: 0 8px 32px rgba(0, 0, 0, 0.22), 0 2px 6px rgba(0, 0, 0, 0.1);
+  --bb-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --bb-overlay: rgba(16, 18, 21, 0.65);
   --bb-hover-soft: rgba(255, 255, 255, 0.05);
   --bb-toast-accent: #cfe3c3;
   color-scheme: dark;
 }
 
 :root[data-theme="light"] {
-  --bb-canvas-bg: #f5f5f2;
+  --bb-canvas-bg: #f4f5f5;
   --bb-surface: #ffffff;
   --bb-surface-raised: #ffffff;
-  --bb-surface-hover: #edf2eb;
-  --bb-surface-active: #e2e9df;
-  --bb-border: #e6e7e1;
-  --bb-border-strong: #d6d9d0;
-  --bb-text: #292b29;
-  --bb-text-muted: #8b8e88;
-  --bb-text-faint: #a1a59b;
-  --bb-accent: #627d65;
-  --bb-accent-hover: #556c58;
+  --bb-surface-hover: #f0f2f1;
+  --bb-surface-active: #e9ecea;
+  --bb-border: #e3e6e4;
+  --bb-border-strong: #cbd0cd;
+  --bb-text: #262c29;
+  --bb-text-muted: #717a74;
+  --bb-text-faint: #929b95;
+  --bb-accent: #50775e;
+  --bb-accent-hover: #3c6049;
   --bb-accent-contrast: #ffffff;
-  --bb-accent-soft: rgba(98, 125, 101, 0.13);
-  --bb-accent-border: rgba(98, 125, 101, 0.35);
-  --bb-focus: rgba(98, 125, 101, 0.42);
+  --bb-accent-soft: rgba(80, 119, 94, 0.09);
+  --bb-accent-border: rgba(80, 119, 94, 0.4);
+  --bb-focus: rgba(80, 119, 94, 0.6);
   --bb-success: #7c9874;
   --bb-success-soft: rgba(124, 152, 116, 0.13);
   --bb-warning: #a08a4f;
   --bb-warning-soft: rgba(160, 138, 79, 0.13);
   --bb-danger: #b25353;
   --bb-danger-soft: rgba(178, 83, 83, 0.11);
-  --bb-edge-generated: #b6bdb2;
-  --bb-edge-reference: #b6bdb2;
-  --bb-edge-branch: #b6bdb2;
-  --bb-canvas-dot: #d6d9d0;
-  --bb-minimap-image: #b6bdb2;
-  --bb-minimap-mask: rgba(245, 245, 242, 0.84);
-  --bb-shadow: 0 6px 24px rgba(35, 43, 32, 0.1);
-  --bb-shadow-soft: 0 4px 14px rgba(35, 50, 28, 0.07);
-  --bb-overlay: rgba(34, 42, 33, 0.47);
-  --bb-hover-soft: rgba(98, 125, 101, 0.08);
+  --bb-edge-generated: #a1aaa4;
+  --bb-edge-reference: #9eafa3;
+  --bb-edge-branch: #abb0b7;
+  --bb-canvas-dot: #d3d9d5;
+  --bb-minimap-image: #a2b2a8;
+  --bb-minimap-mask: rgba(244, 245, 245, 0.84);
+  --bb-shadow: 0 8px 28px rgba(25, 37, 29, 0.08), 0 1px 4px rgba(25, 37, 29, 0.04);
+  --bb-shadow-soft: 0 2px 8px rgba(25, 37, 29, 0.045);
+  --bb-overlay: rgba(25, 31, 28, 0.46);
+  --bb-hover-soft: rgba(80, 119, 94, 0.055);
   --bb-toast-accent: #c3d9b8;
   color-scheme: light;
 }
@@ -172,14 +172,14 @@ button:disabled {
 }
 
 .bb-button.primary {
-  color: var(--bb-surface);
-  background: var(--bb-text);
+  color: var(--bb-accent-contrast);
+  background: var(--bb-accent);
   font-weight: 500;
 }
 
 .bb-button.primary:hover {
-  color: #fff;
-  background: var(--bb-accent);
+  color: var(--bb-accent-contrast);
+  background: var(--bb-accent-hover);
 }
 
 .bb-button.secondary {

@@ -22,6 +22,7 @@ import { EditorContextProviders } from "./EditorContext";
 import { useEditor } from "./useEditor";
 import { useExecution } from "./ExecutionProvider";
 import { useToast } from "./ToastProvider";
+import { BrandMark } from "../ui/Brand";
 
 export type WorkspaceContextValue = {
   tabs: CanvasTab[];
@@ -59,13 +60,7 @@ function LoadingScreen({ message }: { message: string }) {
   return (
     <div className="bb-app-loading">
       <span className="bb-loader-mark" aria-hidden="true">
-        <svg viewBox="0 0 32 32">
-          <path d="M7.5 12V7.5H12M20 7.5h4.5V12M24.5 20v4.5H20M12 24.5H7.5V20" />
-          <path d="m10.5 11.5 5 4.5 6-5M15.5 16v5" />
-          <circle cx="10.5" cy="11.5" r="2.35" />
-          <circle cx="21.5" cy="11" r="2.35" />
-          <circle cx="15.5" cy="21" r="2.35" />
-        </svg>
+        <BrandMark size={28} />
       </span>
       <strong>Branchboard</strong>
       <p>{message}</p>

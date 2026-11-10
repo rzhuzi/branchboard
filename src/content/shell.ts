@@ -64,40 +64,45 @@ export function createFloatingShell(): FloatingShell {
       :host {
         all: initial;
         color-scheme: dark;
-        font-family: "Segoe UI Variable Text", "PingFang SC", "Microsoft YaHei UI",
-          "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
-        --bb-canvas-bg: #101315;
-        --bb-surface: #171b1f;
-        --bb-surface-raised: #1d2227;
-        --bb-surface-hover: #242a30;
-        --bb-border: #2a3036;
-        --bb-border-strong: #3a424a;
-        --bb-text: #e8eaed;
-        --bb-text-muted: #8d969f;
-        --bb-text-faint: #646d76;
-        --bb-accent: #df7c46;
-        --bb-success: #69b18c;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        --bb-canvas-bg: #1e2023;
+        --bb-surface: #282b2f;
+        --bb-surface-raised: #303438;
+        --bb-surface-hover: #373c3f;
+        --bb-border: #373d3f;
+        --bb-border-strong: #464d4f;
+        --bb-text: #edeef0;
+        --bb-text-muted: #a1a8a5;
+        --bb-text-faint: #717975;
+        --bb-accent: #99bba4;
+        --bb-success: #99bba4;
         --bb-danger: #d87575;
-        --bb-shadow: 0 18px 48px rgba(0,0,0,.42);
+        --bb-shadow: 0 28px 80px rgba(0,0,0,.4), 0 4px 18px rgba(0,0,0,.2);
+        --bb-orb-shadow: 0 6px 20px rgba(0,0,0,.24), 0 1px 4px rgba(0,0,0,.12);
+        --bb-pulse: rgba(153,187,164,.3);
       }
       :host(.light) {
         color-scheme: light;
-        --bb-canvas-bg: #f2f1ee;
-        --bb-surface: #fbfaf8;
+        --bb-canvas-bg: #f4f5f5;
+        --bb-surface: #ffffff;
         --bb-surface-raised: #ffffff;
-        --bb-surface-hover: #f0ece7;
-        --bb-border: #ddd9d2;
-        --bb-border-strong: #c7c1b8;
-        --bb-text: #252b31;
-        --bb-text-muted: #6d757d;
-        --bb-text-faint: #979ea5;
-        --bb-accent: #c65f2f;
-        --bb-success: #42805e;
+        --bb-surface-hover: #f0f3f1;
+        --bb-border: #e5e9e6;
+        --bb-border-strong: #d4dad6;
+        --bb-text: #262c29;
+        --bb-text-muted: #737c76;
+        --bb-text-faint: #9ca59f;
+        --bb-accent: #50775e;
+        --bb-success: #50775e;
         --bb-danger: #b25353;
-        --bb-shadow: 0 18px 48px rgba(60,52,44,.24);
+        --bb-shadow: 0 28px 80px rgba(25,36,29,.18), 0 4px 18px rgba(25,36,29,.08);
+        --bb-orb-shadow: 0 6px 20px rgba(25,36,29,.12), 0 1px 4px rgba(25,36,29,.06);
+        --bb-pulse: rgba(80,119,94,.3);
       }
       * { box-sizing: border-box; }
       button { font: inherit; }
+      button:focus-visible { outline: 2px solid var(--bb-accent); outline-offset: 3px; }
 
       .orb {
         position: fixed;
@@ -108,23 +113,21 @@ export function createFloatingShell(): FloatingShell {
         height: 48px;
         place-items: center;
         padding: 0;
-        border: 1px solid var(--bb-border-strong);
-        border-radius: 10px;
-        color: var(--bb-text-muted);
-        background: var(--bb-surface);
-        box-shadow: 0 10px 28px rgba(0,0,0,.32);
+        border: 1px solid #819d87;
+        border-radius: 13px;
+        color: #f4f8f2;
+        background: #2b4334;
+        box-shadow: var(--bb-orb-shadow);
         cursor: grab;
         pointer-events: auto;
         touch-action: none;
-        transition: transform .14s ease, background .14s ease;
+        transition: transform .16s ease, background .16s ease, box-shadow .16s ease;
       }
-      .orb:hover { color: var(--bb-text); background: var(--bb-surface-hover); transform: translateY(-1px); }
+      .orb:hover { color: #ffffff; background: #35543f; transform: translateY(-1px); }
       .orb:active, .orb.dragging { cursor: grabbing; transform: scale(.97); }
       .orb.hidden { display: none; }
-      .orb svg { width: 28px; height: 28px; overflow: visible; }
-      .orb .frame { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; opacity: .55; }
-      .orb .link { fill: none; stroke: var(--bb-accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-      .orb .node { fill: var(--bb-surface-raised); stroke: var(--bb-text-muted); stroke-width: .7; }
+      .orb svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+      .orb svg circle { fill: #bcdab1; stroke: none; }
       .orb-status {
         position: absolute;
         top: -2px;
@@ -141,7 +144,7 @@ export function createFloatingShell(): FloatingShell {
       .orb-status.running { opacity: 1; transform: scale(1); background: var(--bb-accent); animation: pulse 1.3s ease-in-out infinite; }
       .orb-status.done { opacity: 1; transform: scale(1); background: var(--bb-success); }
       .orb-status.error { opacity: 1; transform: scale(1); background: var(--bb-danger); }
-      @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(223,124,70,.42); } 50% { box-shadow: 0 0 0 6px rgba(223,124,70,0); } }
+      @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 var(--bb-pulse); } 50% { box-shadow: 0 0 0 5px transparent; } }
 
       .floating {
         position: fixed;
@@ -149,7 +152,7 @@ export function createFloatingShell(): FloatingShell {
         display: none;
         overflow: hidden;
         border: 1px solid var(--bb-border-strong);
-        border-radius: 10px;
+        border-radius: 14px;
         background: var(--bb-canvas-bg);
         box-shadow: var(--bb-shadow);
         pointer-events: auto;
@@ -160,31 +163,31 @@ export function createFloatingShell(): FloatingShell {
         position: relative;
         z-index: 2;
         display: flex;
-        height: 36px;
+        height: 32px;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         gap: 8px;
-        padding: 0 6px 0 10px;
-        border-bottom: 1px solid var(--bb-border);
+        padding: 0 6px;
         background: var(--bb-surface);
         cursor: grab;
         user-select: none;
+        touch-action: none;
       }
       .shell-header:active { cursor: grabbing; }
-      .shell-brand { display: flex; align-items: center; gap: 7px; color: var(--bb-text); font-size: 11.5px; font-weight: 600; letter-spacing: .01em; }
-      .shell-brand svg { width: 19px; height: 19px; overflow: visible; }
-      .shell-brand .frame { fill: none; stroke: var(--bb-text-muted); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; opacity: .55; }
-      .shell-brand .link { fill: none; stroke: var(--bb-accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-      .shell-brand .node { fill: var(--bb-surface-raised); stroke: var(--bb-text-muted); stroke-width: .7; }
-      .shell-actions { display: flex; gap: 1px; }
+      .shell-grip { position: absolute; top: 14px; left: 50%; width: 30px; height: 3px; transform: translateX(-50%); border-radius: 2px; background: var(--bb-border-strong); }
+      .floating.maximized .shell-header { cursor: default; }
+      .shell-actions { display: flex; gap: 3px; }
       .shell-button {
         display: grid;
-        width: 28px;
-        height: 26px;
+        width: 30px;
+        height: 25px;
         place-items: center;
-        border-radius: 4px;
+        padding: 0;
+        border: 0;
+        border-radius: 5px;
         color: var(--bb-text-muted);
         background: transparent;
+        cursor: pointer;
       }
       .shell-button:hover { color: var(--bb-text); background: var(--bb-surface-hover); }
       .shell-button svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -192,7 +195,7 @@ export function createFloatingShell(): FloatingShell {
       .canvas-frame {
         display: block;
         width: 100%;
-        height: calc(100% - 36px);
+        height: calc(100% - 32px);
         border: 0;
         background: var(--bb-canvas-bg);
       }
@@ -202,18 +205,18 @@ export function createFloatingShell(): FloatingShell {
         z-index: 3;
         right: 0;
         bottom: 0;
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         border: 0;
         background:
-          linear-gradient(135deg, transparent 48%, rgba(135,148,161,.25) 49%, rgba(135,148,161,.25) 54%, transparent 55%),
-          linear-gradient(135deg, transparent 66%, rgba(135,148,161,.32) 67%, rgba(135,148,161,.32) 72%, transparent 73%);
+          linear-gradient(135deg, transparent 57%, var(--bb-border-strong) 58%, var(--bb-border-strong) 62%, transparent 63%),
+          linear-gradient(135deg, transparent 74%, var(--bb-border-strong) 75%, var(--bb-border-strong) 79%, transparent 80%);
         cursor: nwse-resize;
       }
       .resize-handle:hover {
         background:
-          linear-gradient(135deg, transparent 48%, var(--bb-accent) 49%, var(--bb-accent) 54%, transparent 55%),
-          linear-gradient(135deg, transparent 66%, var(--bb-accent) 67%, var(--bb-accent) 72%, transparent 73%);
+          linear-gradient(135deg, transparent 57%, var(--bb-accent) 58%, var(--bb-accent) 62%, transparent 63%),
+          linear-gradient(135deg, transparent 74%, var(--bb-accent) 75%, var(--bb-accent) 79%, transparent 80%);
       }
       .resize-handle.hidden { display: none; }
 
@@ -225,15 +228,15 @@ export function createFloatingShell(): FloatingShell {
         display: flex;
         max-width: min(320px, calc(100vw - 36px));
         align-items: center;
-        gap: 7px;
-        padding: 8px 10px;
-        border: 1px solid var(--bb-border-strong);
-        border-radius: 7px;
+        gap: 9px;
+        padding: 10px 13px;
+        border: 1px solid var(--bb-border);
+        border-radius: 9px;
         color: var(--bb-text);
         background: var(--bb-surface-raised);
-        box-shadow: var(--bb-shadow);
-        font-size: 10.5px;
-        line-height: 1.4;
+        box-shadow: var(--bb-orb-shadow);
+        font-size: 12px;
+        line-height: 1.5;
         pointer-events: none;
         opacity: 0;
         transform: translateY(5px);
@@ -248,12 +251,16 @@ export function createFloatingShell(): FloatingShell {
         place-items: center;
         border-radius: 50%;
         color: var(--bb-success);
-        background: rgba(105,177,140,.13);
+        background: transparent;
         font-size: 10px;
         font-weight: 700;
       }
       .toast.warn { border-color: var(--bb-danger); }
       .toast.warn .toast-mark { color: var(--bb-danger); background: rgba(216,117,117,.13); }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation: none !important; transition: none !important; }
+      }
 
       @media (max-width: 640px) {
         .floating {
@@ -265,33 +272,21 @@ export function createFloatingShell(): FloatingShell {
       }
     </style>
     <button class="orb" type="button" title="打开 Branchboard 画布" aria-label="Branchboard 画布">
-      <svg viewBox="0 0 32 32" aria-hidden="true">
-        <path class="frame" d="M7.5 12V7.5H12M20 7.5h4.5V12M24.5 20v4.5H20M12 24.5H7.5V20"/>
-        <path class="link" d="m10.5 11.5 5 4.5 6-5M15.5 16v5"/>
-        <circle class="node" cx="10.5" cy="11.5" r="2.35"/>
-        <circle class="node" cx="21.5" cy="11" r="2.35"/>
-        <circle class="node" cx="15.5" cy="21" r="2.35"/>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 5v14h5a5 5 0 0 0 0-10H5m5 0h3a4 4 0 0 0 0-8H9"/>
+        <circle cx="18" cy="18" r="2"/>
       </svg>
       <span class="orb-status"></span>
     </button>
     <section class="floating" aria-label="Branchboard 浮动画布">
-      <header class="shell-header">
-        <div class="shell-brand">
-          <svg viewBox="0 0 32 32" aria-hidden="true">
-            <path class="frame" d="M7.5 12V7.5H12M20 7.5h4.5V12M24.5 20v4.5H20M12 24.5H7.5V20"/>
-            <path class="link" d="m10.5 11.5 5 4.5 6-5M15.5 16v5"/>
-            <circle class="node" cx="10.5" cy="11.5" r="2.35"/>
-            <circle class="node" cx="21.5" cy="11" r="2.35"/>
-            <circle class="node" cx="15.5" cy="21" r="2.35"/>
-          </svg>
-          <span>Branchboard</span>
-        </div>
+      <header class="shell-header" title="拖动窗口 · 双击最大化或还原">
+        <span class="shell-grip" aria-hidden="true"></span>
         <div class="shell-actions">
-          <button class="shell-button maximize" type="button" title="最大化" aria-label="最大化">
-            <svg viewBox="0 0 20 20"><rect x="4.5" y="4.5" width="11" height="11" rx="1"/></svg>
-          </button>
           <button class="shell-button minimize" type="button" title="收起画布" aria-label="收起画布">
             <svg viewBox="0 0 20 20"><path d="M4.5 10h11"/></svg>
+          </button>
+          <button class="shell-button maximize" type="button" title="最大化" aria-label="最大化">
+            <svg viewBox="0 0 20 20"><rect x="4.5" y="4.5" width="11" height="11" rx="1"/></svg>
           </button>
         </div>
       </header>
@@ -396,8 +391,8 @@ export function createFloatingShell(): FloatingShell {
       {
         minWidth: 520,
         minHeight: 420,
-        defaultWidth: 900,
-        defaultHeight: 700,
+        defaultWidth: 1040,
+        defaultHeight: 760,
         margin: 8
       }
     );
@@ -428,6 +423,8 @@ export function createFloatingShell(): FloatingShell {
   function setMaximized(next: boolean) {
     if (next === maximized) return;
     maximized = next;
+    floating.classList.toggle("maximized", maximized);
+    maximize.setAttribute("aria-pressed", String(maximized));
     if (maximized) {
       savedGeometry = readGeometry();
       floating.style.left = "8px";

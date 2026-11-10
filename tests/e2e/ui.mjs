@@ -146,6 +146,11 @@ try {
   await page.waitForSelector(".bb-empty-state", { timeout: 8000 });
   await screenshot("01-empty");
 
+  log("double-clicking a tool icon does not create a prompt");
+  await page.click('.bb-tool-rail [aria-label="选择 (V)"] svg', { count: 2 });
+  await wait(150);
+  assert.equal(await promptCount(), 0);
+
   log("double-click creates an auto-focused prompt");
   let rect = await canvasRect();
   await page.mouse.click(rect.x + rect.width / 2, rect.y + rect.height / 2, {
@@ -351,6 +356,9 @@ try {
     "pasted image is off the right edge"
   );
   await screenshot("06-image-pasted");
+  await (await page.$(".bb-image-node img")).screenshot({
+    path: path.join(ARTIFACT_DIR, "import-source.png")
+  });
 
   log("double-click image preview");
   const imageRect = await page.$eval(".bb-image-node img", (element) => {
@@ -657,6 +665,64 @@ try {
   );
   await page2.close();
   await screenshot("11-tab-sync");
+
+  log("image shelf locates a real canvas image and closes without changing the view");
+  await page.click('.bb-library-trigger');
+  await page.waitForSelector('.bb-asset-thumbnail');
+  const targetImageLabel = await page.$eval('.bb-asset-thumbnail', (element) =>
+    element.getAttribute('aria-label')
+  );
+  await page.click('.bb-asset-thumbnail');
+  await page.waitForSelector('.react-flow__node-image.selected');
+  await wait(450);
+  await screenshot("12-image-shelf");
+  const locatedViewport = await viewportState();
+  await page.click('[aria-label="收起图片栏"]');
+  await wait(100);
+  assert.deepEqual(await viewportState(), locatedViewport);
+
+  log("narrow layouts keep controls visible and close the image shelf after locating");
+  for (const viewport of [{ width: 600, height: 500 }, { width: 390, height: 844 }]) {
+    await page.setViewport(viewport);
+    await wait(200);
+    if (!(await page.$('.bb-asset-shelf'))) await page.click('.bb-library-trigger');
+    await page.waitForSelector('.bb-asset-thumbnail');
+    await page.click(`.bb-asset-thumbnail[aria-label="${targetImageLabel}"]`);
+    await page.waitForFunction(() => !document.querySelector('.bb-asset-shelf'));
+    assert.equal(await page.$eval('.bb-library-trigger', (element) =>
+      element.getAttribute('aria-expanded')
+    ), 'false');
+    await wait(450);
+    const overflow = await page.evaluate(() => {
+      const controls = document.querySelectorAll('.bb-topbar-actions button, .bb-tool-rail button');
+      return Array.from(controls).filter((element) => {
+        const rect = element.getBoundingClientRect();
+        return rect.width && rect.height &&
+          (rect.x < 0 || rect.y < 0 || rect.right > innerWidth || rect.bottom > innerHeight);
+      }).map((element) => element.getAttribute('aria-label'));
+    });
+    assert.deepEqual(overflow, [], `controls overflow at ${viewport.width}px`);
+    await screenshot(`13-narrow-${viewport.width}`);
+  }
+
+  log("an empty image shelf imports an image through its file picker");
+  await page.setViewport({ width: 1280, height: 900 });
+  await page.click('[aria-label="新建画布"]');
+  await page.waitForSelector('.bb-empty-state');
+  if (!(await page.$('.bb-asset-shelf'))) await page.click('.bb-library-trigger');
+  await page.waitForSelector('.bb-asset-empty');
+  const [fileChooser] = await Promise.all([
+    page.waitForFileChooser(),
+    page.click('.bb-asset-empty')
+  ]);
+  await fileChooser.accept([path.join(ARTIFACT_DIR, 'import-source.png')]);
+  await page.waitForSelector('.bb-image-node img');
+  await page.waitForSelector('.bb-asset-thumbnail');
+  assert.equal(await page.$$eval('.bb-asset-thumbnail', (elements) => elements.length), 1);
+  await waitForSaved();
+  await page.reload({ waitUntil: 'networkidle0' });
+  await page.waitForSelector('.bb-image-node img');
+  assert.equal(await page.$eval('.bb-library-trigger span', (element) => element.textContent), '1');
 
   assert.deepEqual(pageErrors, []);
   console.log(`\nAll UI checks passed. Screenshots: ${ARTIFACT_DIR}`);

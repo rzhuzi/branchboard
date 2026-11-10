@@ -1,7 +1,7 @@
 import type { CanvasEdge, CanvasNode } from "./types";
 import { clamp } from "./geometry.ts";
 
-export const PROMPT_WIDTH = 320;
+export const PROMPT_WIDTH = 300;
 export const IMAGE_WIDTH = 320;
 const NODE_GAP = 36;
 const CASCADE_STEP = 40;
@@ -17,11 +17,11 @@ export type Point = {
 };
 
 function promptHeight(prompt: string): number {
-  if (!prompt.trim()) return 196;
+  if (!prompt.trim()) return 210;
   const lines = prompt.split("\n").reduce((total, line) => {
     return total + Math.max(1, Math.ceil(line.length / 24));
   }, 0);
-  return clamp(96 + lines * 21 + 68, 190, 470);
+  return clamp(94 + lines * 24.5, 210, 438);
 }
 
 export function estimateNodeSize(node: Pick<CanvasNode, "type" | "data">): NodeSize {
@@ -30,7 +30,7 @@ export function estimateNodeSize(node: Pick<CanvasNode, "type" | "data">): NodeS
     const height = Number(node.data?.height) || 1024;
     return {
       width: IMAGE_WIDTH,
-      height: clamp(Math.round((IMAGE_WIDTH * height) / Math.max(1, width)), 100, 440)
+      height: clamp(Math.round((IMAGE_WIDTH * height) / Math.max(1, width)), 100, 440) + 44
     };
   }
   return {

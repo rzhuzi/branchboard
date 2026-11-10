@@ -330,8 +330,12 @@ try {
     document.querySelector(".bb-empty-state .bb-empty-add")?.click();
   });
   await frame.waitForSelector(".bb-prompt-node textarea", { timeout: 5000 });
+  await frame.waitForFunction(() =>
+    document.activeElement === document.querySelector(".bb-prompt-node textarea")
+  );
   const promptValue = "最小化后仍然存在的提示词";
   await frame.type(".bb-prompt-node textarea", promptValue);
+  assert.equal(await frame.$eval(".bb-prompt-node textarea", (element) => element.value), promptValue);
   await wait(400);
   await page.evaluate(() => {
     const host = document.getElementById("branchboard-floating-canvas-host");

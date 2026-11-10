@@ -13,7 +13,7 @@ export function BrandMark({ size = 25 }: { size?: number }) {
       aria-hidden="true"
     >
       <path d="M5 5v14h5a5 5 0 0 0 0-10H5m5 0h3a4 4 0 0 0 0-8H9" />
-      <circle cx="18" cy="18" r="2" />
+      <circle cx="18" cy="18" r="2" fill="var(--bb-accent)" stroke="none" />
     </svg>
   );
 }

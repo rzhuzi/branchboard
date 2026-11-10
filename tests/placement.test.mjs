@@ -37,8 +37,9 @@ function image(id, x, y, width = 1024, height = 1024) {
 }
 
 test("places a child to the right of its parent and below existing children", () => {
-  const parent = prompt("p1", 0, 0);
-  const child = image("i1", 392, 0);
+  const parent = { ...prompt("p1", 0, 0), measured: { width: 380, height: 260 } };
+  const child = { ...image("i1", 452, 0), measured: { width: 320, height: 410 } };
+  const childSize = { width: 320, height: 240 };
   const position = placeChild(
     [parent, child],
     [
@@ -50,39 +51,48 @@ test("places a child to the right of its parent and below existing children", ()
       }
     ],
     "p1",
-    { width: 320, height: 240 }
+    childSize
   );
 
-  assert.equal(position.x, 392);
-  assert.equal(position.y, 360);
+  assert.equal(position.x, child.position.x, "siblings should share the same column");
+  assert.ok(position.x > parent.position.x + parent.measured.width);
+  assert.ok(position.y > child.position.y + child.measured.height);
 });
 
 test("cascades a new node away from an occupied position", () => {
-  const existing = prompt("p1", 0, 0);
-  const position = findFreePosition([existing], { width: 320, height: 200 }, {
+  const existing = { ...prompt("p1", 0, 0), measured: { width: 380, height: 270 } };
+  const size = { width: 320, height: 200 };
+  const position = findFreePosition([existing], size, {
     x: 0,
     y: 0
   });
 
-  const overlaps =
-    position.x < 320 + 36 &&
-    position.x + 320 + 36 > 0 &&
-    position.y < 196 + 36 &&
-    position.y + 200 + 36 > 0;
-  assert.equal(overlaps, false);
+  assert.ok(
+    position.x >= existing.position.x + existing.measured.width ||
+      position.x + size.width <= existing.position.x ||
+      position.y >= existing.position.y + existing.measured.height ||
+      position.y + size.height <= existing.position.y,
+    "the returned rectangle must not overlap the measured existing node"
+  );
 });
 
 test("places a reference image to the left of a prompt without overlapping it", () => {
-  const target = prompt("p1", 500, 300);
-  const position = placeIncoming([target], [], "p1", { width: 320, height: 200 });
+  const target = { ...prompt("p1", 500, 300), measured: { width: 300, height: 240 } };
+  const size = { width: 320, height: 200 };
+  const position = placeIncoming([target], [], "p1", size);
 
-  assert.equal(position.x, 116);
-  assert.equal(position.y, 300);
+  assert.ok(position.x + size.width < target.position.x);
+  assert.equal(
+    position.y + size.height / 2,
+    target.position.y + target.measured.height / 2,
+    "the first reference should align with the prompt's measured vertical center"
+  );
 });
 
 test("stacks incoming reference images above existing references", () => {
-  const target = prompt("p1", 500, 300);
-  const first = image("i1", 116, 300);
+  const target = { ...prompt("p1", 500, 300), measured: { width: 300, height: 240 } };
+  const first = { ...image("i1", 116, 300), measured: { width: 320, height: 390 } };
+  const size = { width: 320, height: 220 };
   const position = placeIncoming(
     [target, first],
     [
@@ -94,9 +104,9 @@ test("stacks incoming reference images above existing references", () => {
       }
     ],
     "p1",
-    { width: 320, height: 220 }
+    size
   );
 
-  assert.equal(position.x, 116);
-  assert.ok(position.y < 300);
+  assert.equal(position.x, first.position.x);
+  assert.ok(position.y + size.height < first.position.y);
 });

@@ -4,7 +4,7 @@ import { Brand } from "./Brand";
 import { CanvasTabs } from "./CanvasTabs";
 import { IconButton } from "./controls";
 import { HelpPopover } from "./HelpPopover";
-import { MoonIcon, SunIcon } from "./icons";
+import { ImageIcon, MoonIcon, SunIcon } from "./icons";
 import { TaskCenter } from "./TaskCenter";
 
 function SaveIndicator() {
@@ -33,8 +33,10 @@ function SaveIndicator() {
   );
 }
 
-export function TopBar() {
+export function TopBar({ assetsOpen, onToggleAssets }: { assetsOpen: boolean; onToggleAssets: () => void }) {
   const { theme, toggleTheme } = useSettings();
+  const { nodes } = useEditorState();
+  const imageCount = nodes.filter((node) => node.data.kind === "image").length;
 
   return (
     <header className="bb-topbar">
@@ -44,6 +46,18 @@ export function TopBar() {
         <SaveIndicator />
         <TaskCenter />
         <span className="bb-topbar-divider" aria-hidden="true" />
+        <button
+          type="button"
+          className={`bb-library-trigger ${assetsOpen ? "active" : ""}`}
+          aria-label="画布图片"
+          aria-pressed={assetsOpen}
+          aria-expanded={assetsOpen}
+          aria-controls="bb-asset-shelf"
+          title="画布图片"
+          onClick={onToggleAssets}
+        >
+          <ImageIcon size={16} /><span>{imageCount}</span>
+        </button>
         <IconButton
           label={theme === "light" ? "切换到深色主题" : "切换到浅色主题"}
           onClick={toggleTheme}
